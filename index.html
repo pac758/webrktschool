@@ -899,7 +899,7 @@
             try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); return localStorage; }
             catch(e) { return sessionStorage; }
         })();
-        const CMS_API = _store.getItem('rkt_api_url') || '';
+        const CMS_API = _store.getItem('rkt_api_url') || 'https://script.google.com/macros/s/AKfycbwb-ZEoRTrGu026rl7ewBSsnIHXkRHNp_j7v6tJy-yBTinpN6v4F7r7P1KQYHEy5San/exec';
 
         async function cmsGet(sheet) {
             if (!CMS_API) return null;

@@ -437,7 +437,7 @@ function storeSet(key, val) {
     try { store.setItem(key, val); } catch(e) {}
 }
 
-let API_URL = storeGet('rkt_api_url', '');
+let API_URL = storeGet('rkt_api_url', 'https://script.google.com/macros/s/AKfycbwb-ZEoRTrGu026rl7ewBSsnIHXkRHNp_j7v6tJy-yBTinpN6v4F7r7P1KQYHEy5San/exec');
 let API_SECRET = storeGet('rkt_api_secret', 'rkt2567');
 let currentModal = null;
 let editingRow = null;
