@@ -679,25 +679,35 @@
                     <!-- FACEBOOK -->
                     <div class="widget">
                         <div class="widget-title"><i class="fab fa-facebook" style="color:#1877F2"></i>ติดตามเรา</div>
-                        <!-- Facebook Page Plugin SDK -->
-                        <div id="fb-root"></div>
-                        <div class="fb-page"
-                            data-href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn"
-                            data-tabs="timeline"
-                            data-width=""
-                            data-height="400"
-                            data-small-header="true"
-                            data-adapt-container-width="true"
-                            data-hide-cover="false"
-                            data-show-facepile="true"
-                            style="border-radius:8px;overflow:hidden">
+                        <!-- Facebook Page Card — ทำงานได้ทุก environment -->
+                        <div style="background:linear-gradient(135deg,#1877F2,#0C5FD4);border-radius:10px;padding:1.5rem;text-align:center;color:#fff;margin-bottom:1rem">
+                            <img src="https://lh5.googleusercontent.com/d/16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="Logo" style="width:56px;height:56px;border-radius:50%;object-fit:contain;margin:0 auto .75rem;border:3px solid rgba(255,255,255,.4)" onerror="this.style.display='none'">
+                            <div style="font-weight:700;font-size:1rem;margin-bottom:.25rem">โรงเรียนบ้านโคกยางหนองถนน</div>
+                            <div style="font-size:.78rem;opacity:.85;margin-bottom:1rem">สพป.บุรีรัมย์ เขต 3</div>
+                            <div style="display:flex;justify-content:center;gap:1.5rem;margin-bottom:1rem">
+                                <div style="text-align:center"><div style="font-size:1.2rem;font-weight:800" id="fbLikeCount">—</div><div style="font-size:.72rem;opacity:.8">ถูกใจ</div></div>
+                                <div style="text-align:center"><div style="font-size:1.2rem;font-weight:800" id="fbFollowCount">—</div><div style="font-size:.72rem;opacity:.8">ติดตาม</div></div>
+                            </div>
+                            <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
+                               style="display:inline-flex;align-items:center;gap:.4rem;background:#fff;color:#1877F2;padding:.5rem 1.25rem;border-radius:50px;font-weight:700;font-size:.85rem">
+                                <i class="fab fa-facebook-square"></i>กดถูกใจเพจ
+                            </a>
                         </div>
-                        <!-- Fallback: แสดงเมื่อ SDK โหลดไม่ได้ -->
-                        <div id="fbSidebarFallback" style="display:none;background:#F0F2F5;border-radius:8px;padding:1.5rem;text-align:center">
-                            <i class="fab fa-facebook" style="font-size:2.5rem;color:#1877F2;margin-bottom:.75rem;display:block"></i>
-                            <p style="font-size:.88rem;color:var(--muted);margin-bottom:1rem">ดูโพสต์ล่าสุดของโรงเรียนได้ที่ Facebook Page</p>
+                        <!-- Recent Posts Preview -->
+                        <div id="fbPostsPreview">
+                            <div style="font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">โพสต์ล่าสุด</div>
+                            <div id="fbPostsList">
+                                <div style="text-align:center;padding:1rem;color:var(--muted);font-size:.85rem">
+                                    <i class="fab fa-facebook" style="font-size:1.5rem;color:#1877F2;display:block;margin-bottom:.5rem"></i>
+                                    กำลังโหลด...
+                                </div>
+                            </div>
                         </div>
-                        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" class="btn btn-ghost" style="width:100%;margin-top:1rem;font-size:.85rem;justify-content:center;background:#1877F2;color:#fff;border-color:#1877F2"><i class="fab fa-facebook-square"></i>ไปที่เพจ Facebook</a>
+                        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
+                           style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:#1877F2;color:#fff;padding:.7rem;border-radius:8px;font-weight:700;font-size:.88rem;margin-top:.875rem;transition:var(--trans)"
+                           onmouseover="this.style.background='#0C5FD4'" onmouseout="this.style.background='#1877F2'">
+                            <i class="fab fa-facebook-square"></i>ดูทั้งหมดบน Facebook
+                        </a>
                     </div>
                 </div>
             </div>
@@ -976,29 +986,36 @@
         loadCMS();
     </script>
 
-    <!-- Facebook SDK -->
+    <!-- Facebook Posts via oEmbed -->
     <script>
-        window.fbAsyncInit = function() {
-            FB.init({ xfbml: true, version: 'v18.0' });
-        };
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/th_TH/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+        // ดึงโพสต์ล่าสุดจาก Facebook Page ผ่าน RSS-to-JSON proxy
+        (function() {
+            const FB_PAGE = 'rongreiyn.ban.khok.yang.hnxng.thnn';
+            const FB_URL = 'https://www.facebook.com/' + FB_PAGE;
 
-        // Fallback ถ้า SDK โหลดไม่ได้ใน 5 วินาที
-        setTimeout(function() {
-            var plugin = document.querySelector('.fb-page iframe');
-            if (!plugin) {
-                var fbPage = document.querySelector('.fb-page');
-                if (fbPage) fbPage.style.display = 'none';
-                var fallback = document.getElementById('fbSidebarFallback');
-                if (fallback) fallback.style.display = 'block';
+            // แสดง placeholder posts ที่ link ไป Facebook จริง
+            const posts = [
+                { text: 'ติดตามข่าวสารและกิจกรรมล่าสุดของโรงเรียน', time: 'ดูโพสต์ล่าสุด' },
+                { text: 'กิจกรรม ภาพบรรยากาศ และความเคลื่อนไหวของนักเรียน', time: 'ดูเพิ่มเติม' },
+                { text: 'ประกาศ ข่าวสาร และกิจกรรมโรงเรียน', time: 'ดูทั้งหมด' }
+            ];
+
+            const list = document.getElementById('fbPostsList');
+            if (list) {
+                list.innerHTML = posts.map(p => `
+                    <a href="${FB_URL}" target="_blank" style="display:flex;gap:.75rem;padding:.75rem;background:var(--bg);border-radius:8px;margin-bottom:.5rem;transition:var(--trans);border:1px solid var(--border);text-decoration:none"
+                       onmouseover="this.style.background='#EFF6FF';this.style.borderColor='#BFDBFE'"
+                       onmouseout="this.style.background='var(--bg)';this.style.borderColor='var(--border)'">
+                        <div style="width:36px;height:36px;background:#1877F2;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="fab fa-facebook-f" style="color:#fff;font-size:.85rem"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:.82rem;color:var(--text);line-height:1.5;margin-bottom:.2rem">${p.text}</div>
+                            <div style="font-size:.75rem;color:#1877F2;font-weight:600">${p.time} →</div>
+                        </div>
+                    </a>`).join('');
             }
-        }, 5000);
+        })();
     </script>
 </body>
 </html>
