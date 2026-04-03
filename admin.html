@@ -584,9 +584,10 @@ async function saveSettings() {
     const fields = ['name_th','name_en','dept','phone','email','website','address','vision','motto','students','staff','years','awards','logo','facebook','youtube','maps','maps_nav'];
     const data = {};
     fields.forEach(f => { data[f] = document.getElementById('s_' + f)?.value || ''; });
+    toast('กำลังบันทึก...', 'warning');
     const r = await apiPost('saveSettings', 'settings', data);
-    if (r?.success) { toast('บันทึกข้อมูลโรงเรียนสำเร็จ', 'success'); allData.settings = data; }
-    else toast('เกิดข้อผิดพลาด', 'error');
+    if (r?.success) { toast('บันทึกข้อมูลโรงเรียนสำเร็จ ✓', 'success'); allData.settings = data; }
+    else toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
 }
 
 // ===== DIRECTOR =====
@@ -600,9 +601,10 @@ function fillDirector() {
 async function saveDirector() {
     const data = {};
     ['name','role','title','message','photo'].forEach(f => { data[f] = document.getElementById('d_' + f)?.value || ''; });
+    toast('กำลังบันทึก...', 'warning');
     const r = await apiPost('saveDirector', 'director', data);
-    if (r?.success) { toast('บันทึกสาส์นผู้บริหารสำเร็จ', 'success'); allData.director = data; }
-    else toast('เกิดข้อผิดพลาด', 'error');
+    if (r?.success) { toast('บันทึกสาส์นผู้บริหารสำเร็จ ✓', 'success'); allData.director = data; }
+    else toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
 }
 
 // ===== TABLE RENDER =====
@@ -744,13 +746,16 @@ async function saveModal() {
         return;
     }
 
+    setBtnLoading(true);
+    toast('กำลังบันทึก...', 'warning');
     const r = await apiPost('saveSheet', currentModal, rows);
+    setBtnLoading(false);
     if (r?.success) {
         allData[currentModal] = rows;
         renderTable(currentModal, rows);
         updateDashboard();
         closeModal();
-        toast('บันทึกสำเร็จ', 'success');
+        toast('บันทึกสำเร็จ ✓', 'success');
     } else {
         const errMsg = r?.error || 'ไม่ทราบสาเหตุ';
         toast(`เกิดข้อผิดพลาด: ${errMsg}`, 'error');
@@ -765,15 +770,33 @@ function editRow(name, idx) {
 
 async function deleteRow(name, idx) {
     if (!confirm('ยืนยันการลบข้อมูลนี้?')) return;
+    setBtnLoading(true);
+    toast('กำลังลบข้อมูล...', 'warning');
     let rows = [...(allData[name] || [])];
     rows.splice(idx, 1);
     const r = await apiPost('saveSheet', name, rows);
+    setBtnLoading(false);
     if (r?.success) {
         allData[name] = rows;
         renderTable(name, rows);
         updateDashboard();
-        toast('ลบข้อมูลสำเร็จ', 'success');
-    } else toast('เกิดข้อผิดพลาด', 'error');
+        toast('ลบข้อมูลสำเร็จ ✓', 'success');
+    } else {
+        toast('เกิดข้อผิดพลาด: ' + (r?.error || 'ไม่ทราบสาเหตุ'), 'error');
+    }
+}
+
+// ===== LOADING STATE =====
+function setBtnLoading(loading) {
+    const btn = document.getElementById('modalSaveBtn');
+    if (!btn) return;
+    if (loading) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
+    } else {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save"></i>บันทึก';
+    }
 }
 
 // ===== SETUP =====
