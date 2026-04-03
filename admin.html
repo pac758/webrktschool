@@ -387,7 +387,7 @@
                     <div class="card-header"><h4><i class="fas fa-plug"></i>เชื่อมต่อ API</h4></div>
                     <div class="card-body">
                         <div class="field"><label>Google Apps Script Deployment URL</label><input type="text" id="apiUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec"></div>
-                        <div class="field"><label>รหัสผ่าน Admin (ตั้งใน Apps Script)</label><input type="password" id="apiSecret" placeholder="secret key สำหรับ POST"></div>
+                        <div class="field"><label>รหัสผ่าน Admin (ตั้งใน Apps Script)</label><input type="password" id="apiSecret" placeholder="rkt2567"></div>
                         <div style="display:flex;gap:.75rem;flex-wrap:wrap">
                             <button class="btn btn-primary" onclick="saveApiConfig()"><i class="fas fa-save"></i>บันทึกการตั้งค่า</button>
                             <button class="btn btn-warning" onclick="testApi()"><i class="fas fa-vial"></i>ทดสอบการเชื่อมต่อ</button>
@@ -497,9 +497,18 @@ function showPage(name) {
 async function apiGet(sheet) {
     if (!API_URL) return null;
     try {
-        const res = await fetch(`${API_URL}?sheet=${sheet}&t=${Date.now()}`);
-        return await res.json();
-    } catch(e) { return null; }
+        // Apps Script redirect ต้องใช้ fetch แบบ follow redirect
+        const url = `${API_URL}?sheet=${sheet}&t=${Date.now()}`;
+        const res = await fetch(url, { redirect: 'follow' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        // Apps Script บางครั้ง return HTML error page
+        if (text.trim().startsWith('<')) throw new Error('Got HTML instead of JSON');
+        return JSON.parse(text);
+    } catch(e) {
+        console.warn(`apiGet(${sheet}) failed:`, e.message);
+        return null;
+    }
 }
 
 async function apiPost(action, sheet, data) {
@@ -507,18 +516,32 @@ async function apiPost(action, sheet, data) {
     try {
         const res = await fetch(API_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain' }, // Apps Script ต้องการ text/plain
             body: JSON.stringify({ action, sheet, data, secret: API_SECRET })
         });
-        return await res.json();
-    } catch(e) { toast('เกิดข้อผิดพลาด: ' + e.message, 'error'); return null; }
+        const text = await res.text();
+        if (text.trim().startsWith('<')) throw new Error('Got HTML instead of JSON');
+        return JSON.parse(text);
+    } catch(e) {
+        toast('เกิดข้อผิดพลาด: ' + e.message, 'error');
+        console.error('apiPost error:', e);
+        return null;
+    }
 }
 
 async function loadAllData() {
+    toast('กำลังโหลดข้อมูลจาก Google Sheet...', 'warning');
     const sheets = ['settings', 'director', 'news', 'calendar', 'team', 'achievements', 'gallery'];
+    let loaded = 0;
     for (const s of sheets) {
         const d = await apiGet(s);
-        if (d) allData[s] = d;
+        if (d !== null) { allData[s] = d; loaded++; }
+    }
+    if (loaded > 0) {
+        toast(`โหลดข้อมูลสำเร็จ (${loaded}/7 sheets)`, 'success');
+    } else {
+        toast('ไม่สามารถดึงข้อมูลได้ — ตรวจสอบ API URL และ Deploy settings', 'error');
     }
     updateDashboard();
     fillSettings();
@@ -757,92 +780,132 @@ function toast(msg, type = 'success') {
 
 // ===== APPS SCRIPT CODE =====
 function loadScriptCode() {
-    document.getElementById('scriptCode').value = `// Google Apps Script — RKT School CMS
+    document.getElementById('scriptCode').value = `// Google Apps Script — RKT School CMS v2
 // วาง code นี้ใน Apps Script แล้ว Deploy เป็น Web App
+// Execute as: Me | Who has access: Anyone
 
-const SPREADSHEET_ID = SpreadsheetApp.getActiveSpreadsheet().getId();
-const SECRET = 'your_secret_key'; // เปลี่ยนเป็น secret ของคุณ
+const SECRET = 'rkt2567'; // เปลี่ยนได้ตามต้องการ
+
+// ===== CORS Helper =====
+function setCORS(output) {
+  return output; // Apps Script จัดการ CORS ให้อัตโนมัติเมื่อ Deploy แบบ Anyone
+}
 
 function doGet(e) {
-  const sheet = e.parameter.sheet;
-  const data = getSheetData(sheet);
-  return ContentService
-    .createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
+  try {
+    const sheet = e.parameter.sheet;
+    if (!sheet) return jsonOut({ error: 'missing sheet param' });
+    const data = getSheetData(sheet);
+    return jsonOut(data);
+  } catch(err) {
+    return jsonOut({ error: err.message });
+  }
 }
 
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
     if (body.secret !== SECRET) {
-      return jsonResponse({ success: false, error: 'Unauthorized' });
+      return jsonOut({ success: false, error: 'Unauthorized' });
     }
     const { action, sheet, data } = body;
-    if (action === 'saveSheet') {
-      saveSheetData(sheet, data);
-    } else if (action === 'saveSettings') {
-      saveKeyValue('settings', data);
-    } else if (action === 'saveDirector') {
-      saveKeyValue('director', data);
-    }
-    return jsonResponse({ success: true });
+    if (action === 'saveSheet') saveSheetData(sheet, data);
+    else if (action === 'saveSettings') saveKeyValue('settings', data);
+    else if (action === 'saveDirector') saveKeyValue('director', data);
+    return jsonOut({ success: true });
   } catch(err) {
-    return jsonResponse({ success: false, error: err.message });
+    return jsonOut({ success: false, error: err.message });
   }
 }
 
-function getSheetData(sheetName) {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  const sheet = ss.getSheetByName(sheetName);
-  if (!sheet) return null;
-  const rows = sheet.getDataRange().getValues();
-  if (rows.length < 2) {
-    // settings/director: key-value format
-    if (sheetName === 'settings' || sheetName === 'director') {
+function getSheetData(name) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const s = ss.getSheetByName(name);
+  if (!s) return null;
+  const rows = s.getDataRange().getValues();
+  if (!rows || rows.length === 0) return (name==='settings'||name==='director') ? {} : [];
+  if (name === 'settings' || name === 'director') {
+    const obj = {};
+    rows.forEach(r => { if (r[0]) obj[String(r[0])] = String(r[1] || ''); });
+    return obj;
+  }
+  const headers = rows[0].map(String);
+  return rows.slice(1)
+    .filter(r => r.some(c => c !== ''))
+    .map(row => {
       const obj = {};
-      rows.forEach(r => { if (r[0]) obj[r[0]] = r[1]; });
+      headers.forEach((h, i) => { obj[h] = String(row[i] || ''); });
       return obj;
-    }
-    return [];
-  }
-  const headers = rows[0];
-  // key-value sheets
-  if (sheetName === 'settings' || sheetName === 'director') {
-    const obj = {};
-    rows.forEach(r => { if (r[0]) obj[r[0]] = r[1]; });
-    return obj;
-  }
-  // array sheets
-  return rows.slice(1).map(row => {
-    const obj = {};
-    headers.forEach((h, i) => { obj[h] = row[i] || ''; });
-    return obj;
-  });
+    });
 }
 
-function saveSheetData(sheetName, rows) {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  let sheet = ss.getSheetByName(sheetName);
-  if (!sheet) sheet = ss.insertSheet(sheetName);
-  sheet.clearContents();
+function saveSheetData(name, rows) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let s = ss.getSheetByName(name);
+  if (!s) s = ss.insertSheet(name);
+  s.clearContents();
   if (!rows || rows.length === 0) return;
   const headers = Object.keys(rows[0]);
-  sheet.appendRow(headers);
-  rows.forEach(row => sheet.appendRow(headers.map(h => row[h] || '')));
+  s.appendRow(headers);
+  rows.forEach(r => s.appendRow(headers.map(h => r[h] || '')));
 }
 
-function saveKeyValue(sheetName, data) {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  let sheet = ss.getSheetByName(sheetName);
-  if (!sheet) sheet = ss.insertSheet(sheetName);
-  sheet.clearContents();
-  Object.entries(data).forEach(([k, v]) => sheet.appendRow([k, v]));
+function saveKeyValue(name, data) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let s = ss.getSheetByName(name);
+  if (!s) s = ss.insertSheet(name);
+  s.clearContents();
+  Object.entries(data).forEach(([k, v]) => s.appendRow([k, v]));
 }
 
-function jsonResponse(obj) {
+function jsonOut(obj) {
   return ContentService
     .createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+// ===== Seed ข้อมูลเริ่มต้น (รันครั้งเดียว) =====
+function seedInitialData() {
+  saveKeyValue('settings', {
+    name_th: 'โรงเรียนบ้านโคกยางหนองถนน',
+    name_en: 'Baan Khok Yang Nong Thanon School',
+    dept: 'สพป.บุรีรัมย์ เขต 3',
+    phone: '089-947-2938',
+    email: 'admin1@rkt.ac.th',
+    website: 'www.rkt.ac.th',
+    address: 'ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์ 31110',
+    vision: 'พัฒนาผู้เรียนให้มีคุณภาพตามมาตรฐาน สร้างสังคมแห่งการเรียนรู้ ควบคู่คุณธรรม น้อมนำหลักปรัชญาของเศรษฐกิจพอเพียง',
+    motto: 'การศึกษาดี มีวินัย ใฝ่เรียนรู้ คู่คุณธรรม',
+    students: '89+', staff: '14', years: '48', awards: '10+',
+    logo: 'https://lh5.googleusercontent.com/d/16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm',
+    facebook: 'https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn',
+    youtube: 'https://www.youtube.com/embed/E7PcDSLRSdo',
+    maps: 'https://maps.google.com/maps?q=โรงเรียนบ้านโคกยางหนองถนน&t=&z=15&ie=UTF8&iwloc=&output=embed',
+    maps_nav: 'https://maps.app.goo.gl/rZB8jnEnvNw971dW9'
+  });
+  saveKeyValue('director', {
+    name: 'นายสมศักดิ์ อั้นภักดี',
+    role: 'ผู้อำนวยการโรงเรียนบ้านโคกยางหนองถนน',
+    title: 'มุ่งมั่นพัฒนาผู้เรียนสู่ความเป็นเลิศ',
+    message: 'โรงเรียนบ้านโคกยางหนองถนน มีความมุ่งมั่นที่จะพัฒนาคุณภาพการศึกษาในทุกมิติ โดยเน้นผู้เรียนเป็นสำคัญ',
+    photo: 'https://drive.google.com/thumbnail?id=1wuklmompBWYIOOuSrQeKdNns5wRIT5BB&sz=w800'
+  });
+  saveSheetData('news', [
+    {date:'29 พ.ค.', title:'กิจกรรมวันสุนทรภู่', excerpt:'คณะครูและนักเรียนร่วมจัดกิจกรรม', link:''},
+    {date:'10 พ.ค.', title:'โครงการค่ายพุทธบุตร', excerpt:'กิจกรรมอบรมจริยธรรมแก่นักเรียน', link:''},
+    {date:'01 พ.ค.', title:'รับสมัครนักเรียนใหม่ 2567', excerpt:'เปิดรับสมัครตั้งแต่วันนี้เป็นต้นไป', link:''}
+  ]);
+  saveSheetData('calendar', [
+    {day:'12', month:'ส.ค.', title:'วันแม่แห่งชาติ', detail:'หยุดราชการ 1 วัน'},
+    {day:'18', month:'ส.ค.', title:'สัปดาห์วิทยาศาสตร์', detail:'กิจกรรมฐานการเรียนรู้'},
+    {day:'09', month:'ก.ย.', title:'กีฬาสีภายใน', detail:'โคกยางเกมส์'}
+  ]);
+  saveSheetData('achievements', [
+    {icon:'fas fa-trophy', title:'รางวัลโรงเรียนพระราชทาน', detail:'ประเภทสถานศึกษาขนาดเล็ก 2565'},
+    {icon:'fas fa-leaf', title:'โรงเรียนปลอดขยะ Zero Waste', detail:'รางวัลเหรียญทอง ระดับเขตพื้นที่'},
+    {icon:'fas fa-medal', title:'เหรียญทอง งานศิลปหัตถกรรม', detail:'หุ่นยนต์ระดับพื้นฐาน ภาคตะวันออกเฉียงเหนือ'}
+  ]);
+  SpreadsheetApp.getUi().alert('✅ Seed ข้อมูลสำเร็จแล้วครับ!');
 }`;
 }
 
