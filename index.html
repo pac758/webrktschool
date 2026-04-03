@@ -678,11 +678,26 @@
                     </div>
                     <!-- FACEBOOK -->
                     <div class="widget">
-                        <div class="widget-title"><i class="fab fa-facebook"></i>ติดตามเรา</div>
-                        <div class="fb-wrap">
-                            <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Frongreiyn.ban.khok.yang.hnxng.thnn&tabs=timeline&width=340&height=300&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true" width="100%" height="300" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                        <div class="widget-title"><i class="fab fa-facebook" style="color:#1877F2"></i>ติดตามเรา</div>
+                        <!-- Facebook Page Plugin SDK -->
+                        <div id="fb-root"></div>
+                        <div class="fb-page"
+                            data-href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn"
+                            data-tabs="timeline"
+                            data-width=""
+                            data-height="400"
+                            data-small-header="true"
+                            data-adapt-container-width="true"
+                            data-hide-cover="false"
+                            data-show-facepile="true"
+                            style="border-radius:8px;overflow:hidden">
                         </div>
-                        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" class="btn btn-ghost" style="width:100%;margin-top:1rem;font-size:.85rem;justify-content:center"><i class="fab fa-facebook-square"></i>ไปที่เพจ Facebook</a>
+                        <!-- Fallback: แสดงเมื่อ SDK โหลดไม่ได้ -->
+                        <div id="fbSidebarFallback" style="display:none;background:#F0F2F5;border-radius:8px;padding:1.5rem;text-align:center">
+                            <i class="fab fa-facebook" style="font-size:2.5rem;color:#1877F2;margin-bottom:.75rem;display:block"></i>
+                            <p style="font-size:.88rem;color:var(--muted);margin-bottom:1rem">ดูโพสต์ล่าสุดของโรงเรียนได้ที่ Facebook Page</p>
+                        </div>
+                        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" class="btn btn-ghost" style="width:100%;margin-top:1rem;font-size:.85rem;justify-content:center;background:#1877F2;color:#fff;border-color:#1877F2"><i class="fab fa-facebook-square"></i>ไปที่เพจ Facebook</a>
                     </div>
                 </div>
             </div>
@@ -839,8 +854,7 @@
         });
 
         // Fade-up on scroll
-        function initFadeUp() {
-            const fadeEls = document.querySelectorAll('section, .feat-card, .team-card, .achieve-card, .gallery-item');
+        function initFadeUp() {            const fadeEls = document.querySelectorAll('section, .feat-card, .team-card, .achieve-card, .gallery-item');
             fadeEls.forEach(el => el.classList.add('fade-up'));
             const io = new IntersectionObserver(entries => {
                 entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
@@ -960,6 +974,31 @@
         }
 
         loadCMS();
+    </script>
+
+    <!-- Facebook SDK -->
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({ xfbml: true, version: 'v18.0' });
+        };
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/th_TH/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        // Fallback ถ้า SDK โหลดไม่ได้ใน 5 วินาที
+        setTimeout(function() {
+            var plugin = document.querySelector('.fb-page iframe');
+            if (!plugin) {
+                var fbPage = document.querySelector('.fb-page');
+                if (fbPage) fbPage.style.display = 'none';
+                var fallback = document.getElementById('fbSidebarFallback');
+                if (fallback) fallback.style.display = 'block';
+            }
+        }, 5000);
     </script>
 </body>
 </html>
