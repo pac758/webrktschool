@@ -429,8 +429,16 @@ const store = (() => {
     catch(e) { return sessionStorage; }
 })();
 
-let API_URL = store.getItem('rkt_api_url') || '';
-let API_SECRET = store.getItem('rkt_api_secret') || '';
+// Safe get/set that never throws
+function storeGet(key, def='') {
+    try { return store.getItem(key) || def; } catch(e) { return def; }
+}
+function storeSet(key, val) {
+    try { store.setItem(key, val); } catch(e) {}
+}
+
+let API_URL = storeGet('rkt_api_url', '');
+let API_SECRET = storeGet('rkt_api_secret', 'rkt2567');
 let currentModal = null;
 let editingRow = null;
 let allData = {};
@@ -771,10 +779,10 @@ async function deleteRow(name, idx) {
 // ===== SETUP =====
 function saveApiConfig() {
     API_URL = document.getElementById('apiUrl').value.trim();
-    API_SECRET = document.getElementById('apiSecret').value.trim();
-    store.setItem('rkt_api_url', API_URL);
-    store.setItem('rkt_api_secret', API_SECRET);    updateApiStatus();
-    toast('บันทึกการตั้งค่าแล้ว', 'success');
+    const inputSecret = document.getElementById('apiSecret').value.trim();
+    API_SECRET = inputSecret || 'rkt2567'; // fallback to default
+    try { storeSet('rkt_api_url', API_URL); storeSet('rkt_api_secret', API_SECRET); } catch(e) {}
+    updateApiStatus();    toast('บันทึกการตั้งค่าแล้ว', 'success');
     if (API_URL) loadAllData();
 }
 
