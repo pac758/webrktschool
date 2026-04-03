@@ -654,8 +654,8 @@ const modalForms = {
         <div class="field"><label>ลิงก์ข่าว (ถ้ามี)</label><input type="text" id="mf_link" placeholder="https://..."></div>
         <div class="field">
             <label>Facebook Post URL (ถ้ามี — จะ embed โพสต์ในหน้าข่าว)</label>
-            <input type="text" id="mf_fb_post" placeholder="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn/posts/...">
-            <small style="color:var(--muted);font-size:.78rem;margin-top:.3rem;display:block">วิธีได้ URL: เปิดโพสต์ใน Facebook → คลิก ··· → ฝังโพสต์ → คัดลอก URL จาก iframe src="..." หรือ copy link ของโพสต์</small>
+            <input type="text" id="mf_fb_post" placeholder="วาง URL โพสต์ หรือ iframe code ทั้งก้อนได้เลย">
+            <small style="color:var(--muted);font-size:.78rem;margin-top:.3rem;display:block">วิธีได้โค้ด: เปิดโพสต์ใน Facebook → คลิก ··· → <strong>ฝังโพสต์</strong> → คัดลอกโค้ด → วางได้เลย</small>
         </div>`,
     calendar: () => `
         <div class="field-row">
@@ -706,7 +706,17 @@ function getModalData() {
     const cfg = tableConfig[currentModal];
     if (!cfg) return {};
     const data = {};
-    cfg.cols.forEach(c => { const el = document.getElementById('mf_' + c); if (el) data[c] = el.value; });
+    cfg.cols.forEach(c => {
+        const el = document.getElementById('mf_' + c);
+        if (!el) return;
+        let val = el.value.trim();
+        // ถ้าเป็น field fb_post และผู้ใช้วาง iframe code ทั้งก้อน → ดึงแค่ src URL
+        if (c === 'fb_post' && val.includes('<iframe')) {
+            const match = val.match(/src=["']([^"']+)["']/);
+            val = match ? match[1] : val;
+        }
+        data[c] = val;
+    });
     return data;
 }
 
