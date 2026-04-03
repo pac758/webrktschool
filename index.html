@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โรงเรียนบ้านโคกยางหนองถนน - พัฒนาผู้เรียนสู่ความเป็นเลิศ</title>
+    <meta name="description" content="โรงเรียนบ้านโคกยางหนองถนน สพป.บุรีรัมย์ เขต 3 มุ่งมั่นพัฒนาการศึกษาคุณภาพ เพื่อสร้างเด็กไทยที่มีความรู้ คุณธรรม และพร้อมก้าวสู่อนาคต">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Noto+Serif+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:       #334155;   /* Slate 700 — primary */
+            --red-dark:  #1E293B;   /* Slate 800 — dark */
+            --red-light: #475569;   /* Slate 600 — light */
+            --gold:      #B45309;   /* Amber 700 — accent */
+            --gold-lt:   #FDE68A;   /* Amber 200 — accent light */
+            --bg:        #F8FAFC;   /* Slate 50 — background */
+            --surface:   #FFFFFF;
+            --text:      #1E293B;   /* Slate 800 */
+            --muted:     #64748B;   /* Slate 500 */
+            --border:    #E2E8F0;   /* Slate 200 */
+            --radius:    12px;
+            --radius-lg: 20px;
+            --shadow:    0 4px 24px rgba(0,0,0,.07);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,.10);
+            --trans:     all .3s cubic-bezier(.4,0,.2,1);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{font-family:'Sarabun',sans-serif;color:var(--text);background:var(--bg);line-height:1.7;-webkit-font-smoothing:antialiased}
+        h1,h2,h3,h4{line-height:1.3;font-weight:700}
+        a{text-decoration:none;color:inherit;transition:var(--trans)}
+        ul{list-style:none}
+        img{max-width:100%;height:auto;display:block}
+        .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+        /* ===== TOP BAR ===== */
+        .topbar{background:var(--red-dark);color:rgba(255,255,255,.9);padding:.4rem 0;font-size:.82rem}
+        .topbar .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+        .topbar a{color:rgba(255,255,255,.8);transition:var(--trans)}
+        .topbar a:hover{color:var(--gold-lt)}
+        /* ===== HEADER ===== */
+        .header{background:var(--surface);box-shadow:0 2px 12px rgba(0,0,0,.08);position:sticky;top:0;z-index:999;transition:var(--trans)}
+        .header.scrolled{background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}
+        .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;max-width:1200px;margin:0 auto}
+        .logo{display:flex;align-items:center;gap:.875rem}
+        .logo img{width:52px;height:52px;object-fit:contain;transition:var(--trans)}
+        .logo:hover img{transform:rotate(-5deg) scale(1.05)}
+        .logo-text h1{font-size:1.15rem;color:var(--red);line-height:1.1}
+        .logo-text span{font-size:.75rem;color:var(--muted);font-weight:400}
+        .nav-desktop{display:none;gap:1.75rem;align-items:center}
+        .nav-desktop a{font-size:.9rem;font-weight:500;color:var(--text);position:relative;padding:.25rem 0}
+        .nav-desktop a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--red);transition:width .3s}
+        .nav-desktop a:hover{color:var(--red)}
+        .nav-desktop a:hover::after{width:100%}
+        .nav-btn{background:var(--red);color:#fff;padding:.5rem 1.25rem;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:0 2px 8px rgba(155,28,28,.3)}
+        .nav-btn:hover{background:var(--red-dark);transform:translateY(-1px)}
+        .hamburger{background:none;border:none;font-size:1.4rem;color:var(--red);cursor:pointer;display:flex;align-items:center}
+        /* ===== MOBILE MENU ===== */
+        .mob-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;opacity:0;transition:opacity .3s}
+        .mob-overlay.open{display:block;opacity:1}
+        .mob-nav{position:fixed;top:0;right:-300px;width:280px;height:100%;background:#fff;z-index:1001;transition:right .3s cubic-bezier(.4,0,.2,1);padding:1.5rem;display:flex;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,.1)}
+        .mob-nav.open{right:0}
+        .mob-close{align-self:flex-end;background:none;border:none;font-size:1.4rem;color:var(--muted);cursor:pointer;margin-bottom:1.5rem}
+        .mob-links li{margin-bottom:1rem}
+        .mob-links a{font-size:1rem;font-weight:500;color:var(--text);display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;border-radius:8px;transition:var(--trans)}
+        .mob-links a:hover,.mob-links a.active{background:#F1F5F9;color:var(--red)}
+    </style>
+</head>
+<body>
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <div class="container">
+            <div style="display:flex;gap:1.25rem;flex-wrap:wrap">
+                <span><i class="fas fa-phone-alt" style="color:var(--gold-lt);margin-right:.4rem"></i>089-947-2938</span>
+                <span><i class="fas fa-envelope" style="color:var(--gold-lt);margin-right:.4rem"></i>admin1@rkt.ac.th</span>
+                <span><i class="fas fa-map-marker-alt" style="color:var(--gold-lt);margin-right:.4rem"></i>ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์</span>
+            </div>
+            <div style="display:flex;gap:1rem">
+                <a href="https://www.rkt.ac.th/" target="_blank"><i class="fas fa-external-link-alt" style="margin-right:.3rem"></i>เว็บเดิม</a>
+                <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"><i class="fab fa-facebook" style="margin-right:.3rem"></i>Facebook</a>
+                <a href="admin.html" style="background:rgba(255,255,255,.15);padding:.2rem .75rem;border-radius:50px"><i class="fas fa-lock" style="margin-right:.3rem"></i>Admin</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                <img src="https://lh5.googleusercontent.com/d/16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="ตราโรงเรียน" onerror="this.src='https://placehold.co/100x100/9B1C1C/white?text=RKT'">
+                <div class="logo-text">
+                    <h1>โรงเรียนบ้านโคกยางหนองถนน</h1>
+                    <span>สพป.บุรีรัมย์ เขต 3</span>
+                </div>
+            </a>
+            <nav class="nav-desktop" id="navDesktop">
+                <a href="#home">หน้าแรก</a>
+                <a href="#about">เกี่ยวกับเรา</a>
+                <a href="#director">ผู้บริหาร</a>
+                <a href="#features">จุดเด่น</a>
+                <a href="#team">บุคลากร</a>
+                <a href="#gallery">กิจกรรม</a>
+                <a href="#news">ข่าวสาร</a>
+                <a href="#contact">ติดต่อ</a>
+                <a href="https://www.rkt.ac.th/%E0%B8%9E%E0%B8%A3%E0%B8%AD%E0%B8%A1-ai" target="_blank" class="nav-btn"><i class="fas fa-robot" style="margin-right:.4rem"></i>พรอม AI</a>
+            </nav>
+            <button class="hamburger" id="hamburger" aria-label="เปิดเมนู"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- MOBILE MENU -->
+    <div class="mob-overlay" id="mobOverlay"></div>
+    <div class="mob-nav" id="mobNav">
+        <button class="mob-close" id="mobClose"><i class="fas fa-times"></i></button>
+        <ul class="mob-links">
+            <li><a href="#home" class="active"><i class="fas fa-home"></i>หน้าแรก</a></li>
+            <li><a href="#about"><i class="fas fa-info-circle"></i>เกี่ยวกับเรา</a></li>
+            <li><a href="#director"><i class="fas fa-user-tie"></i>ผู้บริหาร</a></li>
+            <li><a href="#features"><i class="fas fa-star"></i>จุดเด่น</a></li>
+            <li><a href="#team"><i class="fas fa-users"></i>บุคลากร</a></li>
+            <li><a href="#gallery"><i class="fas fa-images"></i>กิจกรรม</a></li>
+            <li><a href="#news"><i class="fas fa-newspaper"></i>ข่าวสาร</a></li>
+            <li><a href="#contact"><i class="fas fa-phone"></i>ติดต่อ</a></li>
+        </ul>
+    </div>
+
+    <style>
+        /* ===== HERO ===== */
+        .hero{position:relative;background:linear-gradient(135deg,#0F172A 0%,#1E293B 55%,#334155 100%);color:#fff;padding:4rem 0 5rem;overflow:hidden}
+        .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+        .hero-inner{display:flex;flex-direction:column;gap:2.5rem;position:relative;z-index:1;align-items:center;text-align:center}
+        .hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:.35rem 1rem;border-radius:50px;font-size:.82rem;font-weight:600;margin-bottom:1rem;backdrop-filter:blur(4px)}
+        .hero h2{font-size:clamp(1.8rem,5vw,3.2rem);font-weight:800;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+        .hero h2 span{color:var(--gold-lt)}
+        .hero p{font-size:1.05rem;opacity:.9;max-width:600px;margin:0 auto}
+        .hero-btns{display:flex;flex-wrap:wrap;gap:.875rem;justify-content:center;margin-top:.5rem}
+        .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.5rem;border-radius:50px;font-weight:600;font-size:.9rem;transition:var(--trans);border:2px solid transparent;cursor:pointer}
+        .btn-white{background:#fff;color:var(--red)}
+        .btn-white:hover{background:var(--gold-lt);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.15)}
+        .btn-outline{background:transparent;border-color:rgba(255,255,255,.6);color:#fff}
+        .btn-outline:hover{background:rgba(255,255,255,.15);transform:translateY(-2px)}
+        .btn-red{background:var(--red);color:#fff;border-color:var(--red)}
+        .btn-red:hover{background:var(--red-dark);transform:translateY(-2px);box-shadow:0 6px 20px rgba(155,28,28,.3)}
+        .btn-ghost{background:transparent;border-color:var(--red);color:var(--red)}
+        .btn-ghost:hover{background:var(--red);color:#fff;transform:translateY(-2px)}
+        .hero-img-wrap{position:relative;width:min(320px,80vw)}
+        .hero-img-wrap img{width:100%;border-radius:var(--radius-lg);border:4px solid rgba(255,255,255,.25);box-shadow:0 20px 60px rgba(0,0,0,.3);object-fit:cover;aspect-ratio:4/3}
+        .hero-img-badge{position:absolute;bottom:-1rem;right:-1rem;background:#fff;color:var(--red);padding:.6rem 1rem;border-radius:var(--radius);font-size:.8rem;font-weight:700;box-shadow:var(--shadow);display:flex;align-items:center;gap:.4rem}
+        /* ===== QUICK LINKS ===== */
+        .quick-links{background:var(--surface);padding:1.5rem 0;border-bottom:1px solid var(--border)}
+        .quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
+        .quick-item{display:flex;align-items:center;gap:.75rem;padding:.875rem 1rem;background:var(--bg);border-radius:var(--radius);font-size:.85rem;font-weight:600;color:var(--text);transition:var(--trans);border:1px solid var(--border)}
+        .quick-item:hover{background:var(--red);color:#fff;border-color:var(--red);transform:translateY(-2px);box-shadow:0 4px 16px rgba(155,28,28,.2)}
+        .quick-item i{font-size:1.1rem;color:var(--red);transition:var(--trans);width:20px;text-align:center}
+        .quick-item:hover i{color:#fff}
+        /* ===== STATS ===== */
+        .stats{background:linear-gradient(135deg,#1E293B,#334155);color:#fff;padding:2.5rem 0}
+        .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;text-align:center}
+        .stat-icon{font-size:1.75rem;color:#FDE68A;margin-bottom:.5rem}
+        .stat-num{font-size:2.5rem;font-weight:800;line-height:1}
+        .stat-lbl{font-size:.85rem;opacity:.85;margin-top:.25rem}
+        /* ===== CMS dynamic containers ===== */
+        #newsTbodyFront .news-item{display:flex;gap:1rem;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);transition:var(--trans)}
+        #newsTbodyFront .news-item:last-child{border-bottom:none}
+        #newsTbodyFront .news-item:hover{background:#F8FAFC}
+        #calListFront{list-style:none}
+        #calListFront .cal-list-item{display:flex;gap:.875rem;padding:.875rem;background:var(--bg);border-radius:8px;margin-bottom:.6rem;border:1px solid var(--border);transition:var(--trans)}
+        #calListFront .cal-list-item:hover{background:#F1F5F9;border-color:var(--red)}
+    </style>
+
+    <!-- HERO -->
+    <section id="home" class="hero">
+        <div class="container hero-inner">
+            <div>
+                <div class="hero-badge"><i class="fas fa-school"></i> ยินดีต้อนรับสู่รั้วแดง-ทอง</div>
+                <h2>พัฒนาผู้เรียน<br>สู่<span>ความเป็นเลิศ</span></h2>
+                <p style="margin-top:.75rem">มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ผสมผสานเทคโนโลยีสมัยใหม่และคุณธรรม เพื่อสร้างเด็กไทยที่พร้อมก้าวสู่ระดับสากล</p>
+                <div class="hero-btns">
+                    <a href="https://script.google.com/macros/s/AKfycbxSarrCofSBsB_arfHLQFDG3pUEAuaqRxMbNAXmfzBYD799Jt7gM08ZKxS8hU_YrDV2/exec" target="_blank" class="btn btn-white"><i class="fas fa-chart-line"></i>ตรวจสอบผลการเรียน</a>
+                    <a href="https://script.google.com/macros/s/AKfycbz9ASNeHRWV7ObF-UE0qWnAiVGjogpn0sMXAb-8L-66u7I9S3fe9VY9q8dbNJXpcTrN/exec" target="_blank" class="btn btn-outline"><i class="fas fa-user-plus"></i>ระบบ ปพ.5</a>
+                    <a href="https://sites.google.com/rkt.ac.th/mix/Home?authuser=0" target="_blank" class="btn btn-outline"><i class="fas fa-laptop"></i>เรียนออนไลน์</a>
+                    <a href="https://script.google.com/macros/s/AKfycbwQgI6RtfxLMWYrA_jP1cunUhCqEu7STF-aDvl6aLL5ognwhEGIqwFdSuc2NJOtwmb3/exec" target="_blank" class="btn btn-outline"><i class="fas fa-briefcase"></i>ศูนย์กลางงาน</a>
+                </div>
+            </div>
+            <div class="hero-img-wrap">
+                <img src="https://drive.google.com/thumbnail?id=1va1Au_6cu7Setw8BXXeLAz6met5Td1k8&sz=w800" alt="กิจกรรมโรงเรียน" onerror="this.src='https://placehold.co/640x480/9B1C1C/white?text=โรงเรียนบ้านโคกยางหนองถนน'">
+                <div class="hero-img-badge"><i class="fas fa-award"></i> รางวัลโรงเรียนพระราชทาน</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUICK LINKS -->
+    <section class="quick-links">
+        <div class="container">
+            <div class="quick-grid">
+                <a href="https://script.google.com/macros/s/AKfycbxSarrCofSBsB_arfHLQFDG3pUEAuaqRxMbNAXmfzBYD799Jt7gM08ZKxS8hU_YrDV2/exec" target="_blank" class="quick-item"><i class="fas fa-chart-bar"></i>ตรวจสอบผลการเรียน</a>
+                <a href="https://script.google.com/a/macros/rkt.ac.th/s/AKfycbybjMo0Xs0ji_i962aznQ-Pi3pccibXzKqOGIXLlBQ0rzjVj-VJ2Degh-h57Ht04Dpb/exec" target="_blank" class="quick-item"><i class="fas fa-clipboard-check"></i>ระบบ ปพ.5 ออนไลน์</a>
+                <a href="https://script.google.com/a/macros/rkt.ac.th/s/AKfycbwtnNURBR2NSXb-_weXwTsLb8jWik_siLiGbjR91KN9XAw57OHSntOrx2x3Fvc_dH42/exec" target="_blank" class="quick-item"><i class="fas fa-briefcase"></i>ศูนย์กลางงานโรงเรียน</a>
+                <a href="https://www.dltv.ac.th" target="_blank" class="quick-item"><i class="fas fa-tv"></i>DLTV เรียนทางไกล</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container stats-grid">
+            <div><div class="stat-icon"><i class="fas fa-user-graduate"></i></div><div class="stat-num stat-students">89+</div><div class="stat-lbl">นักเรียน</div></div>
+            <div><div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div><div class="stat-num stat-staff">14</div><div class="stat-lbl">ครูและบุคลากร</div></div>
+            <div><div class="stat-icon"><i class="fas fa-school"></i></div><div class="stat-num stat-years">48</div><div class="stat-lbl">ปีแห่งความภูมิใจ</div></div>
+            <div><div class="stat-icon"><i class="fas fa-trophy"></i></div><div class="stat-num stat-awards">10+</div><div class="stat-lbl">รางวัลเกียรติยศ</div></div>
+        </div>
+    </section>
+
+    <style>
+        /* ===== SECTION COMMON ===== */
+        section{padding:4rem 0}
+        .sec-header{text-align:center;max-width:680px;margin:0 auto 2.5rem}
+        .sec-tag{display:inline-block;background:#F1F5F9;color:var(--red);font-size:.78rem;font-weight:700;padding:.3rem .875rem;border-radius:50px;margin-bottom:.75rem;letter-spacing:.05em;text-transform:uppercase}
+        .sec-title{font-size:clamp(1.5rem,3.5vw,2.25rem);color:var(--text);margin-bottom:.5rem}
+        .sec-title span{color:var(--red)}
+        .sec-title::after{content:'';display:block;width:48px;height:4px;background:var(--gold);border-radius:2px;margin:.6rem auto 0}
+        .sec-desc{color:var(--muted);font-size:.95rem}
+        /* ===== DIRECTOR ===== */
+        .director-section{background:var(--surface)}
+        .director-card{display:flex;flex-direction:column;background:var(--bg);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg);max-width:900px;margin:0 auto}
+        .director-img{width:100%;height:280px;object-fit:cover;object-position:top center}
+        .director-body{padding:2rem 2rem 2.5rem;position:relative}
+        .quote-mark{font-size:4rem;color:var(--red);opacity:.1;position:absolute;top:.5rem;left:1.25rem;font-family:Georgia,serif;line-height:1}
+        .director-body h3{font-size:1.3rem;color:var(--red);margin-bottom:1rem;position:relative;z-index:1}
+        .director-body blockquote{font-size:1rem;color:var(--muted);line-height:1.8;font-style:italic;position:relative;z-index:1;margin-bottom:1.5rem}
+        .director-name{font-weight:700;color:var(--text);font-size:1.05rem}
+        .director-role{font-size:.85rem;color:var(--muted)}
+        /* ===== ABOUT ===== */
+        .about-section{background:var(--bg)}
+        .vision-box{background:linear-gradient(135deg,#F1F5F9,#fff);border:2px solid var(--red);border-radius:var(--radius-lg);padding:2rem;text-align:center;margin-bottom:2rem}
+        .vision-box h3{color:var(--red);font-size:1.2rem;margin-bottom:.75rem}
+        .vision-box p{font-size:1rem;font-weight:500;color:var(--text);line-height:1.8}
+        .mission-grid{display:grid;grid-template-columns:1fr;gap:1.5rem;margin-bottom:2rem}
+        .info-card{background:var(--surface);border-radius:var(--radius);padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.06);border-top:4px solid var(--red)}
+        .info-card h4{color:var(--red);font-size:1.05rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+        .info-list li{position:relative;padding-left:1.5rem;margin-bottom:.6rem;font-size:.9rem;color:var(--muted)}
+        .info-list li::before{content:'\f058';font-family:'Font Awesome 6 Free';font-weight:900;color:var(--red);position:absolute;left:0;top:2px;font-size:.8rem}
+        .attr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-top:1.5rem}
+        .attr-item{display:flex;align-items:center;gap:.6rem;background:var(--bg);padding:.75rem;border-radius:8px;font-size:.85rem;font-weight:600;border:1px solid var(--border)}
+        .attr-item i{color:var(--gold);font-size:.9rem}
+    </style>
+
+    <!-- DIRECTOR -->
+    <section id="director" class="director-section">
+        <div class="container">
+            <div class="sec-header">
+                <div class="sec-tag"><i class="fas fa-user-tie" style="margin-right:.3rem"></i>ผู้บริหาร</div>
+                <h2 class="sec-title">สาส์นจาก<span>ผู้อำนวยการ</span></h2>
+            </div>
+            <div class="director-card">
+                <img src="https://drive.google.com/thumbnail?id=1wuklmompBWYIOOuSrQeKdNns5wRIT5BB&sz=w800" alt="ผู้อำนวยการโรงเรียน" class="director-img director-photo" onerror="this.src='https://placehold.co/900x280/334155/white?text=ผู้อำนวยการ'">
+                <div class="director-body">
+                    <div class="quote-mark">"</div>
+                    <h3 class="director-title-text">มุ่งมั่นพัฒนาผู้เรียนสู่ความเป็นเลิศ</h3>
+                    <blockquote class="director-message">"โรงเรียนบ้านโคกยางหนองถนน มีความมุ่งมั่นที่จะพัฒนาคุณภาพการศึกษาในทุกมิติ โดยเน้นผู้เรียนเป็นสำคัญ ส่งเสริมให้เด็กๆ ได้เรียนรู้อย่างมีความสุข เต็มศักยภาพ พร้อมทั้งปลูกฝังคุณธรรม จริยธรรม เพื่อให้เป็นคนดีของสังคมและประเทศชาติ เราพร้อมที่จะก้าวไปข้างหน้าพร้อมกับชุมชน"</blockquote>
+                    <div class="director-name">นายนัฐวุฒิ สนทนา</div>
+                    <div class="director-role">ผู้อำนวยการโรงเรียนบ้านโคกยางหนองถนน</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="sec-header">
+                <div class="sec-tag"><i class="fas fa-info-circle" style="margin-right:.3rem"></i>เกี่ยวกับเรา</div>
+                <h2 class="sec-title">วิสัยทัศน์<span>และพันธกิจ</span></h2>
+                <p class="sec-desc">โรงเรียนบ้านโคกยางหนองถนน มุ่งมั่นจัดการศึกษาขั้นพื้นฐานเพื่อพัฒนาคุณภาพชีวิตของเยาวชนในชุมชน</p>
+            </div>
+            <div class="vision-box">
+                <h3><i class="fas fa-eye" style="margin-right:.5rem"></i>วิสัยทัศน์ (Vision)</h3>
+                <p>"พัฒนาผู้เรียนให้มีคุณภาพตามมาตรฐาน สร้างสังคมแห่งการเรียนรู้ ควบคู่คุณธรรม น้อมนำหลักปรัชญาของเศรษฐกิจพอเพียง เน้นความปลอดภัยใส่ใจสิ่งแวดล้อม"</p>
+            </div>
+            <div class="mission-grid">
+                <div class="info-card">
+                    <h4><i class="fas fa-bullseye"></i>พันธกิจ (Mission)</h4>
+                    <ul class="info-list">
+                        <li>ส่งเสริมความร่วมมือระหว่างโรงเรียน ครอบครัว และชุมชน</li>
+                        <li>พัฒนาระบบบริหารจัดการให้มีความปลอดภัย</li>
+                        <li>ส่งเสริมความเป็นเลิศและสมรรถนะผู้เรียน</li>
+                        <li>พัฒนาผู้เรียนสู่ศตวรรษที่ 21</li>
+                        <li>สร้างโอกาสและความเสมอภาคทางการศึกษา</li>
+                        <li>พัฒนาครูและบุคลากรสู่มาตรฐานวิชาชีพ</li>
+                        <li>จัดการศึกษาที่เป็นมิตรกับสิ่งแวดล้อม</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4><i class="fas fa-flag-checkered"></i>เป้าประสงค์ (Goals)</h4>
+                    <ul class="info-list">
+                        <li>นักเรียนรักชาติ ศาสน์ กษัตริย์ และเป็นพลเมืองดี</li>
+                        <li>นักเรียนได้รับโอกาสทางการศึกษาอย่างทั่วถึงและเท่าเทียม</li>
+                        <li>สถานศึกษามีความปลอดภัยจากภัยคุกคามทุกรูปแบบ</li>
+                        <li>บุคลากรเป็นบุคคลแห่งการเรียนรู้และทันเทคโนโลยี</li>
+                        <li>สถานศึกษาบรรลุเป้าหมายการพัฒนาอย่างยั่งยืน (SDGs)</li>
+                        <li>บริหารจัดการขยะและสิ่งแวดล้อม (Zero Waste) ได้ดี</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="info-card">
+                <h4><i class="fas fa-star"></i>คุณลักษณะอันพึงประสงค์ 8 ประการ</h4>
+                <div class="attr-grid">
+                    <div class="attr-item"><i class="fas fa-heart"></i>รักชาติ ศาสน์ กษัตริย์</div>
+                    <div class="attr-item"><i class="fas fa-balance-scale"></i>ซื่อสัตย์สุจริต</div>
+                    <div class="attr-item"><i class="fas fa-user-clock"></i>มีวินัย</div>
+                    <div class="attr-item"><i class="fas fa-book-reader"></i>ใฝ่เรียนรู้</div>
+                    <div class="attr-item"><i class="fas fa-seedling"></i>อยู่อย่างพอเพียง</div>
+                    <div class="attr-item"><i class="fas fa-briefcase"></i>มุ่งมั่นในการทำงาน</div>
+                    <div class="attr-item"><i class="fas fa-praying-hands"></i>รักความเป็นไทย</div>
+                    <div class="attr-item"><i class="fas fa-hands-helping"></i>มีจิตสาธารณะ</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* ===== FEATURES ===== */
+        .features-section{background:var(--surface)}
+        .feat-grid{display:grid;grid-template-columns:1fr;gap:1.5rem}
+        .feat-card{background:var(--surface);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);transition:var(--trans);border:1px solid var(--border)}
+        .feat-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+        .feat-img{height:200px;overflow:hidden;position:relative}
+        .feat-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+        .feat-card:hover .feat-img img{transform:scale(1.08)}
+        .feat-icon{position:absolute;top:.875rem;right:.875rem;background:#fff;color:var(--red);width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);font-size:.9rem}
+        .feat-body{padding:1.25rem 1.5rem 1.5rem}
+        .feat-body h3{font-size:1.1rem;margin-bottom:.4rem;color:var(--text)}
+        .feat-body p{font-size:.88rem;color:var(--muted)}
+        /* ===== ACHIEVEMENTS ===== */
+        .achieve-section{background:var(--bg)}
+        .achieve-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+        .achieve-card{background:var(--surface);padding:1.25rem 1.5rem;border-radius:var(--radius);border-left:5px solid var(--gold);display:flex;gap:1rem;align-items:flex-start;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:var(--trans)}
+        .achieve-card:hover{transform:translateX(4px);box-shadow:var(--shadow)}
+        .achieve-icon{font-size:1.75rem;color:var(--red);flex-shrink:0;margin-top:.1rem}
+        .achieve-card h4{font-size:1rem;color:var(--text);margin-bottom:.25rem}
+        .achieve-card p{font-size:.85rem;color:var(--muted)}
+        /* ===== VIDEO ===== */
+        .video-section{background:var(--surface)}
+        .video-wrap{position:relative;padding-bottom:56.25%;height:0;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)}
+        .video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%}
+    </style>
+
+    <!-- FEATURES -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="sec-header">
+                <div class="sec-tag"><i class="fas fa-star" style="margin-right:.3rem"></i>จุดเด่น</div>
+                <h2 class="sec-title">เสริมสร้าง<span>ศักยภาพผู้เรียน</span></h2>
+                <p class="sec-desc">หลักสูตรที่ทันสมัย ครอบคลุมทุกด้านของการพัฒนาผู้เรียน</p>
+            </div>
+            <div class="feat-grid">
+                <div class="feat-card">
+                    <div class="feat-img">
+                        <img src="https://drive.google.com/thumbnail?id=1va1Au_6cu7Setw8BXXeLAz6met5Td1k8&sz=w800" alt="วิชาการ" onerror="this.src='https://placehold.co/800x200/9B1C1C/white?text=วิชาการ'">
+                        <div class="feat-icon"><i class="fas fa-brain"></i></div>
+                    </div>
+                    <div class="feat-body"><h3>วิชาการเข้มข้น</h3><p>เน้นทักษะการคิดวิเคราะห์ และการประยุกต์ใช้ความรู้ในชีวิตจริง</p></div>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-img">
+                        <img src="https://drive.google.com/thumbnail?id=1xdEVr1DWuvlpXec3lntiQBzkhhYndznH&sz=w800" alt="เทคโนโลยี" onerror="this.src='https://placehold.co/800x200/9B1C1C/white?text=เทคโนโลยี'">
+                        <div class="feat-icon"><i class="fas fa-laptop"></i></div>
+                    </div>
+                    <div class="feat-body"><h3>เทคโนโลยีทันสมัย</h3><p>ห้องเรียน Smart Classroom และสื่อการสอนดิจิทัล พร้อมการเรียนรู้ AI</p></div>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-img">
+                        <img src="https://lh5.googleusercontent.com/d/13J5xHfoeeACn_XMlvdbzqVJraLOG2oH4" alt="คุณธรรม" onerror="this.src='https://placehold.co/800x200/9B1C1C/white?text=คุณธรรม'">
+                        <div class="feat-icon"><i class="fas fa-heart"></i></div>
+                    </div>
+                    <div class="feat-body"><h3>คุณธรรมนำความรู้</h3><p>ปลูกฝังวินัย ความรับผิดชอบ และความเป็นไทยให้กับผู้เรียนทุกคน</p></div>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-img">
+                        <img src="https://lh5.googleusercontent.com/d/1O9jP9HNPq4ewMDhHw4Hp6EfSHrmJb8kM" alt="สิ่งแวดล้อม" onerror="this.src='https://placehold.co/800x200/9B1C1C/white?text=สิ่งแวดล้อม'">
+                        <div class="feat-icon"><i class="fas fa-leaf"></i></div>
+                    </div>
+                    <div class="feat-body"><h3>สิ่งแวดล้อมศึกษา</h3><p>เรียนรู้จากธรรมชาติ ปลูกฝังจิตสำนึกรักษ์โลก โรงเรียนปลอดขยะ Zero Waste</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+    <section class="achieve-section">
+        <div class="container">
+            <div class="sec-header">
+                <div class="sec-tag"><i class="fas fa-trophy" style="margin-right:.3rem"></i>ความภาคภูมิใจ</div>
+                <h2 class="sec-title">รางวัล<span>แห่งความสำเร็จ</span></h2>
+            </div>
+            <div class="achieve-grid" id="achieveGridFront">
+                <div class="achieve-card"><i class="fas fa-trophy achieve-icon"></i><div><h4>รางวัลโรงเรียนพระราชทาน</h4><p>ประเภทสถานศึกษาขนาดเล็ก ประจำปีการศึกษา 2565</p></div></div>
+                <div class="achieve-card"><i class="fas fa-leaf achieve-icon"></i><div><h4>โรงเรียนปลอดขยะ (Zero Waste)</h4><p>รางวัลระดับเหรียญทอง ระดับเขตพื้นที่การศึกษา</p></div></div>
+                <div class="achieve-card"><i class="fas fa-medal achieve-icon"></i><div><h4>เหรียญทอง งานศิลปหัตถกรรม</h4><p>การแข่งขันหุ่นยนต์ระดับพื้นฐาน ระดับภาคตะวันออกเฉียงเหนือ</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VIDEO -->
+    <section class="video-section">
+        <div class="container">
+            <div class="sec-header">
+                <div class="sec-tag"><i class="fas fa-play-circle" style="margin-right:.3rem"></i>วิดีโอ</div>
+                <h2 class="sec-title">รั้วแดง-ทอง<span>บ้านโคกยางหนองถนน</span></h2>
+                <p class="sec-desc">บรรยากาศการเรียนรู้ที่ส่งเสริมความสุขและพัฒนาการของผู้เรียน</p>
+            </div>
+            <div class="video-wrap">
+                <iframe src="https://www.youtube.com/embed/E7PcDSLRSdo" title="โรงเรียนบ้านโคกยางหนองถนน" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* ===== TEAM ===== */
+        .team-section{background:var(--bg)}
+        .team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem}
+        .team-card{background:var(--surface);border-radius:var(--radius-lg);padding:1.5rem 1rem;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:var(--trans);border:1px solid var(--border)}
+        .team-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+        .team-photo{width:100px;height:100px;border-radius:50%;object-fit:cover;object-position:top center;margin:0 auto 1rem;border:3px solid var(--red);box-shadow:0 4px 12px rgba(51,65,85,.15)}
+        .team-name{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:.25rem}
+        .team-role{font-size:.8rem;color:var(--muted)}
+        /* ===== GALLERY ===== */
+        .gallery-section{background:var(--surface)}
+        .gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.875rem}
+        .gallery-item{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;cursor:pointer}
+        .gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+        .gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent);display:flex;align-items:flex-end;padding:1rem;opacity:0;transition:opacity .3s}
+        .gallery-text{color:#fff;transform:translateY(10px);transition:transform .3s}
+        .gallery-text h4{font-size:.95rem;margin-bottom:.2rem}
+        .gallery-text p{font-size:.78rem;opacity:.85}
+        .gallery-item:hover img{transform:scale(1.08)}
+        .gallery-item:hover .gallery-overlay{opacity:1}
+        .gallery-item:hover .gallery-text{transform:translateY(0)}
+    </style>
+
+    <!-- TEAM -->
+    <section id="team" class="team-section">
+        <div class="container">
+            <div class="sec-header">
+                <div class="sec-tag"><i class="fas fa-users" style="margin-right:.3rem"></i>บุคลากร</div>
+                <h2 class="sec-title">คณะครู<span>และบุคลากร</span></h2>
+                <p class="sec-desc">ทีมงานคุณภาพที่พร้อมดูแลและพัฒนาผู้เรียนทุกคน</p>
+            </div>
+            <div class="team-grid" id="teamGridFront">
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1wuklmompBWYIOOuSrQeKdNns5wRIT5BB&sz=w500" alt="ผู้อำนวยการ" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ผอ'">
+                    <div class="team-name">นายนัฐวุฒิ สนทนา</div>
+                    <div class="team-role">ผู้อำนวยการโรงเรียน</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1Xw7VoMeJHO-NBQyk2Z8PFgJYi0kzGZPc&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นายประเทือง หงษ์แก้ว</div>
+                    <div class="team-role">หัวหน้าฝ่ายวิชาการ</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1li3YS-sFmAKinzBe9g9ZNItJVTWZTvZ5&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นางสุมิตรา ชอบมี</div>
+                    <div class="team-role">ครูประจำชั้นอนุบาล 1</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1LwL_rJrxQcJYzJcQJsWORHgOs4VUojXf&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นางสาวเพ็ญนภา นาคินชาติ</div>
+                    <div class="team-role">ครูประจำชั้นอนุบาล 2</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1Zn9vqJj9wKtqvQBzstyhDgcYmYniPujK&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นางสาวเพ็ญนภา นาคินชาติ</div>
+                    <div class="team-role">ครูประจำชั้นอนุบาล 3</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1ct6O_Dz3HITXWcShyml3QL5gVc1hVQv8&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นางเดือนฉาย ยืนชนม์</div>
+                    <div class="team-role">ครูประจำชั้น ป.1</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=10EJmfSp58w25yjHWh0WoWwcLwGXeCEUh&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นางสาวนัฐวรา หงษ์สุด</div>
+                    <div class="team-role">ครูประจำชั้น ป.2</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1_d7C4p_dUKq6rKwGHH0ImPABcm2bqYP1&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นายประเทือง หงษ์แก้ว</div>
+                    <div class="team-role">ครูประจำชั้น ป.3</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=10jhwBg4qkQuo5Cd-iLpFd7FCn6qPx39Y&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นางสาวหนึ่งฤทัย มะทุโป</div>
+                    <div class="team-role">ครูประจำชั้น ป.4</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1nESMhTlED65rBjl_0COilVhBp_UjJAjh&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นางสาวนันท์นภัส ปาโมกข์</div>
+                    <div class="team-role">ครูประจำชั้น ป.5</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1o8degWBg8it-9cC7oTCqAJKyqxdohcha&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นางสาวจันทนา มหาภูวตานนท์</div>
+                    <div class="team-role">ครูประจำชั้น ป.6</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1nIYjBcowGI8TBt3e7FQvn_WhJz2N8bLH&sz=w500" alt="ครู" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ครู'">
+                    <div class="team-name">นางสาวปิยรัตน์ ทองคำ</div>
+                    <div class="team-role">ครูสอนภาษาอังกฤษ</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1bA8QJrKsIBm5Jt9b2glaV6a7l7h4dzEC&sz=w500" alt="เจ้าหน้าที่" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=ธุรการ'">
+                    <div class="team-name">นางสาวภัทรีพร ผ่องแผ้ว</div>
+                    <div class="team-role">เจ้าหน้าที่ธุรการ</div>
+                </div>
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1zA4FVmEuboiekG4sYd5MeBvQqjkOuRLH&sz=w500" alt="นักการ" class="team-photo" onerror="this.src='https://placehold.co/200x200/9B1C1C/white?text=นักการ'">
+                    <div class="team-name">นายธวัชชัย ฉิมกูล</div>
+                    <div class="team-role">นักการภารโรง</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" class="gallery-section">
+        <div class="container">
+            <div class="sec-header">
+                <div class="sec-tag"><i class="fas fa-images" style="margin-right:.3rem"></i>ภาพกิจกรรม</div>
+                <h2 class="sec-title">บรรยากาศ<span>การเรียนรู้</span></h2>
+                <p class="sec-desc">ภาพบรรยากาศความสำเร็จและกิจกรรมการเรียนรู้ของนักเรียน</p>
+            </div>
+            <div class="gallery-grid" id="galleryGridFront">
+                <div class="gallery-item">
+                    <img src="https://drive.google.com/thumbnail?id=1e_g8-GwG5C-M97_9xH6HR10uykVmVRGO&sz=w600" alt="กิจกรรมรับบริจาค" onerror="this.src='https://placehold.co/600x450/9B1C1C/white?text=กิจกรรม'">
+                    <div class="gallery-overlay"><div class="gallery-text"><h4>กิจกรรมรับบริจาค</h4><p>ผู้ใจบุญร่วมสนับสนุนการศึกษา</p></div></div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://drive.google.com/thumbnail?id=1xdEVr1DWuvlpXec3lntiQBzkhhYndznH&sz=w600" alt="พิธีไหว้ครู" onerror="this.src='https://placehold.co/600x450/9B1C1C/white?text=กิจกรรม'">
+                    <div class="gallery-overlay"><div class="gallery-text"><h4>พิธีไหว้ครู</h4><p>น้อมวันทา บูชาครู</p></div></div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://lh5.googleusercontent.com/d/1O9jP9HNPq4ewMDhHw4Hp6EfSHrmJb8kM" alt="แหล่งเรียนรู้" onerror="this.src='https://placehold.co/600x450/9B1C1C/white?text=กิจกรรม'">
+                    <div class="gallery-overlay"><div class="gallery-text"><h4>แหล่งเรียนรู้</h4><p>ศึกษาธรรมชาติในโรงเรียน</p></div></div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://drive.google.com/thumbnail?id=1va1Au_6cu7Setw8BXXeLAz6met5Td1k8&sz=w600" alt="วิชาการ" onerror="this.src='https://placehold.co/600x450/9B1C1C/white?text=กิจกรรม'">
+                    <div class="gallery-overlay"><div class="gallery-text"><h4>กิจกรรมวิชาการ</h4><p>ส่งเสริมความรู้และทักษะ</p></div></div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://lh5.googleusercontent.com/d/13J5xHfoeeACn_XMlvdbzqVJraLOG2oH4" alt="คุณธรรม" onerror="this.src='https://placehold.co/600x450/9B1C1C/white?text=กิจกรรม'">
+                    <div class="gallery-overlay"><div class="gallery-text"><h4>ด้านคุณธรรม</h4><p>อบรมบ่มเพาะจริยธรรมอันดีงาม</p></div></div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://lh5.googleusercontent.com/d/1O9jP9HNPq4ewMDhHw4Hp6EfSHrmJb8kM" alt="กิจกรรมโรงเรียน" onerror="this.src='https://placehold.co/600x450/9B1C1C/white?text=กิจกรรม'">
+                    <div class="gallery-overlay"><div class="gallery-text"><h4>กิจกรรมโรงเรียน</h4><p>เสริมสร้างทักษะชีวิต</p></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* ===== NEWS + SIDEBAR ===== */
+        .news-section{background:var(--bg)}
+        .news-layout{display:grid;grid-template-columns:1fr;gap:2rem}
+        .news-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;border-top:4px solid var(--red)}
+        .news-item{display:flex;gap:1rem;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);transition:var(--trans)}
+        .news-item:last-child{border-bottom:none}
+        .news-item:hover{background:#F8FAFC}
+        .news-date{background:var(--bg);padding:.5rem .75rem;border-radius:8px;text-align:center;min-width:60px;flex-shrink:0}
+        .news-day{display:block;font-size:1.4rem;font-weight:800;color:var(--red);line-height:1}
+        .news-month{display:block;font-size:.75rem;color:var(--muted)}
+        .news-info h3{font-size:.95rem;font-weight:600;color:var(--text);margin-bottom:.25rem;transition:var(--trans)}
+        .news-item:hover .news-info h3{color:var(--red)}
+        .news-excerpt{font-size:.82rem;color:var(--muted);line-height:1.6}
+        /* SIDEBAR */
+        .widget{background:var(--surface);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow);margin-bottom:1.5rem;border:1px solid var(--border)}
+        .widget-title{font-size:1rem;font-weight:700;color:var(--red);border-bottom:2px solid var(--border);padding-bottom:.75rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.5rem}
+        .link-list li{margin-bottom:.6rem}
+        .link-list a{display:flex;align-items:center;gap:.6rem;padding:.7rem .875rem;background:var(--bg);border-radius:8px;font-size:.85rem;font-weight:500;transition:var(--trans);border:1px solid var(--border)}
+        .link-list a:hover{background:var(--red);color:#fff;border-color:var(--red);padding-left:1.1rem}
+        .link-list a i{width:16px;text-align:center;color:var(--red);transition:var(--trans)}
+        .link-list a:hover i{color:#fff}
+        /* CALENDAR */
+        .cal-list li{display:flex;gap:.875rem;padding:.875rem;background:var(--bg);border-radius:8px;margin-bottom:.6rem;border:1px solid var(--border);transition:var(--trans)}
+        .cal-list li:hover{background:#F1F5F9;border-color:var(--red)}
+        .cal-date{background:var(--red);color:#fff;width:52px;height:52px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+        .cal-date .day{font-size:1.2rem;font-weight:800;line-height:1}
+        .cal-date .mon{font-size:.7rem}
+        .cal-info h4{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:.15rem}
+        .cal-info p{font-size:.78rem;color:var(--muted)}
+        /* ===== CONTACT ===== */
+        .contact-section{background:var(--surface)}
+        .contact-grid{display:grid;grid-template-columns:1fr;gap:2rem}
+        .map-wrap{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg);height:320px;border:3px solid var(--border)}
+        .map-wrap iframe{width:100%;height:100%;border:none}
+        .contact-info{background:var(--bg);border-radius:var(--radius-lg);padding:2rem;border-left:5px solid var(--red)}        .contact-info h3{font-size:1.2rem;color:var(--red);margin-bottom:1.5rem}
+        .contact-row{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem}
+        .contact-icon{width:40px;height:40px;background:var(--surface);color:var(--red);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+        .contact-row span{font-size:.9rem;color:var(--muted);line-height:1.6}
+        .fb-wrap{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow)}
+    </style>
+
+    <!-- NEWS + SIDEBAR -->
+    <section id="news" class="news-section">
+        <div class="container">
+            <div class="sec-header">
+                <div class="sec-tag"><i class="fas fa-newspaper" style="margin-right:.3rem"></i>ข่าวสาร</div>
+                <h2 class="sec-title">ข่าวประชาสัมพันธ์<span>และปฏิทิน</span></h2>
+            </div>
+            <div class="news-layout">
+                <!-- MAIN NEWS -->
+                <div>
+                    <div class="news-card" id="newsTbodyFront">
+                        <div class="news-item">
+                            <div class="news-date"><span class="news-day">29</span><span class="news-month">พ.ค.</span></div>
+                            <div class="news-info">
+                                <h3><a href="#">กิจกรรมวันสุนทรภู่ กวีเอกของโลก</a></h3>
+                                <p class="news-excerpt">คณะครูและนักเรียนร่วมจัดกิจกรรมเพื่อรำลึกถึงครูกลอนสุนทรภู่ มีการประกวดแต่งกลอนและวาดภาพระบายสี...</p>
+                            </div>
+                        </div>
+                        <div class="news-item">
+                            <div class="news-date"><span class="news-day">10</span><span class="news-month">พ.ค.</span></div>
+                            <div class="news-info">
+                                <h3><a href="#">โครงการค่ายพุทธบุตร ส่งเสริมคุณธรรม</a></h3>
+                                <p class="news-excerpt">กิจกรรมอบรมจริยธรรมแก่นักเรียน เพื่อปลูกฝังจิตสำนึกที่ดีงามตามวิถีพุทธ...</p>
+                            </div>
+                        </div>
+                        <div class="news-item">
+                            <div class="news-date"><span class="news-day">01</span><span class="news-month">พ.ค.</span></div>
+                            <div class="news-info">
+                                <h3><a href="#">ประกาศรับสมัครนักเรียนใหม่ ปีการศึกษา 2567</a></h3>
+                                <p class="news-excerpt">เปิดรับสมัครนักเรียนระดับชั้นอนุบาลถึงประถมศึกษาปีที่ 6 ตั้งแต่วันนี้เป็นต้นไป...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:1.5rem">
+                        <a href="https://www.rkt.ac.th/news" target="_blank" class="btn btn-ghost"><i class="fas fa-arrow-right"></i>ดูข่าวทั้งหมด</a>
+                    </div>
+                </div>
+                <!-- SIDEBAR -->
+                <div>
+                    <!-- CALENDAR -->
+                    <div class="widget">
+                        <div class="widget-title"><i class="far fa-calendar-alt"></i>ปฏิทินกิจกรรม</div>
+                        <ul class="cal-list" id="calListFront">
+                            <li>
+                                <div class="cal-date"><span class="day">12</span><span class="mon">ส.ค.</span></div>
+                                <div class="cal-info"><h4>วันแม่แห่งชาติ</h4><p>หยุดราชการ 1 วัน</p></div>
+                            </li>
+                            <li>
+                                <div class="cal-date"><span class="day">18</span><span class="mon">ส.ค.</span></div>
+                                <div class="cal-info"><h4>สัปดาห์วิทยาศาสตร์แห่งชาติ</h4><p>กิจกรรมฐานการเรียนรู้วิทยาศาสตร์</p></div>
+                            </li>
+                            <li>
+                                <div class="cal-date"><span class="day">09</span><span class="mon">ก.ย.</span></div>
+                                <div class="cal-info"><h4>กีฬาสีภายใน "โคกยางเกมส์"</h4><p>การแข่งขันกีฬาเชื่อมความสามัคคี</p></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- DOCS -->
+                    <div class="widget">
+                        <div class="widget-title"><i class="fas fa-file-download"></i>เอกสารเผยแพร่</div>
+                        <ul class="link-list">
+                            <li><a href="#"><i class="fas fa-file-pdf"></i>ปฏิทินวิชาการ 2567</a></li>
+                            <li><a href="#"><i class="fas fa-file-pdf"></i>คู่มือนักเรียนและผู้ปกครอง</a></li>
+                            <li><a href="#"><i class="fas fa-file-word"></i>แบบฟอร์มใบลา</a></li>
+                        </ul>
+                    </div>
+                    <!-- SERVICES -->
+                    <div class="widget">
+                        <div class="widget-title"><i class="fas fa-link"></i>บริการออนไลน์</div>
+                        <ul class="link-list">
+                            <li><a href="https://script.google.com/a/macros/rkt.ac.th/s/AKfycbybjMo0Xs0ji_i962aznQ-Pi3pccibXzKqOGIXLlBQ0rzjVj-VJ2Degh-h57Ht04Dpb/exec" target="_blank"><i class="fas fa-clipboard-check"></i>ระบบ ปพ.5 ออนไลน์</a></li>
+                            <li><a href="https://script.google.com/a/macros/rkt.ac.th/s/AKfycbwtnNURBR2NSXb-_weXwTsLb8jWik_siLiGbjR91KN9XAw57OHSntOrx2x3Fvc_dH42/exec" target="_blank"><i class="fas fa-briefcase"></i>ศูนย์กลางงานโรงเรียน</a></li>
+                            <li><a href="https://www.dltv.ac.th" target="_blank"><i class="fas fa-tv"></i>DLTV เรียนทางไกล</a></li>
+                            <li><a href="https://www.rkt.ac.th/%E0%B8%9E%E0%B8%A3%E0%B8%AD%E0%B8%A1-ai" target="_blank"><i class="fas fa-robot"></i>พรอม AI</a></li>
+                        </ul>
+                    </div>
+                    <!-- FACEBOOK -->
+                    <div class="widget">
+                        <div class="widget-title"><i class="fab fa-facebook"></i>ติดตามเรา</div>
+                        <div class="fb-wrap">
+                            <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Frongreiyn.ban.khok.yang.hnxng.thnn&tabs=timeline&width=340&height=300&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true" width="100%" height="300" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                        </div>
+                        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" class="btn btn-ghost" style="width:100%;margin-top:1rem;font-size:.85rem;justify-content:center"><i class="fab fa-facebook-square"></i>ไปที่เพจ Facebook</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="sec-header">
+                <div class="sec-tag"><i class="fas fa-map-marked-alt" style="margin-right:.3rem"></i>ติดต่อ</div>
+                <h2 class="sec-title">ติดต่อ<span>โรงเรียน</span></h2>
+            </div>
+            <div class="contact-grid">
+                <div class="map-wrap">
+                    <iframe src="https://maps.google.com/maps?q=โรงเรียนบ้านโคกยางหนองถนน&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <div>
+                    <div class="contact-info">
+                        <h3><i class="fas fa-school" style="margin-right:.5rem"></i>โรงเรียนบ้านโคกยางหนองถนน</h3>
+                        <div class="contact-row"><div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div><span>บ้านโคกยางหนองถนน ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์ 31110</span></div>
+                        <div class="contact-row"><div class="contact-icon"><i class="fas fa-phone"></i></div><span>089-947-2938</span></div>
+                        <div class="contact-row"><div class="contact-icon"><i class="fas fa-envelope"></i></div><span>admin1@rkt.ac.th</span></div>
+                        <div class="contact-row"><div class="contact-icon"><i class="fas fa-globe"></i></div><span><a href="https://www.rkt.ac.th" target="_blank" style="color:var(--red)">www.rkt.ac.th</a></span></div>
+                        <a href="https://maps.app.goo.gl/rZB8jnEnvNw971dW9" target="_blank" class="btn btn-red" style="margin-top:1rem;width:100%;justify-content:center"><i class="fas fa-location-arrow"></i>นำทาง Google Maps</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* ===== FOOTER ===== */
+        .footer{background:#0F172A;color:#CBD5E1;padding-top:3.5rem}
+        .footer-grid{display:grid;grid-template-columns:1fr;gap:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(255,255,255,.08)}
+        .footer-brand img{width:64px;height:64px;object-fit:contain;margin-bottom:1rem}
+        .footer-brand h2{color:#fff;font-size:1.15rem;margin-bottom:.75rem}
+        .footer-brand p{font-size:.88rem;opacity:.7;line-height:1.7;margin-bottom:1.25rem}
+        .footer-social{display:flex;gap:.75rem}
+        .footer-social a{width:38px;height:38px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#D1D5DB;transition:var(--trans)}
+        .footer-social a:hover{background:var(--red);color:#fff;transform:translateY(-2px)}        .footer-col h3{color:#fff;font-size:1rem;margin-bottom:1.25rem}
+        .footer-col ul li{margin-bottom:.6rem}
+        .footer-col ul a{font-size:.88rem;opacity:.7;transition:var(--trans)}
+        .footer-col ul a:hover{opacity:1;color:var(--gold-lt)}
+        .footer-contact-item{display:flex;gap:.75rem;margin-bottom:.875rem;font-size:.88rem;opacity:.8}
+        .footer-contact-item i{color:var(--red);margin-top:.2rem;flex-shrink:0}
+        .copyright{padding:1.25rem 0;text-align:center;font-size:.82rem;background:#020617;color:rgba(255,255,255,.35)}
+        /* ===== RESPONSIVE ===== */
+        @media(min-width:640px){
+            .quick-grid{grid-template-columns:repeat(4,1fr)}
+            .stats-grid{grid-template-columns:repeat(4,1fr)}
+            .feat-grid{grid-template-columns:repeat(2,1fr)}
+            .achieve-grid{grid-template-columns:repeat(3,1fr)}
+            .team-grid{grid-template-columns:repeat(3,1fr)}
+            .gallery-grid{grid-template-columns:repeat(3,1fr)}
+            .mission-grid{grid-template-columns:repeat(2,1fr)}
+            .attr-grid{grid-template-columns:repeat(4,1fr)}
+        }
+        @media(min-width:768px){
+            .nav-desktop{display:flex}
+            .hamburger{display:none}
+            .hero-inner{flex-direction:row;text-align:left;justify-content:space-between}
+            .hero h2{font-size:clamp(2rem,4vw,3.2rem)}
+            .hero p{margin:0}
+            .hero-btns{justify-content:flex-start}
+            .hero-img-wrap{width:min(380px,45%)}
+            .director-card{flex-direction:row}
+            .director-img{width:40%;height:auto}
+            .news-layout{grid-template-columns:3fr 2fr}
+            .contact-grid{grid-template-columns:3fr 2fr}
+            .footer-grid{grid-template-columns:2fr 1fr 1fr}
+            .team-grid{grid-template-columns:repeat(4,1fr)}
+            .gallery-grid{grid-template-columns:repeat(3,1fr)}
+        }
+        @media(min-width:1024px){
+            .feat-grid{grid-template-columns:repeat(4,1fr)}
+            .team-grid{grid-template-columns:repeat(5,1fr)}
+            .gallery-grid{grid-template-columns:repeat(3,1fr)}
+        }
+        /* ===== SCROLL ANIMATION ===== */
+        .fade-up{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+        .fade-up.visible{opacity:1;transform:translateY(0)}
+    </style>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="https://lh5.googleusercontent.com/d/16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="ตราโรงเรียน" onerror="this.src='https://placehold.co/128x128/9B1C1C/white?text=RKT'">
+                    <h2>โรงเรียนบ้านโคกยางหนองถนน</h2>
+                    <p>"การศึกษาดี มีวินัย ใฝ่เรียนรู้ คู่คุณธรรม"<br>มุ่งมั่นพัฒนาผู้เรียนให้เป็นมนุษย์ที่สมบูรณ์ เป็นคนดี มีปัญญา มีความสุข และมีความเป็นไทย</p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.youtube.com/embed/E7PcDSLRSdo" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="mailto:admin1@rkt.ac.th" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>หน่วยงานที่เกี่ยวข้อง</h3>
+                    <ul>
+                        <li><a href="https://web.brm3.go.th/" target="_blank">สพป.บุรีรัมย์ เขต 3</a></li>
+                        <li><a href="https://www.obec.go.th/" target="_blank">กระทรวงศึกษาธิการ</a></li>
+                        <li><a href="https://www.ksp.or.th/" target="_blank">คุรุสภา</a></li>
+                        <li><a href="https://www.dltv.ac.th" target="_blank">DLTV เรียนทางไกล</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>ติดต่อสอบถาม</h3>
+                    <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์ 31110</span></div>
+                    <div class="footer-contact-item"><i class="fas fa-phone"></i><span>089-947-2938</span></div>
+                    <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>admin1@rkt.ac.th</span></div>
+                    <div class="footer-contact-item"><i class="fas fa-globe"></i><span><a href="https://www.rkt.ac.th" target="_blank" style="color:var(--gold-lt)">www.rkt.ac.th</a></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2567 โรงเรียนบ้านโคกยางหนองถนน · สงวนลิขสิทธิ์ · สพป.บุรีรัมย์ เขต 3</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sticky header
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobNav = document.getElementById('mobNav');
+        const mobOverlay = document.getElementById('mobOverlay');
+        const mobClose = document.getElementById('mobClose');
+
+        function openMenu() { mobNav.classList.add('open'); mobOverlay.classList.add('open'); }
+        function closeMenu() { mobNav.classList.remove('open'); mobOverlay.classList.remove('open'); }
+
+        hamburger.addEventListener('click', openMenu);
+        mobClose.addEventListener('click', closeMenu);
+        mobOverlay.addEventListener('click', closeMenu);
+        document.querySelectorAll('.mob-links a').forEach(a => a.addEventListener('click', closeMenu));
+
+        // Smooth scroll with header offset
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const id = a.getAttribute('href');
+                if (id === '#') return;
+                const el = document.querySelector(id);
+                if (el) {
+                    e.preventDefault();
+                    window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Fade-up on scroll
+        function initFadeUp() {
+            const fadeEls = document.querySelectorAll('section, .feat-card, .team-card, .achieve-card, .gallery-item');
+            fadeEls.forEach(el => el.classList.add('fade-up'));
+            const io = new IntersectionObserver(entries => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+            }, { threshold: 0.08 });
+            fadeEls.forEach(el => io.observe(el));
+        }
+        initFadeUp();
+
+        // ===== GOOGLE SHEET CMS =====
+        const _store = (() => {
+            try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); return localStorage; }
+            catch(e) { return sessionStorage; }
+        })();
+        const CMS_API = _store.getItem('rkt_api_url') || '';
+
+        async function cmsGet(sheet) {
+            if (!CMS_API) return null;
+            try {
+                const r = await fetch(`${CMS_API}?sheet=${sheet}&t=${Date.now()}`);
+                return await r.json();
+            } catch(e) { return null; }
+        }
+
+        async function loadCMS() {
+            if (!CMS_API) return;
+            const [settings, director, news, calendar, team, achievements, gallery] = await Promise.all([
+                cmsGet('settings'), cmsGet('director'), cmsGet('news'),
+                cmsGet('calendar'), cmsGet('team'), cmsGet('achievements'), cmsGet('gallery')
+            ]);
+            if (settings) applySettings(settings);
+            if (director) applyDirector(director);
+            if (news) renderNews(news);
+            if (calendar) renderCalendar(calendar);
+            if (team) renderTeam(team);
+            if (achievements) renderAchievements(achievements);
+            if (gallery) renderGallery(gallery);
+            initFadeUp();
+        }
+
+        function applySettings(s) {
+            if (s.name_th) { document.querySelectorAll('.school-name-th').forEach(el => el.textContent = s.name_th); }
+            if (s.name_en) { document.querySelectorAll('.school-name-en').forEach(el => el.textContent = s.name_en); }
+            if (s.phone) document.querySelectorAll('.school-phone').forEach(el => el.textContent = s.phone);
+            if (s.email) document.querySelectorAll('.school-email').forEach(el => el.textContent = s.email);
+            if (s.address) document.querySelectorAll('.school-address').forEach(el => el.textContent = s.address);
+            if (s.vision) document.querySelectorAll('.school-vision').forEach(el => el.textContent = s.vision);
+            if (s.motto) document.querySelectorAll('.school-motto').forEach(el => el.textContent = s.motto);
+            if (s.students) document.querySelectorAll('.stat-students').forEach(el => el.textContent = s.students);
+            if (s.staff) document.querySelectorAll('.stat-staff').forEach(el => el.textContent = s.staff);
+            if (s.years) document.querySelectorAll('.stat-years').forEach(el => el.textContent = s.years);
+            if (s.awards) document.querySelectorAll('.stat-awards').forEach(el => el.textContent = s.awards);
+            if (s.facebook) document.querySelectorAll('.school-facebook').forEach(el => el.href = s.facebook);
+            if (s.youtube) document.querySelectorAll('.school-youtube').forEach(el => el.src = s.youtube);
+            if (s.maps) document.querySelectorAll('.school-maps').forEach(el => el.src = s.maps);
+            if (s.maps_nav) document.querySelectorAll('.school-maps-nav').forEach(el => el.href = s.maps_nav);
+            if (s.logo) document.querySelectorAll('.school-logo').forEach(el => el.src = s.logo);
+        }
+
+        function applyDirector(d) {
+            if (d.name) document.querySelectorAll('.director-name').forEach(el => el.textContent = d.name);
+            if (d.role) document.querySelectorAll('.director-role').forEach(el => el.textContent = d.role);
+            if (d.title) document.querySelectorAll('.director-title-text').forEach(el => el.textContent = d.title);
+            if (d.message) document.querySelectorAll('.director-message').forEach(el => el.textContent = '"' + d.message + '"');
+            if (d.photo) document.querySelectorAll('.director-photo').forEach(el => el.src = d.photo);
+        }
+
+        function renderNews(rows) {
+            const el = document.getElementById('newsTbodyFront');
+            if (!el || !rows.length) return;
+            el.innerHTML = rows.slice(0, 5).map(r => `
+                <div class="news-item">
+                    <div class="news-date"><span class="news-day">${(r.date||'').split(' ')[0]||'—'}</span><span class="news-month">${(r.date||'').split(' ').slice(1).join(' ')||''}</span></div>
+                    <div class="news-info"><h3><a href="${r.link||'#'}">${r.title||''}</a></h3><p class="news-excerpt">${r.excerpt||''}</p></div>
+                </div>`).join('');
+        }
+
+        function renderCalendar(rows) {
+            const el = document.getElementById('calListFront');
+            if (!el || !rows.length) return;
+            el.innerHTML = rows.slice(0, 4).map(r => `
+                <li class="cal-list-item">
+                    <div class="cal-date"><span class="day">${r.day||''}</span><span class="mon">${r.month||''}</span></div>
+                    <div class="cal-info"><h4>${r.title||''}</h4><p>${r.detail||''}</p></div>
+                </li>`).join('');
+        }
+
+        function renderTeam(rows) {
+            const el = document.getElementById('teamGridFront');
+            if (!el || !rows.length) return;
+            const sorted = [...rows].sort((a,b) => (parseInt(a.order)||99) - (parseInt(b.order)||99));
+            el.innerHTML = sorted.map(r => `
+                <div class="team-card">
+                    <img src="${r.photo||'https://placehold.co/200x200/334155/white?text=ครู'}" alt="${r.name||''}" class="team-photo" onerror="this.src='https://placehold.co/200x200/334155/white?text=ครู'">
+                    <div class="team-name">${r.name||''}</div>
+                    <div class="team-role">${r.role||''}</div>
+                </div>`).join('');
+        }
+
+        function renderAchievements(rows) {
+            const el = document.getElementById('achieveGridFront');
+            if (!el || !rows.length) return;
+            el.innerHTML = rows.map(r => `
+                <div class="achieve-card">
+                    <i class="${r.icon||'fas fa-trophy'} achieve-icon"></i>
+                    <div><h4>${r.title||''}</h4><p>${r.detail||''}</p></div>
+                </div>`).join('');
+        }
+
+        function renderGallery(rows) {
+            const el = document.getElementById('galleryGridFront');
+            if (!el || !rows.length) return;
+            el.innerHTML = rows.map(r => `
+                <div class="gallery-item">
+                    <img src="${r.photo||''}" alt="${r.title||''}" onerror="this.src='https://placehold.co/600x450/334155/white?text=ภาพกิจกรรม'">
+                    <div class="gallery-overlay"><div class="gallery-text"><h4>${r.title||''}</h4><p>${r.caption||''}</p></div></div>
+                </div>`).join('');
+        }
+
+        loadCMS();
+    </script>
+</body>
+</html>

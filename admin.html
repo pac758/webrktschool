@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — โรงเรียนบ้านโคกยางหนองถนน</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #334155;
+            --primary-dark: #1E293B;
+            --accent: #B45309;
+            --accent-lt: #FDE68A;
+            --bg: #F1F5F9;
+            --surface: #FFFFFF;
+            --text: #1E293B;
+            --muted: #64748B;
+            --border: #E2E8F0;
+            --success: #059669;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --radius: 10px;
+            --shadow: 0 2px 16px rgba(0,0,0,.08);
+            --trans: all .25s ease;
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{text-decoration:none;color:inherit}
+        ul{list-style:none}
+        input,textarea,select{font-family:'Sarabun',sans-serif}
+
+        /* ===== LOGIN ===== */
+        .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0F172A,#334155)}
+        .login-box{background:#fff;border-radius:16px;padding:2.5rem;width:min(400px,90vw);box-shadow:0 20px 60px rgba(0,0,0,.2)}
+        .login-logo{text-align:center;margin-bottom:1.5rem}
+        .login-logo img{width:64px;height:64px;object-fit:contain;margin:0 auto .75rem}
+        .login-logo h1{font-size:1.1rem;color:var(--primary);line-height:1.3}
+        .login-logo p{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+        .form-group{margin-bottom:1.25rem}
+        .form-group label{display:block;font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:.4rem}
+        .form-group input{width:100%;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.95rem;transition:var(--trans);outline:none}
+        .form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(51,65,85,.1)}
+        .btn-login{width:100%;padding:.8rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:var(--trans)}
+        .btn-login:hover{background:var(--primary-dark)}
+        .login-error{background:#FEF2F2;color:var(--danger);padding:.75rem 1rem;border-radius:8px;font-size:.85rem;margin-bottom:1rem;display:none}
+
+        /* ===== LAYOUT ===== */
+        .app{display:none;min-height:100vh}
+        .sidebar{width:240px;background:var(--primary-dark);color:#fff;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;transition:var(--trans)}
+        .sidebar-header{padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.1)}
+        .sidebar-header h2{font-size:.95rem;font-weight:700;line-height:1.3}
+        .sidebar-header p{font-size:.75rem;opacity:.6;margin-top:.2rem}
+        .sidebar-nav{padding:1rem 0}
+        .nav-item{display:flex;align-items:center;gap:.75rem;padding:.7rem 1.5rem;font-size:.88rem;font-weight:500;cursor:pointer;transition:var(--trans);color:rgba(255,255,255,.75);border-left:3px solid transparent}
+        .nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+        .nav-item.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--accent-lt)}
+        .nav-item i{width:18px;text-align:center;font-size:.9rem}
+        .nav-divider{height:1px;background:rgba(255,255,255,.08);margin:.5rem 1.5rem}
+        .sidebar-footer{padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.1);margin-top:auto}
+        .btn-logout{display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:rgba(255,255,255,.6);cursor:pointer;transition:var(--trans);background:none;border:none;width:100%;padding:.5rem 0}
+        .btn-logout:hover{color:#fff}
+
+        /* ===== MAIN ===== */
+        .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
+        .topbar{background:#fff;border-bottom:1px solid var(--border);padding:.875rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+        .topbar h3{font-size:1rem;font-weight:700;color:var(--text)}
+        .topbar-right{display:flex;align-items:center;gap:1rem}
+        .badge-api{font-size:.75rem;padding:.25rem .75rem;border-radius:50px;font-weight:600}
+        .badge-api.connected{background:#D1FAE5;color:var(--success)}
+        .badge-api.disconnected{background:#FEE2E2;color:var(--danger)}
+        .content{padding:1.5rem;flex:1}
+
+        /* ===== CARDS ===== */
+        .page{display:none}
+        .page.active{display:block}
+        .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1.5rem;overflow:hidden}
+        .card-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+        .card-header h4{font-size:.95rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:.5rem}
+        .card-body{padding:1.5rem}
+
+        /* ===== FORM ===== */
+        .field{margin-bottom:1.25rem}
+        .field label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.04em}
+        .field input,.field textarea,.field select{width:100%;padding:.65rem .875rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;transition:var(--trans);outline:none;color:var(--text)}
+        .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(51,65,85,.08)}
+        .field textarea{resize:vertical;min-height:90px}
+        .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        .field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+
+        /* ===== BUTTONS ===== */
+        .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;transition:var(--trans);border:none}
+        .btn-primary{background:var(--primary);color:#fff}
+        .btn-primary:hover{background:var(--primary-dark)}
+        .btn-success{background:var(--success);color:#fff}
+        .btn-success:hover{background:#047857}
+        .btn-danger{background:var(--danger);color:#fff}
+        .btn-danger:hover{background:#B91C1C}
+        .btn-warning{background:var(--warning);color:#fff}
+        .btn-warning:hover{background:#B45309}
+        .btn-ghost{background:var(--bg);color:var(--text);border:1.5px solid var(--border)}
+        .btn-ghost:hover{background:var(--border)}
+        .btn-sm{padding:.4rem .8rem;font-size:.78rem}
+
+        /* ===== TABLE ===== */
+        .table-wrap{overflow-x:auto}
+        table{width:100%;border-collapse:collapse;font-size:.88rem}
+        th{background:var(--bg);padding:.75rem 1rem;text-align:left;font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+        td{padding:.75rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
+        tr:last-child td{border-bottom:none}
+        tr:hover td{background:#FAFAFA}
+        .td-actions{display:flex;gap:.4rem}
+
+        /* ===== TOAST ===== */
+        .toast-wrap{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem}
+        .toast{background:#1E293B;color:#fff;padding:.75rem 1.25rem;border-radius:10px;font-size:.88rem;display:flex;align-items:center;gap:.6rem;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:slideIn .3s ease;max-width:320px}
+        .toast.success{border-left:4px solid var(--success)}
+        .toast.error{border-left:4px solid var(--danger)}
+        .toast.warning{border-left:4px solid var(--warning)}
+        @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+        /* ===== MODAL ===== */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
+        .modal-overlay.open{display:flex}
+        .modal{background:#fff;border-radius:16px;width:min(560px,100%);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+        .modal-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1}
+        .modal-header h4{font-size:1rem;font-weight:700}
+        .modal-close{background:none;border:none;font-size:1.2rem;color:var(--muted);cursor:pointer;padding:.25rem}
+        .modal-body{padding:1.5rem}
+        .modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.75rem}
+
+        /* ===== SETUP ===== */
+        .setup-box{background:linear-gradient(135deg,#EFF6FF,#F0FDF4);border:1.5px solid #BFDBFE;border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
+        .setup-box h4{color:#1D4ED8;font-size:.95rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+        .setup-box p{font-size:.85rem;color:var(--muted);line-height:1.7}
+        .setup-box code{background:#E0E7FF;color:#3730A3;padding:.1rem .4rem;border-radius:4px;font-size:.82rem}
+        .setup-steps{counter-reset:step;margin-top:1rem}
+        .setup-step{display:flex;gap:.875rem;margin-bottom:.875rem;align-items:flex-start}
+        .step-num{background:#1D4ED8;color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.1rem}
+        .step-text{font-size:.85rem;color:var(--text);line-height:1.6}
+
+        /* ===== STATS OVERVIEW ===== */
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem}
+        .stat-card{background:#fff;border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:1rem}
+        .stat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+        .stat-icon.blue{background:#EFF6FF;color:#2563EB}
+        .stat-icon.green{background:#F0FDF4;color:#059669}
+        .stat-icon.amber{background:#FFFBEB;color:#D97706}
+        .stat-icon.purple{background:#F5F3FF;color:#7C3AED}
+        .stat-icon.slate{background:#F1F5F9;color:#475569}
+        .stat-num{font-size:1.5rem;font-weight:800;color:var(--text);line-height:1}
+        .stat-lbl{font-size:.78rem;color:var(--muted);margin-top:.2rem}
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:768px){
+            .sidebar{transform:translateX(-100%)}
+            .sidebar.open{transform:translateX(0)}
+            .main{margin-left:0}
+            .field-row,.field-row-3{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-wrap" id="loginWrap">
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="https://lh5.googleusercontent.com/d/16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="Logo" onerror="this.style.display='none'">
+            <h1>โรงเรียนบ้านโคกยางหนองถนน</h1>
+            <p>ระบบจัดการเนื้อหาเว็บไซต์</p>
+        </div>
+        <div class="login-error" id="loginError"><i class="fas fa-exclamation-circle"></i> <span id="loginErrorMsg"></span></div>
+        <div class="form-group">
+            <label>ชื่อผู้ใช้</label>
+            <input type="text" id="loginUser" placeholder="username" autocomplete="username">
+        </div>
+        <div class="form-group">
+            <label>รหัสผ่าน</label>
+            <input type="password" id="loginPass" placeholder="password" autocomplete="current-password">
+        </div>
+        <button class="btn-login" onclick="doLogin()"><i class="fas fa-sign-in-alt" style="margin-right:.5rem"></i>เข้าสู่ระบบ</button>
+    </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div class="app" id="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Admin Panel</h2>
+            <p>โรงเรียนบ้านโคกยางหนองถนน</p>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-item active" onclick="showPage('dashboard')" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>ภาพรวม</div>
+            <div class="nav-divider"></div>
+            <div class="nav-item" onclick="showPage('settings')" data-page="settings"><i class="fas fa-cog"></i>ข้อมูลโรงเรียน</div>
+            <div class="nav-item" onclick="showPage('director')" data-page="director"><i class="fas fa-user-tie"></i>สาส์นผู้บริหาร</div>
+            <div class="nav-item" onclick="showPage('news')" data-page="news"><i class="fas fa-newspaper"></i>ข่าวประชาสัมพันธ์</div>
+            <div class="nav-item" onclick="showPage('calendar')" data-page="calendar"><i class="far fa-calendar-alt"></i>ปฏิทินกิจกรรม</div>
+            <div class="nav-item" onclick="showPage('team')" data-page="team"><i class="fas fa-users"></i>บุคลากร</div>
+            <div class="nav-item" onclick="showPage('achievements')" data-page="achievements"><i class="fas fa-trophy"></i>รางวัล/ความภาคภูมิใจ</div>
+            <div class="nav-item" onclick="showPage('gallery')" data-page="gallery"><i class="fas fa-images"></i>ภาพกิจกรรม</div>
+            <div class="nav-divider"></div>
+            <div class="nav-item" onclick="showPage('setup')" data-page="setup"><i class="fas fa-plug"></i>ตั้งค่า API</div>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i>ออกจากระบบ</button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+        <div class="topbar">
+            <h3 id="pageTitle">ภาพรวม</h3>
+            <div class="topbar-right">
+                <span class="badge-api disconnected" id="apiStatus"><i class="fas fa-circle" style="font-size:.5rem;margin-right:.3rem"></i>ยังไม่เชื่อมต่อ API</span>
+                <a href="index.html" target="_blank" class="btn btn-ghost btn-sm"><i class="fas fa-external-link-alt"></i>ดูเว็บไซต์</a>
+            </div>
+        </div>
+        <div class="content">
+
+            <!-- DASHBOARD -->
+            <div class="page active" id="page-dashboard">
+                <div class="stats-grid" id="dashStats">
+                    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-newspaper"></i></div><div><div class="stat-num" id="cnt-news">—</div><div class="stat-lbl">ข่าวสาร</div></div></div>
+                    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-users"></i></div><div><div class="stat-num" id="cnt-team">—</div><div class="stat-lbl">บุคลากร</div></div></div>
+                    <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-trophy"></i></div><div><div class="stat-num" id="cnt-achieve">—</div><div class="stat-lbl">รางวัล</div></div></div>
+                    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-images"></i></div><div><div class="stat-num" id="cnt-gallery">—</div><div class="stat-lbl">ภาพกิจกรรม</div></div></div>
+                    <div class="stat-card"><div class="stat-icon slate"><i class="far fa-calendar-alt"></i></div><div><div class="stat-num" id="cnt-cal">—</div><div class="stat-lbl">กิจกรรม</div></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-info-circle"></i>วิธีใช้งาน</h4></div>
+                    <div class="card-body">
+                        <p style="font-size:.9rem;color:var(--muted);line-height:1.8">1. ไปที่เมนู <strong>ตั้งค่า API</strong> แล้วกรอก Google Apps Script URL<br>2. แก้ไขข้อมูลในแต่ละเมนูด้านซ้าย<br>3. กด <strong>บันทึก</strong> เพื่ออัปเดตข้อมูลใน Google Sheet<br>4. เว็บไซต์หลักจะดึงข้อมูลใหม่โดยอัตโนมัติ</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS -->
+            <div class="page" id="page-settings">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-school"></i>ข้อมูลโรงเรียน</h4><button class="btn btn-success btn-sm" onclick="saveSettings()"><i class="fas fa-save"></i>บันทึก</button></div>
+                    <div class="card-body">
+                        <div class="field-row">
+                            <div class="field"><label>ชื่อโรงเรียน (ภาษาไทย)</label><input type="text" id="s_name_th" placeholder="โรงเรียนบ้านโคกยางหนองถนน"></div>
+                            <div class="field"><label>ชื่อโรงเรียน (ภาษาอังกฤษ)</label><input type="text" id="s_name_en" placeholder="Baan Khok Yang Nong Thanon School"></div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field"><label>สังกัด</label><input type="text" id="s_dept" placeholder="สพป.บุรีรัมย์ เขต 3"></div>
+                            <div class="field"><label>เบอร์โทรศัพท์</label><input type="text" id="s_phone" placeholder="089-947-2938"></div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field"><label>อีเมล</label><input type="email" id="s_email" placeholder="admin1@rkt.ac.th"></div>
+                            <div class="field"><label>เว็บไซต์</label><input type="text" id="s_website" placeholder="www.rkt.ac.th"></div>
+                        </div>
+                        <div class="field"><label>ที่อยู่</label><input type="text" id="s_address" placeholder="ต.โคกยาง อ.ประโคนชัย จ.บุรีรัมย์ 31230"></div>
+                        <div class="field"><label>วิสัยทัศน์ (Vision)</label><textarea id="s_vision" placeholder="พัฒนาผู้เรียนให้มีคุณภาพตามมาตรฐาน..."></textarea></div>
+                        <div class="field"><label>คำขวัญโรงเรียน</label><input type="text" id="s_motto" placeholder="การศึกษาดี มีวินัย ใฝ่เรียนรู้ คู่คุณธรรม"></div>
+                        <div class="field-row">
+                            <div class="field"><label>จำนวนนักเรียน</label><input type="text" id="s_students" placeholder="89+"></div>
+                            <div class="field"><label>จำนวนครูและบุคลากร</label><input type="text" id="s_staff" placeholder="14"></div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field"><label>ปีที่ก่อตั้ง (ปีแห่งความภูมิใจ)</label><input type="text" id="s_years" placeholder="48"></div>
+                            <div class="field"><label>จำนวนรางวัล</label><input type="text" id="s_awards" placeholder="10+"></div>
+                        </div>
+                        <div class="field"><label>URL โลโก้โรงเรียน</label><input type="text" id="s_logo" placeholder="https://..."></div>
+                        <div class="field"><label>URL Facebook Page</label><input type="text" id="s_facebook" placeholder="https://www.facebook.com/..."></div>
+                        <div class="field"><label>URL YouTube วิดีโอ (embed)</label><input type="text" id="s_youtube" placeholder="https://www.youtube.com/embed/..."></div>
+                        <div class="field"><label>Google Maps Embed URL</label><input type="text" id="s_maps" placeholder="https://maps.google.com/maps?q=..."></div>
+                        <div class="field"><label>Google Maps นำทาง URL</label><input type="text" id="s_maps_nav" placeholder="https://maps.app.goo.gl/..."></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIRECTOR -->
+            <div class="page" id="page-director">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-user-tie"></i>สาส์นจากผู้บริหาร</h4><button class="btn btn-success btn-sm" onclick="saveDirector()"><i class="fas fa-save"></i>บันทึก</button></div>
+                    <div class="card-body">
+                        <div class="field-row">
+                            <div class="field"><label>ชื่อ-นามสกุล</label><input type="text" id="d_name" placeholder="นายนัฐวุฒิ สนทนา"></div>
+                            <div class="field"><label>ตำแหน่ง</label><input type="text" id="d_role" placeholder="ผู้อำนวยการโรงเรียน"></div>
+                        </div>
+                        <div class="field"><label>หัวข้อสาส์น</label><input type="text" id="d_title" placeholder="มุ่งมั่นพัฒนาผู้เรียนสู่ความเป็นเลิศ"></div>
+                        <div class="field"><label>เนื้อหาสาส์น</label><textarea id="d_message" style="min-height:140px" placeholder="โรงเรียนบ้านโคกยางหนองถนน มีความมุ่งมั่น..."></textarea></div>
+                        <div class="field"><label>URL รูปภาพผู้บริหาร</label><input type="text" id="d_photo" placeholder="https://drive.google.com/thumbnail?id=..."></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEWS -->
+            <div class="page" id="page-news">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-newspaper"></i>ข่าวประชาสัมพันธ์</h4><button class="btn btn-primary btn-sm" onclick="openModal('news')"><i class="fas fa-plus"></i>เพิ่มข่าว</button></div>
+                    <div class="card-body">
+                        <div class="table-wrap">
+                            <table id="newsTable">
+                                <thead><tr><th>#</th><th>วันที่</th><th>หัวข้อ</th><th>เนื้อหาย่อ</th><th>จัดการ</th></tr></thead>
+                                <tbody id="newsTbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">กำลังโหลด...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CALENDAR -->
+            <div class="page" id="page-calendar">
+                <div class="card">
+                    <div class="card-header"><h4><i class="far fa-calendar-alt"></i>ปฏิทินกิจกรรม</h4><button class="btn btn-primary btn-sm" onclick="openModal('calendar')"><i class="fas fa-plus"></i>เพิ่มกิจกรรม</button></div>
+                    <div class="card-body">
+                        <div class="table-wrap">
+                            <table id="calTable">
+                                <thead><tr><th>#</th><th>วัน</th><th>เดือน</th><th>ชื่อกิจกรรม</th><th>รายละเอียด</th><th>จัดการ</th></tr></thead>
+                                <tbody id="calTbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">กำลังโหลด...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEAM -->
+            <div class="page" id="page-team">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-users"></i>บุคลากร</h4><button class="btn btn-primary btn-sm" onclick="openModal('team')"><i class="fas fa-plus"></i>เพิ่มบุคลากร</button></div>
+                    <div class="card-body">
+                        <div class="table-wrap">
+                            <table id="teamTable">
+                                <thead><tr><th>#</th><th>รูป</th><th>ชื่อ-นามสกุล</th><th>ตำแหน่ง</th><th>ลำดับ</th><th>จัดการ</th></tr></thead>
+                                <tbody id="teamTbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">กำลังโหลด...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACHIEVEMENTS -->
+            <div class="page" id="page-achievements">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-trophy"></i>รางวัลและความภาคภูมิใจ</h4><button class="btn btn-primary btn-sm" onclick="openModal('achievements')"><i class="fas fa-plus"></i>เพิ่มรางวัล</button></div>
+                    <div class="card-body">
+                        <div class="table-wrap">
+                            <table id="achieveTable">
+                                <thead><tr><th>#</th><th>ไอคอน</th><th>ชื่อรางวัล</th><th>รายละเอียด</th><th>จัดการ</th></tr></thead>
+                                <tbody id="achieveTbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">กำลังโหลด...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GALLERY -->
+            <div class="page" id="page-gallery">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-images"></i>ภาพกิจกรรม</h4><button class="btn btn-primary btn-sm" onclick="openModal('gallery')"><i class="fas fa-plus"></i>เพิ่มภาพ</button></div>
+                    <div class="card-body">
+                        <div class="table-wrap">
+                            <table id="galleryTable">
+                                <thead><tr><th>#</th><th>รูปภาพ</th><th>หัวข้อ</th><th>คำบรรยาย</th><th>จัดการ</th></tr></thead>
+                                <tbody id="galleryTbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">กำลังโหลด...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETUP -->
+            <div class="page" id="page-setup">
+                <div class="setup-box">
+                    <h4><i class="fas fa-info-circle"></i>วิธีตั้งค่า Google Apps Script</h4>
+                    <div class="setup-steps">
+                        <div class="setup-step"><div class="step-num">1</div><div class="step-text">เปิด <a href="https://sheets.google.com" target="_blank" style="color:#1D4ED8">Google Sheets</a> สร้าง Spreadsheet ใหม่ ตั้งชื่อว่า <code>RKT School CMS</code></div></div>
+                        <div class="setup-step"><div class="step-num">2</div><div class="step-text">สร้าง Sheet ชื่อ: <code>settings</code>, <code>director</code>, <code>news</code>, <code>calendar</code>, <code>team</code>, <code>achievements</code>, <code>gallery</code></div></div>
+                        <div class="setup-step"><div class="step-num">3</div><div class="step-text">ไปที่ <strong>Extensions → Apps Script</strong> แล้ว copy โค้ดจากกล่องด้านล่างวางลงไป</div></div>
+                        <div class="setup-step"><div class="step-num">4</div><div class="step-text">กด <strong>Deploy → New deployment → Web app</strong> ตั้ง Execute as: <code>Me</code>, Who has access: <code>Anyone</code></div></div>
+                        <div class="setup-step"><div class="step-num">5</div><div class="step-text">Copy URL ที่ได้มากรอกในช่องด้านล่าง แล้วกด <strong>บันทึกและทดสอบ</strong></div></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-code"></i>Google Apps Script Code</h4><button class="btn btn-ghost btn-sm" onclick="copyScript()"><i class="fas fa-copy"></i>Copy</button></div>
+                    <div class="card-body">
+                        <textarea id="scriptCode" style="width:100%;height:280px;font-family:monospace;font-size:.78rem;border:1.5px solid var(--border);border-radius:8px;padding:1rem;resize:vertical;outline:none;background:#F8FAFC;color:#1E293B" readonly></textarea>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-plug"></i>เชื่อมต่อ API</h4></div>
+                    <div class="card-body">
+                        <div class="field"><label>Google Apps Script Deployment URL</label><input type="text" id="apiUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec"></div>
+                        <div class="field"><label>รหัสผ่าน Admin (ตั้งใน Apps Script)</label><input type="password" id="apiSecret" placeholder="secret key สำหรับ POST"></div>
+                        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+                            <button class="btn btn-primary" onclick="saveApiConfig()"><i class="fas fa-save"></i>บันทึกการตั้งค่า</button>
+                            <button class="btn btn-warning" onclick="testApi()"><i class="fas fa-vial"></i>ทดสอบการเชื่อมต่อ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /content -->
+    </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+        <div class="modal-header">
+            <h4 id="modalTitle">เพิ่มข้อมูล</h4>
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal()">ยกเลิก</button>
+            <button class="btn btn-success" id="modalSaveBtn" onclick="saveModal()"><i class="fas fa-save"></i>บันทึก</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ===== CONFIG =====
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin123';
+
+// Safe storage — fallback to sessionStorage if localStorage blocked (e.g. iframe)
+const store = (() => {
+    try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); return localStorage; }
+    catch(e) { return sessionStorage; }
+})();
+
+let API_URL = store.getItem('rkt_api_url') || '';
+let API_SECRET = store.getItem('rkt_api_secret') || '';
+let currentModal = null;
+let editingRow = null;
+let allData = {};
+
+// ===== LOGIN =====
+function doLogin() {
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value;
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+        document.getElementById('loginWrap').style.display = 'none';
+        document.getElementById('app').style.display = 'flex';
+        initApp();
+    } else {
+        const err = document.getElementById('loginError');
+        document.getElementById('loginErrorMsg').textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+        err.style.display = 'flex';
+    }
+}
+document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogout() {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('loginWrap').style.display = 'flex';
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+}
+
+// ===== INIT =====
+function initApp() {
+    document.getElementById('apiUrl').value = API_URL;
+    document.getElementById('apiSecret').value = API_SECRET;
+    updateApiStatus();
+    loadScriptCode();
+    if (API_URL) loadAllData();
+}
+
+function updateApiStatus() {
+    const el = document.getElementById('apiStatus');
+    if (API_URL) {
+        el.className = 'badge-api connected';
+        el.innerHTML = '<i class="fas fa-circle" style="font-size:.5rem;margin-right:.3rem"></i>เชื่อมต่อแล้ว';
+    } else {
+        el.className = 'badge-api disconnected';
+        el.innerHTML = '<i class="fas fa-circle" style="font-size:.5rem;margin-right:.3rem"></i>ยังไม่เชื่อมต่อ API';
+    }
+}
+
+// ===== NAVIGATION =====
+const pageTitles = {
+    dashboard: 'ภาพรวม', settings: 'ข้อมูลโรงเรียน', director: 'สาส์นผู้บริหาร',
+    news: 'ข่าวประชาสัมพันธ์', calendar: 'ปฏิทินกิจกรรม', team: 'บุคลากร',
+    achievements: 'รางวัล/ความภาคภูมิใจ', gallery: 'ภาพกิจกรรม', setup: 'ตั้งค่า API'
+};
+function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.querySelector(`[data-page="${name}"]`).classList.add('active');
+    document.getElementById('pageTitle').textContent = pageTitles[name] || name;
+    if (API_URL && name !== 'setup' && name !== 'dashboard') loadSection(name);
+}
+
+// ===== API CALLS =====
+async function apiGet(sheet) {
+    if (!API_URL) return null;
+    try {
+        const res = await fetch(`${API_URL}?sheet=${sheet}&t=${Date.now()}`);
+        return await res.json();
+    } catch(e) { return null; }
+}
+
+async function apiPost(action, sheet, data) {
+    if (!API_URL) { toast('กรุณาตั้งค่า API URL ก่อน', 'error'); return null; }
+    try {
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, sheet, data, secret: API_SECRET })
+        });
+        return await res.json();
+    } catch(e) { toast('เกิดข้อผิดพลาด: ' + e.message, 'error'); return null; }
+}
+
+async function loadAllData() {
+    const sheets = ['settings', 'director', 'news', 'calendar', 'team', 'achievements', 'gallery'];
+    for (const s of sheets) {
+        const d = await apiGet(s);
+        if (d) allData[s] = d;
+    }
+    updateDashboard();
+    fillSettings();
+    fillDirector();
+}
+
+async function loadSection(name) {
+    const d = await apiGet(name);
+    if (!d) return;
+    allData[name] = d;
+    if (name === 'settings') fillSettings();
+    else if (name === 'director') fillDirector();
+    else renderTable(name, d);
+}
+
+// ===== DASHBOARD =====
+function updateDashboard() {
+    document.getElementById('cnt-news').textContent = (allData.news || []).length;
+    document.getElementById('cnt-team').textContent = (allData.team || []).length;
+    document.getElementById('cnt-achieve').textContent = (allData.achievements || []).length;
+    document.getElementById('cnt-gallery').textContent = (allData.gallery || []).length;
+    document.getElementById('cnt-cal').textContent = (allData.calendar || []).length;
+}
+
+// ===== SETTINGS =====
+function fillSettings() {
+    const d = allData.settings || {};
+    const fields = ['name_th','name_en','dept','phone','email','website','address','vision','motto','students','staff','years','awards','logo','facebook','youtube','maps','maps_nav'];
+    fields.forEach(f => { const el = document.getElementById('s_' + f); if (el && d[f] !== undefined) el.value = d[f]; });
+}
+async function saveSettings() {
+    const fields = ['name_th','name_en','dept','phone','email','website','address','vision','motto','students','staff','years','awards','logo','facebook','youtube','maps','maps_nav'];
+    const data = {};
+    fields.forEach(f => { data[f] = document.getElementById('s_' + f)?.value || ''; });
+    const r = await apiPost('saveSettings', 'settings', data);
+    if (r?.success) { toast('บันทึกข้อมูลโรงเรียนสำเร็จ', 'success'); allData.settings = data; }
+    else toast('เกิดข้อผิดพลาด', 'error');
+}
+
+// ===== DIRECTOR =====
+function fillDirector() {
+    const d = allData.director || {};
+    ['name','role','title','message','photo'].forEach(f => {
+        const el = document.getElementById('d_' + f);
+        if (el && d[f] !== undefined) el.value = d[f];
+    });
+}
+async function saveDirector() {
+    const data = {};
+    ['name','role','title','message','photo'].forEach(f => { data[f] = document.getElementById('d_' + f)?.value || ''; });
+    const r = await apiPost('saveDirector', 'director', data);
+    if (r?.success) { toast('บันทึกสาส์นผู้บริหารสำเร็จ', 'success'); allData.director = data; }
+    else toast('เกิดข้อผิดพลาด', 'error');
+}
+
+// ===== TABLE RENDER =====
+const tableConfig = {
+    news: {
+        cols: ['date','title','excerpt','link'],
+        labels: ['วันที่','หัวข้อ','เนื้อหาย่อ','ลิงก์'],
+        render: (row, i) => `<td>${i+1}</td><td>${row.date||''}</td><td>${row.title||''}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${row.excerpt||''}</td>`
+    },
+    calendar: {
+        cols: ['day','month','title','detail'],
+        labels: ['วัน','เดือน','ชื่อกิจกรรม','รายละเอียด'],
+        render: (row, i) => `<td>${i+1}</td><td>${row.day||''}</td><td>${row.month||''}</td><td>${row.title||''}</td><td>${row.detail||''}</td>`
+    },
+    team: {
+        cols: ['photo','name','role','order'],
+        labels: ['URL รูป','ชื่อ-นามสกุล','ตำแหน่ง','ลำดับ'],
+        render: (row, i) => `<td>${i+1}</td><td>${row.photo ? `<img src="${row.photo}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:top">` : '—'}</td><td>${row.name||''}</td><td>${row.role||''}</td><td>${row.order||''}</td>`
+    },
+    achievements: {
+        cols: ['icon','title','detail'],
+        labels: ['ไอคอน (FA class)','ชื่อรางวัล','รายละเอียด'],
+        render: (row, i) => `<td>${i+1}</td><td><i class="${row.icon||'fas fa-trophy'}"></i> <code style="font-size:.75rem">${row.icon||''}</code></td><td>${row.title||''}</td><td>${row.detail||''}</td>`
+    },
+    gallery: {
+        cols: ['photo','title','caption'],
+        labels: ['URL รูปภาพ','หัวข้อ','คำบรรยาย'],
+        render: (row, i) => `<td>${i+1}</td><td>${row.photo ? `<img src="${row.photo}" style="width:60px;height:45px;border-radius:6px;object-fit:cover">` : '—'}</td><td>${row.title||''}</td><td>${row.caption||''}</td>`
+    }
+};
+
+function renderTable(name, rows) {
+    const cfg = tableConfig[name];
+    if (!cfg) return;
+    const tbody = document.getElementById(name === 'achievements' ? 'achieveTbody' : name + 'Tbody');
+    if (!tbody) return;
+    if (!rows || rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:2rem">ยังไม่มีข้อมูล</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = rows.map((row, i) => `
+        <tr>
+            ${cfg.render(row, i)}
+            <td><div class="td-actions">
+                <button class="btn btn-warning btn-sm" onclick="editRow('${name}',${i})"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="deleteRow('${name}',${i})"><i class="fas fa-trash"></i></button>
+            </div></td>
+        </tr>`).join('');
+}
+
+// ===== MODAL =====
+const modalForms = {
+    news: () => `
+        <div class="field"><label>วันที่</label><input type="text" id="mf_date" placeholder="29 พ.ค."></div>
+        <div class="field"><label>หัวข้อข่าว</label><input type="text" id="mf_title" placeholder="กิจกรรมวันสุนทรภู่..."></div>
+        <div class="field"><label>เนื้อหาย่อ</label><textarea id="mf_excerpt" placeholder="คณะครูและนักเรียนร่วมจัดกิจกรรม..."></textarea></div>
+        <div class="field"><label>ลิงก์ (ถ้ามี)</label><input type="text" id="mf_link" placeholder="https://..."></div>`,
+    calendar: () => `
+        <div class="field-row">
+            <div class="field"><label>วัน (ตัวเลข)</label><input type="text" id="mf_day" placeholder="12"></div>
+            <div class="field"><label>เดือน (ย่อ)</label><input type="text" id="mf_month" placeholder="ส.ค."></div>
+        </div>
+        <div class="field"><label>ชื่อกิจกรรม</label><input type="text" id="mf_title" placeholder="วันแม่แห่งชาติ"></div>
+        <div class="field"><label>รายละเอียด</label><input type="text" id="mf_detail" placeholder="หยุดราชการ 1 วัน"></div>`,
+    team: () => `
+        <div class="field-row">
+            <div class="field"><label>ชื่อ-นามสกุล</label><input type="text" id="mf_name" placeholder="นายนัฐวุฒิ สนทนา"></div>
+            <div class="field"><label>ตำแหน่ง</label><input type="text" id="mf_role" placeholder="ผู้อำนวยการโรงเรียน"></div>
+        </div>
+        <div class="field"><label>URL รูปภาพ</label><input type="text" id="mf_photo" placeholder="https://drive.google.com/thumbnail?id=..."></div>
+        <div class="field"><label>ลำดับการแสดง</label><input type="number" id="mf_order" placeholder="1"></div>`,
+    achievements: () => `
+        <div class="field"><label>ชื่อรางวัล</label><input type="text" id="mf_title" placeholder="รางวัลโรงเรียนพระราชทาน"></div>
+        <div class="field"><label>รายละเอียด</label><textarea id="mf_detail" placeholder="ประเภทสถานศึกษาขนาดเล็ก..."></textarea></div>
+        <div class="field"><label>ไอคอน Font Awesome</label><input type="text" id="mf_icon" placeholder="fas fa-trophy"><small style="color:var(--muted);font-size:.78rem">เช่น fas fa-trophy, fas fa-leaf, fas fa-medal</small></div>`,
+    gallery: () => `
+        <div class="field"><label>URL รูปภาพ</label><input type="text" id="mf_photo" placeholder="https://drive.google.com/thumbnail?id=..."></div>
+        <div class="field"><label>หัวข้อ</label><input type="text" id="mf_title" placeholder="กิจกรรมรับบริจาค"></div>
+        <div class="field"><label>คำบรรยาย</label><input type="text" id="mf_caption" placeholder="ผู้ใจบุญร่วมสนับสนุนการศึกษา"></div>`
+};
+
+const modalTitles = { news:'ข่าวประชาสัมพันธ์', calendar:'กิจกรรม', team:'บุคลากร', achievements:'รางวัล', gallery:'ภาพกิจกรรม' };
+
+function openModal(type, data = null) {
+    currentModal = type;
+    editingRow = data ? data._idx : null;
+    document.getElementById('modalTitle').textContent = (data ? 'แก้ไข' : 'เพิ่ม') + modalTitles[type];
+    document.getElementById('modalBody').innerHTML = modalForms[type]();
+    if (data) {
+        Object.keys(data).forEach(k => {
+            const el = document.getElementById('mf_' + k);
+            if (el) el.value = data[k];
+        });
+    }
+    document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    currentModal = null; editingRow = null;
+}
+
+function getModalData() {
+    const cfg = tableConfig[currentModal];
+    if (!cfg) return {};
+    const data = {};
+    cfg.cols.forEach(c => { const el = document.getElementById('mf_' + c); if (el) data[c] = el.value; });
+    return data;
+}
+
+async function saveModal() {
+    const data = getModalData();
+    let rows = [...(allData[currentModal] || [])];
+    if (editingRow !== null) rows[editingRow] = data;
+    else rows.push(data);
+    const r = await apiPost('saveSheet', currentModal, rows);
+    if (r?.success) {
+        allData[currentModal] = rows;
+        renderTable(currentModal, rows);
+        updateDashboard();
+        closeModal();
+        toast('บันทึกสำเร็จ', 'success');
+    } else toast('เกิดข้อผิดพลาด', 'error');
+}
+
+function editRow(name, idx) {
+    const row = { ...(allData[name] || [])[idx], _idx: idx };
+    openModal(name, row);
+}
+
+async function deleteRow(name, idx) {
+    if (!confirm('ยืนยันการลบข้อมูลนี้?')) return;
+    let rows = [...(allData[name] || [])];
+    rows.splice(idx, 1);
+    const r = await apiPost('saveSheet', name, rows);
+    if (r?.success) {
+        allData[name] = rows;
+        renderTable(name, rows);
+        updateDashboard();
+        toast('ลบข้อมูลสำเร็จ', 'success');
+    } else toast('เกิดข้อผิดพลาด', 'error');
+}
+
+// ===== SETUP =====
+function saveApiConfig() {
+    API_URL = document.getElementById('apiUrl').value.trim();
+    API_SECRET = document.getElementById('apiSecret').value.trim();
+    store.setItem('rkt_api_url', API_URL);
+    store.setItem('rkt_api_secret', API_SECRET);    updateApiStatus();
+    toast('บันทึกการตั้งค่าแล้ว', 'success');
+    if (API_URL) loadAllData();
+}
+
+async function testApi() {
+    const url = document.getElementById('apiUrl').value.trim();
+    if (!url) { toast('กรุณากรอก URL ก่อน', 'warning'); return; }
+    toast('กำลังทดสอบ...', 'warning');
+    try {
+        const res = await fetch(`${url}?sheet=settings&t=${Date.now()}`);
+        const d = await res.json();
+        if (d !== null) toast('เชื่อมต่อสำเร็จ ✓', 'success');
+        else toast('เชื่อมต่อได้แต่ไม่มีข้อมูล', 'warning');
+    } catch(e) { toast('เชื่อมต่อไม่ได้: ' + e.message, 'error'); }
+}
+
+function copyScript() {
+    const el = document.getElementById('scriptCode');
+    el.select();
+    document.execCommand('copy');
+    toast('Copy โค้ดแล้ว', 'success');
+}
+
+// ===== TOAST =====
+function toast(msg, type = 'success') {
+    const icons = { success: 'fa-check-circle', error: 'fa-times-circle', warning: 'fa-exclamation-circle' };
+    const wrap = document.getElementById('toastWrap');
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `<i class="fas ${icons[type]}"></i>${msg}`;
+    wrap.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+}
+
+// ===== APPS SCRIPT CODE =====
+function loadScriptCode() {
+    document.getElementById('scriptCode').value = `// Google Apps Script — RKT School CMS
+// วาง code นี้ใน Apps Script แล้ว Deploy เป็น Web App
+
+const SPREADSHEET_ID = SpreadsheetApp.getActiveSpreadsheet().getId();
+const SECRET = 'your_secret_key'; // เปลี่ยนเป็น secret ของคุณ
+
+function doGet(e) {
+  const sheet = e.parameter.sheet;
+  const data = getSheetData(sheet);
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  try {
+    const body = JSON.parse(e.postData.contents);
+    if (body.secret !== SECRET) {
+      return jsonResponse({ success: false, error: 'Unauthorized' });
+    }
+    const { action, sheet, data } = body;
+    if (action === 'saveSheet') {
+      saveSheetData(sheet, data);
+    } else if (action === 'saveSettings') {
+      saveKeyValue('settings', data);
+    } else if (action === 'saveDirector') {
+      saveKeyValue('director', data);
+    }
+    return jsonResponse({ success: true });
+  } catch(err) {
+    return jsonResponse({ success: false, error: err.message });
+  }
+}
+
+function getSheetData(sheetName) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(sheetName);
+  if (!sheet) return null;
+  const rows = sheet.getDataRange().getValues();
+  if (rows.length < 2) {
+    // settings/director: key-value format
+    if (sheetName === 'settings' || sheetName === 'director') {
+      const obj = {};
+      rows.forEach(r => { if (r[0]) obj[r[0]] = r[1]; });
+      return obj;
+    }
+    return [];
+  }
+  const headers = rows[0];
+  // key-value sheets
+  if (sheetName === 'settings' || sheetName === 'director') {
+    const obj = {};
+    rows.forEach(r => { if (r[0]) obj[r[0]] = r[1]; });
+    return obj;
+  }
+  // array sheets
+  return rows.slice(1).map(row => {
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = row[i] || ''; });
+    return obj;
+  });
+}
+
+function saveSheetData(sheetName, rows) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  let sheet = ss.getSheetByName(sheetName);
+  if (!sheet) sheet = ss.insertSheet(sheetName);
+  sheet.clearContents();
+  if (!rows || rows.length === 0) return;
+  const headers = Object.keys(rows[0]);
+  sheet.appendRow(headers);
+  rows.forEach(row => sheet.appendRow(headers.map(h => row[h] || '')));
+}
+
+function saveKeyValue(sheetName, data) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  let sheet = ss.getSheetByName(sheetName);
+  if (!sheet) sheet = ss.insertSheet(sheetName);
+  sheet.clearContents();
+  Object.entries(data).forEach(([k, v]) => sheet.appendRow([k, v]));
+}
+
+function jsonResponse(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+}
+
+// Close modal on overlay click
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โรงเรียนบ้านโคกยางหนองถนน - สร้างอนาคตด้วยการศึกษาคุณภาพ</title>
+    <meta name="description" content="โรงเรียนบ้านโคกยางหนองถนน มุ่งมั่นพัฒนาการศึกษาคุณภาพ เพื่อสร้างเด็กไทยที่มีความรู้ คุณธรรม และพร้อมก้าวสู่อนาคต">
+    
+    <!-- External Resources -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Modern Variables & Reset --- */
+        :root {
+            /* Primary Palette: Professional Deep Red & Gold */
+            --primary: #9B1C1C;       /* A deeper, more professional red */
+            --primary-light: #C81E1E; /* Brighter red for hovers */
+            --primary-dark: #771D1D;  /* Dark red for depth */
+            
+            --accent: #F59E0B;        /* Gold/Amber for highlights */
+            --accent-light: #FCD34D;
+            
+            /* Neutral Colors */
+            --bg-body: #F9FAFB;       /* Very light grey, easier on eyes than pure white */
+            --bg-surface: #FFFFFF;
+            --bg-secondary: #F3F4F6;
+            
+            --text-main: #111827;     /* Almost black */
+            --text-secondary: #4B5563; /* Dark grey */
+            --text-light: #9CA3AF;    /* Light grey */
+            --text-white: #FFFFFF;
+
+            /* Effects */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            --radius-md: 0.5rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            background-color: var(--bg-body);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-main);
+            line-height: 1.3;
+            font-weight: 600;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* --- Components --- */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--text-white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-surface);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary);
+            color: var(--text-white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+
+        /* --- Header & Nav --- */
+        .top-bar {
+            background-color: var(--primary-dark);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+        }
+
+        .top-bar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-main {
+            background: var(--bg-surface);
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        
+        /* Glass effect when scrolling (added via JS class) */
+        .header-main.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .school-name h1 {
+            font-size: 1.25rem;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        .school-name span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .nav-desktop {
+            display: none;
+        }
+
+        .nav-mobile-toggle {
+            font-size: 1.5rem;
+            color: var(--primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-surface) 0%, #FFF1F2 100%);
+            padding: 3rem 0;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239b1c1c' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: 0;
+        }
+
+        .hero-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        /* --- [NEW] Stats Section --- */
+        .stats-section {
+            background-color: var(--primary);
+            color: white;
+            padding: 2.5rem 0;
+        }
+        
+        .stats-wrapper {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .stat-item i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* --- NEW SECTION: Director's Message --- */
+        .directors-msg {
+            background-color: white;
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--bg-secondary);
+        }
+
+        .msg-box {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .msg-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            object-position: top center;
+            background-color: #ddd;
+        }
+
+        .msg-content {
+            padding: 2rem;
+            position: relative;
+        }
+
+        .quote-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.1;
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+        }
+
+        .director-name {
+            margin-top: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .director-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- Features Section --- */
+        .features {
+            padding: 5rem 0;
+            background-color: var(--bg-surface);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-img-wrapper {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .feature-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .feature-card:hover .feature-img-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .feature-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-icon-float {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--bg-surface);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            z-index: 2;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+        
+        /* --- [NEW] Video Section --- */
+        .video-section {
+            padding: 4rem 0;
+            background-color: var(--bg-secondary);
+        }
+        
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* --- [NEW] Achievements Section --- */
+        .achievements-section {
+            padding: 4rem 0;
+            background: white;
+        }
+        
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .achievement-card {
+            background: var(--bg-body);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border-left: 5px solid var(--accent);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            transition: var(--transition);
+        }
+        
+        .achievement-card:hover {
+            transform: translateX(5px);
+            background: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .achievement-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        /* --- NEW SECTION: Team/Personnel --- */
+        .team-section {
+            padding: 4rem 0;
+            background-color: var(--bg-body);
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .team-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        .team-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: top center;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--primary-light);
+        }
+
+        .team-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+            min-height: 1.5em; /* Reserve space if name is empty for now */
+        }
+
+        .team-role {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* --- Main Content Layout --- */
+        .content-wrapper {
+            padding: 4rem 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+        
+        /* [NEW] Calendar Style */
+        .calendar-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        
+        .calendar-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-bottom: 1px solid var(--bg-secondary);
+            transition: var(--transition);
+        }
+        
+        .calendar-item:hover {
+            background: #FEF2F2;
+        }
+        
+        .cal-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-md);
+            flex-shrink: 0;
+        }
+        
+        .cal-date span:first-child {
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .cal-date span:last-child {
+            font-size: 0.75rem;
+        }
+        
+        .cal-info h4 {
+            font-size: 1rem;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+        }
+        
+        .cal-info p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* News List Style */
+        .news-list {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border-top: 4px solid var(--primary);
+        }
+
+        .news-item {
+            display: flex;
+            gap: 1rem;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--bg-secondary);
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .news-date-box {
+            background: var(--bg-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            min-width: 70px;
+            height: fit-content;
+        }
+
+        .news-day {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .news-month {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .news-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .news-info h3:hover {
+            color: var(--primary);
+        }
+
+        .news-excerpt {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Sidebar Widgets */
+        .widget {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .widget-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--bg-secondary);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .link-list li {
+            margin-bottom: 0.75rem;
+        }
+
+        .link-list a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .link-list a:hover {
+            background: var(--primary);
+            color: white;
+            padding-left: 1rem;
+        }
+
+        .link-list i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* --- Gallery --- */
+        .gallery-section {
+            padding: 4rem 0;
+            background: var(--bg-secondary);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-text {
+            color: white;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-item:hover .gallery-text {
+            transform: translateY(0);
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1F2937; /* Dark Grey */
+            color: #D1D5DB;
+            padding-top: 4rem;
+            font-size: 0.9rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-brand h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links h3, .footer-contact h3 {
+            color: white;
+            margin-bottom: 1.25rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .footer-contact li {
+            display: flex;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .footer-contact i {
+            color: var(--primary-light);
+            margin-top: 0.25rem;
+        }
+
+        .copyright {
+            padding: 1.5rem 0;
+            text-align: center;
+            font-size: 0.85rem;
+            background-color: #111827;
+        }
+
+        /* --- Mobile Menu --- */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100%;
+            background: white;
+            z-index: 1002;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .close-menu {
+            align-self: flex-end;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-nav-links a {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .mobile-nav-links a.active {
+            color: var(--primary);
+        }
+        
+        /* New Identity Box Style */
+        .identity-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+        
+        .identity-item {
+            background: #FEF2F2;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+        }
+        
+        .identity-item h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Vision & Mission Styling */
+        .vision-box {
+            background: #FEF2F2;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 2px solid var(--primary);
+            position: relative;
+        }
+
+        .vision-box h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .vision-box p {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .mission-goal-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .info-card {
+            background: white;
+            border: 1px solid var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-card h4 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .info-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .info-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .info-list li::before {
+            content: '\f058'; /* FontAwesome check-circle */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .attr-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-secondary);
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .attr-item i {
+            color: var(--accent);
+        }
+
+        /* --- Responsive Queries --- */
+        @media (min-width: 768px) {
+            .nav-mobile-toggle {
+                display: none;
+            }
+
+            .nav-desktop {
+                display: flex;
+                gap: 2rem;
+            }
+
+            .nav-desktop a {
+                font-weight: 500;
+                font-size: 0.95rem;
+                color: var(--text-main);
+                position: relative;
+                padding: 0.5rem 0;
+            }
+
+            .nav-desktop a::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: var(--primary);
+                transition: width 0.3s;
+            }
+
+            .nav-desktop a:hover {
+                color: var(--primary);
+            }
+
+            .nav-desktop a:hover::after {
+                width: 100%;
+            }
+
+            .hero {
+                padding: 4rem 0;
+                text-align: left;
+            }
+
+            .hero-container {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .hero-content {
+                text-align: left;
+                flex: 1.2;
+            }
+            
+            .hero p {
+                margin-left: 0;
+            }
+
+            .hero-actions {
+                justify-content: flex-start;
+            }
+            
+            /* [NEW] Stats Grid Responsive */
+            .stats-wrapper {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            /* [NEW] Achievements Grid */
+            .achievements-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .content-wrapper {
+                grid-template-columns: 2fr 1fr;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+            
+            .logo-img {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .school-name h1 {
+                font-size: 1.5rem;
+            }
+
+            /* Director Msg Responsive */
+            .msg-box {
+                flex-direction: row;
+            }
+            
+            .msg-image {
+                width: 40%;
+                height: auto;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .mission-goal-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .attributes-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar Info -->
+    <div class="top-bar">
+        <div class="container">
+            <div><i class="fas fa-phone-alt"></i> 089-947-2938</div>
+            <div><i class="fas fa-envelope"></i> admin1@rkt.ac.th</div>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header-main" id="header">
+        <div class="header-container">
+            <a href="#" class="logo-group">
+                <img src="https://lh5.googleusercontent.com/d/16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" 
+                     alt="ตราโรงเรียน" 
+                     class="logo-img"
+                     onerror="this.src='https://placehold.co/100x100/9B1C1C/white?text=RKT'">
+                <div class="school-name">
+                    <h1>โรงเรียนบ้านโคกยางหนองถนน</h1>
+                    <span>สพป.บุรีรัมย์ เขต 3</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="nav-desktop">
+                <a href="#home">หน้าแรก</a>
+                <a href="#director">สารจากผู้บริหาร</a>
+                <a href="#about">เกี่ยวกับเรา</a>
+                <a href="#team">บุคลากร</a>
+                <a href="#news">ประชาสัมพันธ์</a>
+                <a href="#contact">ติดต่อ</a>
+            </nav>
+
+            <!-- Mobile Toggle -->
+            <button class="nav-mobile-toggle" id="mobileMenuBtn" aria-label="เปิดเมนู">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="close-menu" id="closeMenuBtn"><i class="fas fa-times"></i></button>
+        <ul class="mobile-nav-links">
+            <li><a href="#home" class="active"><i class="fas fa-home"></i> หน้าแรก</a></li>
+            <li><a href="#director"><i class="fas fa-user-tie"></i> สารจากผู้บริหาร</a></li>
+            <li><a href="#about"><i class="fas fa-info-circle"></i> เกี่ยวกับเรา</a></li>
+            <li><a href="#team"><i class="fas fa-users"></i> บุคลากร</a></li>
+            <li><a href="#features"><i class="fas fa-star"></i> จุดเด่น</a></li>
+            <li><a href="#gallery"><i class="fas fa-images"></i> ภาพกิจกรรม</a></li>
+            <li><a href="#news"><i class="fas fa-newspaper"></i> ข่าวสาร</a></li>
+            <li><a href="#contact"><i class="fas fa-phone"></i> ติดต่อเรา</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <h2 data-aos="fade-up">ยินดีต้อนรับสู่โรงเรียนบ้านโคกยางหนองถนน</h2>
+                <p data-aos="fade-up" data-aos-delay="100">เราเป็นสถานศึกษาที่มุ่งมั่นพัฒนาการศึกษาคุณภาพ เพื่อสร้างเด็กไทยที่มีความรู้ คุณธรรม และพร้อมก้าวสู่อนาคตที่สดใส</p>
+                <div class="hero-actions" data-aos="fade-up" data-aos-delay="200">
+                    <a href="https://script.google.com/macros/s/AKfycbxSarrCofSBsB_arfHLQFDG3pUEAuaqRxMbNAXmfzBYD799Jt7gM08ZKxS8hU_YrDV2/exec" 
+                       target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                        <i class="fas fa-chart-line"></i>
+                        ตรวจสอบผลการเรียน
+                    </a>
+                    <a href="https://script.google.com/macros/s/AKfycbz9ASNeHRWV7ObF-UE0qWnAiVGjogpn0sMXAb-8L-66u7I9S3fe9VY9q8dbNJXpcTrN/exec" 
+                       target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                        <i class="fas fa-user-plus"></i>
+                        ระบบ ปพ.5
+                    </a>
+                    <a href="https://sites.google.com/rkt.ac.th/mix/Home?authuser=0" 
+                       target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                        <i class="fas fa-laptop"></i>
+                        เรียนออนไลน์
+                    </a>
+                    <a href="https://script.google.com/macros/s/AKfycbwQgI6RtfxLMWYrA_jP1cunUhCqEu7STF-aDvl6aLL5ognwhEGIqwFdSuc2NJOtwmb3/exec" 
+                       target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                        <i class="fas fa-briefcase"></i>
+                        ศูนย์กลางงานโรงเรียน
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- [NEW] Stats Section -->
+    <section class="stats-section">
+        <div class="container stats-wrapper">
+            <div class="stat-item">
+                <i class="fas fa-user-graduate"></i>
+                <div class="stat-number">89+</div>
+                <div class="stat-label">นักเรียน</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <div class="stat-number">14</div>
+                <div class="stat-label">ครูและบุคลากร</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-school"></i>
+                <div class="stat-number">48</div>
+                <div class="stat-label">ปีแห่งความภูมิใจ</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-award"></i>
+                <div class="stat-number">10+</div>
+                <div class="stat-label">รางวัลเกียรติยศ</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- [UPDATED] Director Message Section with Real Photo -->
+    <section id="director" class="directors-msg">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">สารจากผู้บริหาร</h2>
+            </div>
+            <div class="msg-box">
+                <!-- UPDATED PHOTO -->
+                <img src="https://drive.google.com/thumbnail?id=1wuklmompBWYIOOuSrQeKdNns5wRIT5BB&sz=w500" alt="ผู้อำนวยการโรงเรียน" class="msg-image">
+                <div class="msg-content">
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <h3 style="margin-bottom: 1rem; position: relative; z-index: 1;">มุ่งมั่นพัฒนาผู้เรียนสู่ความเป็นเลิศ</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; position: relative; z-index: 1;">
+                        "โรงเรียนบ้านโคกยางหนองถนน มีความมุ่งมั่นที่จะพัฒนาคุณภาพการศึกษาในทุกมิติ โดยเน้นผู้เรียนเป็นสำคัญ ส่งเสริมให้เด็กๆ ได้เรียนรู้อย่างมีความสุข เต็มศักยภาพ พร้อมทั้งปลูกฝังคุณธรรม จริยธรรม เพื่อให้เป็นคนดีของสังคมและประเทศชาติ เราพร้อมที่จะก้าวไปข้างหน้าพร้อมกับชุมชน"
+                    </p>
+                    <div class="director-info">
+                        <div class="director-name">นายสมศักดิ์ อั้นภักดี</div>
+                        <div class="director-title">ผู้อำนวยการโรงเรียนบ้านโคกยางหนองถนน</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">จุดเด่นของเรา</h2>
+                <p class="section-desc">เสริมสร้างศักยภาพผู้เรียนรอบด้าน ด้วยหลักสูตรที่ทันสมัย</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-img-wrapper">
+                        <img src="https://drive.google.com/thumbnail?id=1va1Au_6cu7Setw8BXXeLAz6met5Td1k8&sz=w800" alt="Academic">
+                    </div>
+                    <div class="feature-icon-float"><i class="fas fa-brain"></i></div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">วิชาการเข้มข้น</h3>
+                        <p>เน้นทักษะการคิดวิเคราะห์ และการประยุกต์ใช้ความรู้</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-img-wrapper">
+                        <img src="https://lh5.googleusercontent.com/d/1O9jP9HNPq4ewMDhHw4Hp6EfSHrmJb8kM" alt="Nature">
+                    </div>
+                    <div class="feature-icon-float"><i class="fas fa-leaf"></i></div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">สิ่งแวดล้อมศึกษา</h3>
+                        <p>เรียนรู้จากธรรมชาติ ปลูกฝังจิตสำนึกรักษ์โลก</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-img-wrapper">
+                        <img src="https://drive.google.com/thumbnail?id=1xdEVr1DWuvlpXec3lntiQBzkhhYndznH&sz=w800" alt="Technology">
+                    </div>
+                    <div class="feature-icon-float"><i class="fas fa-laptop"></i></div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">เทคโนโลยีทันสมัย</h3>
+                        <p>ห้องเรียน Smart Classroom และสื่อการสอนดิจิทัล</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-img-wrapper">
+                        <img src="https://lh5.googleusercontent.com/d/13J5xHfoeeACn_XMlvdbzqVJraLOG2oH4" alt="Morality">
+                    </div>
+                    <div class="feature-icon-float"><i class="fas fa-heart"></i></div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">คุณธรรมนำความรู้</h3>
+                        <p>ปลูกฝังวินัย ความรับผิดชอบ และความเป็นไทย</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- [NEW] Video Section -->
+    <section class="video-section">
+        <div class="container">
+             <div class="section-header">
+                <h2 class="section-title">รั้วแดง-ทอง บ้านโคกยางหนองถนน</h2>
+                <p class="section-desc">บรรยากาศการเรียนรู้ที่ส่งเสริมความสุข</p>
+            </div>
+            <div class="video-wrapper">
+                <!-- Replace 'src' with actual video embed URL -->
+                <iframe src="https://www.youtube.com/embed/E7PcDSLRSdo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+    
+    <!-- [NEW] Achievements Section -->
+    <section class="achievements-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">ความภาคภูมิใจของเรา</h2>
+                <p class="section-desc">รางวัลแห่งความสำเร็จและความมุ่งมั่น</p>
+            </div>
+            <div class="achievements-grid">
+                 <div class="achievement-card">
+                     <i class="fas fa-trophy achievement-icon"></i>
+                     <div>
+                         <h4>รางวัลโรงเรียนพระราชทาน</h4>
+                         <p style="font-size: 0.9rem; color: var(--text-secondary);">ประเภทสถานศึกษาขนาดเล็ก ประจำปีการศึกษา 2565</p>
+                     </div>
+                 </div>
+                 <div class="achievement-card">
+                     <i class="fas fa-leaf achievement-icon"></i>
+                     <div>
+                         <h4>โรงเรียนปลอดขยะ (Zero Waste)</h4>
+                         <p style="font-size: 0.9rem; color: var(--text-secondary);">รางวัลระดับเหรียญทอง ระดับเขตพื้นที่การศึกษา</p>
+                     </div>
+                 </div>
+                 <div class="achievement-card">
+                     <i class="fas fa-medal achievement-icon"></i>
+                     <div>
+                         <h4>เหรียญทอง งานศิลปหัตถกรรม</h4>
+                         <p style="font-size: 0.9rem; color: var(--text-secondary);">การแข่งขันหุ่นยนต์ระดับพื้นฐาน ระดับภาคตะวันออกเฉียงเหนือ</p>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Layout (Sidebar + Content) -->
+    <section class="container content-wrapper">
+        <!-- Main Content -->
+        <main>
+            <section id="about" style="margin-bottom: 3rem;">
+                <div class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">เกี่ยวกับโรงเรียน</div>
+                <div style="background: white; padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); line-height: 1.8;">
+                    <p style="margin-bottom: 2rem;"><strong>โรงเรียนบ้านโคกยางหนองถนน</strong> มุ่งมั่นจัดการศึกษาขั้นพื้นฐานเพื่อพัฒนาคุณภาพชีวิตของเยาวชนในชุมชน ให้มีความรู้ความสามารถ คู่คุณธรรม จริยธรรม ตามหลักปรัชญาของเศรษฐกิจพอเพียง</p>
+                    
+                    <!-- [UPDATED] Vision Box -->
+                    <div class="vision-box">
+                        <h3><i class="fas fa-eye"></i> วิสัยทัศน์ (Vision)</h3>
+                        <p>"พัฒนาผู้เรียนให้มีคุณภาพตามมาตรฐาน สร้างสังคมแห่งการเรียนรู้ ควบคู่คุณธรรม น้อมนำหลักปรัชญาของเศรษฐกิจพอเพียง เน้นความปลอดภัยใส่ใจสิ่งแวดล้อม"</p>
+                    </div>
+
+                    <!-- [UPDATED] Mission & Goals Grid -->
+                    <div class="mission-goal-grid">
+                        <div class="info-card">
+                            <h4><i class="fas fa-bullseye"></i> พันธกิจ (Mission)</h4>
+                            <ul class="info-list">
+                                <li>ส่งเสริมความร่วมมือระหว่างโรงเรียน ครอบครัว และชุมชน</li>
+                                <li>พัฒนาระบบบริหารจัดการให้มีความปลอดภัย</li>
+                                <li>ส่งเสริมความเป็นเลิศและสมรรถนะผู้เรียน</li>
+                                <li>พัฒนาผู้เรียนสู่ศตวรรษที่ 21</li>
+                                <li>สร้างโอกาสและความเสมอภาคทางการศึกษา</li>
+                                <li>พัฒนาครูและบุคลากรสู่มาตรฐานวิชาชีพ</li>
+                                <li>จัดการศึกษาที่เป็นมิตรกับสิ่งแวดล้อม</li>
+                                <li>ใช้เทคโนโลยีและธรรมาภิบาลในการบริหาร</li>
+                                <li>จัดระบบประกันคุณภาพการศึกษาที่เข้มแข็ง</li>
+                                <li>จัดการเรียนรู้ที่เน้นผู้เรียนเป็นสำคัญ</li>
+                            </ul>
+                        </div>
+                        <div class="info-card">
+                            <h4><i class="fas fa-flag-checkered"></i> เป้าประสงค์ (Goals)</h4>
+                            <ul class="info-list">
+                                <li>นักเรียนรักชาติ ศาสน์ กษัตริย์ และเป็นพลเมืองดี</li>
+                                <li>นักเรียนได้รับโอกาสทางการศึกษาอย่างทั่วถึงและเท่าเทียม</li>
+                                <li>สถานศึกษามีความปลอดภัยจากภัยคุกคามทุกรูปแบบ</li>
+                                <li>บุคลากรเป็นบุคคลแห่งการเรียนรู้และทันเทคโนโลยี</li>
+                                <li>สถานศึกษาบรรลุเป้าหมายการพัฒนาอย่างยั่งยืน (SDGs)</li>
+                                <li>มีระบบบริหารจัดการที่มีประสิทธิภาพด้วยเทคโนโลยี</li>
+                                <li>บริหารจัดการขยะและสิ่งแวดล้อม (Zero Waste) ได้ดี</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- [NEW] Desired Characteristics -->
+                    <h4 style="margin-top: 2rem; color: var(--primary); font-size: 1.25rem;"><i class="fas fa-star"></i> คุณลักษณะอันพึงประสงค์ 8 ประการ</h4>
+                    <div class="attributes-grid">
+                        <div class="attr-item"><i class="fas fa-heart"></i> รักชาติ ศาสน์ กษัตริย์</div>
+                        <div class="attr-item"><i class="fas fa-balance-scale"></i> ซื่อสัตย์สุจริต</div>
+                        <div class="attr-item"><i class="fas fa-user-clock"></i> มีวินัย</div>
+                        <div class="attr-item"><i class="fas fa-book-reader"></i> ใฝ่เรียนรู้</div>
+                        <div class="attr-item"><i class="fas fa-seedling"></i> อยู่อย่างพอเพียง</div>
+                        <div class="attr-item"><i class="fas fa-briefcase"></i> มุ่งมั่นในการทำงาน</div>
+                        <div class="attr-item"><i class="fas fa-praying-hands"></i> รักความเป็นไทย</div>
+                        <div class="attr-item"><i class="fas fa-hands-helping"></i> มีจิตสาธารณะ</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- [NEW] Academic Calendar Section -->
+            <section id="calendar" style="margin-bottom: 3rem;">
+                <div class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">ปฏิทินวิชาการ</div>
+                <div style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden;">
+                    <div style="background: var(--primary); padding: 1rem; color: white;">
+                        <h3 style="margin: 0; font-size: 1.1rem;"><i class="far fa-calendar-alt"></i> กิจกรรมเร็วๆ นี้</h3>
+                    </div>
+                    <ul class="calendar-list">
+                        <li class="calendar-item">
+                            <div class="cal-date">
+                                <span>12</span>
+                                <span>ส.ค.</span>
+                            </div>
+                            <div class="cal-info">
+                                <h4>วันเฉลิมพระชนมพรรษาฯ (วันแม่แห่งชาติ)</h4>
+                                <p>หยุดราชการ 1 วัน</p>
+                            </div>
+                        </li>
+                        <li class="calendar-item">
+                            <div class="cal-date">
+                                <span>18</span>
+                                <span>ส.ค.</span>
+                            </div>
+                            <div class="cal-info">
+                                <h4>สัปดาห์วิทยาศาสตร์แห่งชาติ</h4>
+                                <p>กิจกรรมฐานการเรียนรู้วิทยาศาสตร์ ณ หอประชุมโรงเรียน</p>
+                            </div>
+                        </li>
+                        <li class="calendar-item">
+                            <div class="cal-date">
+                                <span>09</span>
+                                <span>ก.ย.</span>
+                            </div>
+                            <div class="cal-info">
+                                <h4>กีฬาสีภายใน "โคกยางเกมส์"</h4>
+                                <p>การแข่งขันกีฬาเชื่อมความสามัคคีประจำปี</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="news">
+                <div class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">ข่าวประชาสัมพันธ์</div>
+                <div class="news-list">
+                    <article class="news-item">
+                        <div class="news-date-box">
+                            <span class="news-day">29</span>
+                            <span class="news-month">พ.ค.</span>
+                        </div>
+                        <div class="news-info">
+                            <h3><a href="#">กิจกรรมวันสุนทรภู่ กวีเอกของโลก</a></h3>
+                            <p class="news-excerpt">คณะครูและนักเรียนร่วมจัดกิจกรรมเพื่อรำลึกถึงครูกลอนสุนทรภู่ มีการประกวดแต่งกลอนและวาดภาพระบายสี...</p>
+                        </div>
+                    </article>
+                    <article class="news-item">
+                        <div class="news-date-box">
+                            <span class="news-day">10</span>
+                            <span class="news-month">พ.ค.</span>
+                        </div>
+                        <div class="news-info">
+                            <h3><a href="#">โครงการค่ายพุทธบุตร ส่งเสริมคุณธรรม</a></h3>
+                            <p class="news-excerpt">กิจกรรมอบรมจริยธรรมแก่นักเรียน เพื่อปลูกฝังจิตสำนึกที่ดีงามตามวิถีพุทธ...</p>
+                        </div>
+                    </article>
+                     <article class="news-item">
+                        <div class="news-date-box">
+                            <span class="news-day">01</span>
+                            <span class="news-month">พ.ค.</span>
+                        </div>
+                        <div class="news-info">
+                            <h3><a href="#">ประกาศรับสมัครนักเรียนใหม่ ประจำปีการศึกษา 2567</a></h3>
+                            <p class="news-excerpt">เปิดรับสมัครนักเรียนระดับชั้นอนุบาลถึงประถมศึกษาปีที่ 6 ตั้งแต่วันนี้เป็นต้นไป...</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <!-- Sidebar -->
+        <aside>
+            <!-- [ADDED] Download/Docs Widget -->
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-file-download"></i> เอกสารเผยแพร่</h3>
+                <ul class="link-list">
+                    <li><a href="#"><i class="fas fa-file-pdf"></i> ปฏิทินวิชาการ 2567</a></li>
+                    <li><a href="#"><i class="fas fa-file-pdf"></i> คู่มือนักเรียนและผู้ปกครอง</a></li>
+                    <li><a href="#"><i class="fas fa-file-word"></i> แบบฟอร์มใบลา</a></li>
+                </ul>
+            </div>
+
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-link"></i> บริการออนไลน์</h3>
+                <ul class="link-list">
+                    <li>
+                        <a href="https://script.google.com/a/macros/rkt.ac.th/s/AKfycbybjMo0Xs0ji_i962aznQ-Pi3pccibXzKqOGIXLlBQ0rzjVj-VJ2Degh-h57Ht04Dpb/exec" target="_blank">
+                            <i class="fas fa-clipboard-check"></i> ระบบ ปพ.5 ออนไลน์
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://script.google.com/a/macros/rkt.ac.th/s/AKfycbwtnNURBR2NSXb-_weXwTsLb8jWik_siLiGbjR91KN9XAw57OHSntOrx2x3Fvc_dH42/exec" target="_blank">
+                            <i class="fas fa-briefcase"></i> ศูนย์กลางงานโรงเรียน
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.dltv.ac.th" target="_blank">
+                            <i class="fas fa-tv"></i> DLTV เรียนทางไกล
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="widget">
+                <h3 class="widget-title"><i class="fab fa-facebook"></i> ติดตามเรา</h3>
+                <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Frongreiyn.ban.khok.yang.hnxng.thnn&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="100%" height="300" style="border:none;overflow:hidden;border-radius:8px;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                <!-- [NEW] Fallback button for Facebook -->
+                <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" class="btn btn-secondary" style="width: 100%; margin-top: 1rem; font-size: 0.85rem;">
+                   <i class="fab fa-facebook-square"></i> ไปที่เพจ Facebook
+                </a>
+            </div>
+
+            <!-- [UPDATED] Contact Widget with Map -->
+            <div class="widget" id="contact">
+                <h3 class="widget-title"><i class="fas fa-map-marked-alt"></i> ติดต่อเรา</h3>
+                <p style="margin-bottom: 0.5rem; font-size: 0.9rem;"><strong>โรงเรียนบ้านโคกยางหนองถนน</strong></p>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    ต.โคกยาง อ.หนองถนน<br>จ.บุรีรัมย์ 31230
+                </p>
+                
+                <!-- Embedded Map Frame -->
+                <div style="width: 100%; height: 200px; margin-bottom: 1rem; border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(0,0,0,0.1);">
+                    <iframe 
+                        width="100%" 
+                        height="100%" 
+                        frameborder="0" 
+                        style="border:0"
+                        loading="lazy"
+                        allowfullscreen
+                        src="https://maps.google.com/maps?q=โรงเรียนบ้านโคกยางหนองถนน&t=&z=15&ie=UTF8&iwloc=&output=embed">
+                    </iframe>
+                </div>
+
+                <!-- Navigate Button with specific link -->
+                <a href="https://maps.app.goo.gl/rZB8jnEnvNw971dW9" target="_blank" class="btn btn-secondary" style="width: 100%; font-size: 0.85rem;">
+                    <i class="fas fa-location-arrow"></i> นำทาง Google Maps
+                </a>
+            </div>
+        </aside>
+    </section>
+
+    <!-- [UPDATED] Team/Personnel Section with Real Links -->
+    <section id="team" class="team-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">บุคลากรของเรา</h2>
+                <p class="section-desc">ทีมงานคุณภาพที่พร้อมดูแลและพัฒนาผู้เรียน</p>
+            </div>
+            <div class="team-grid">
+                <!-- 1. ผู้อำนวยการ -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1wuklmompBWYIOOuSrQeKdNns5wRIT5BB&sz=w500" alt="Director" class="team-img">
+                    <h3 class="team-name">นายสมศักดิ์ อั้นภักดี</h3>
+                    <p class="team-role">ผู้อำนวยการโรงเรียน</p>
+                </div>
+                <!-- 2. หัวหน้าฝ่ายวิชาการ -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1Xw7VoMeJHO-NBQyk2Z8PFgJYi0kzGZPc&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นายประเทือง หงษ์แก้ว</h3>
+                    <p class="team-role">หัวหน้าฝ่ายวิชาการ</p>
+                </div>
+                <!-- 3. ครูอนุบาล 1 -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1li3YS-sFmAKinzBe9g9ZNItJVTWZTvZ5&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นางสุมิตรา ชอบมี</h3>
+                    <p class="team-role">ครูประจำชั้นอนุบาล 1</p>
+                </div>
+                <!-- 4. ครูอนุบาล 2 -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1LwL_rJrxQcJYzJcQJsWORHgOs4VUojXf&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นางสาวเพ็ญนภา นาคินชาติ</h3>
+                    <p class="team-role">ครูประจำชั้นอนุบาล 2</p>
+                </div>
+                <!-- 5. ครูอนุบาล 3 -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1Zn9vqJj9wKtqvQBzstyhDgcYmYniPujK&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นางสาวเพ็ญนภา นาคินชาติ</h3>
+                    <p class="team-role">ครูประจำชั้นอนุบาล 3</p>
+                </div>
+                <!-- 6. ครู ป.1 -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1ct6O_Dz3HITXWcShyml3QL5gVc1hVQv8&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นางเดือนฉาย ยืนชนม์</h3>
+                    <p class="team-role">ครูประจำชั้นประถมศึกษาปีที่ 1</p>
+                </div>
+                <!-- 7. ครู ป.2 -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=10EJmfSp58w25yjHWh0WoWwcLwGXeCEUh&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นางสาวนัฐวรา หงษ์สุด</h3>
+                    <p class="team-role">ครูประจำชั้นประถมศึกษาปีที่ 2</p>
+                </div>
+                <!-- 8. ครู ป.3 -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1_d7C4p_dUKq6rKwGHH0ImPABcm2bqYP1&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นายประเทือง หงษ์แก้ว</h3>
+                    <p class="team-role">ครูประจำชั้นประถมศึกษาปีที่ 3</p>
+                </div>
+                <!-- 9. ครู ป.4 -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=10jhwBg4qkQuo5Cd-iLpFd7FCn6qPx39Y&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นางสาวหนึ่งฤทัย มะทุโป</h3>
+                    <p class="team-role">ครูประจำชั้นประถมศึกษาปีที่ 4</p>
+                </div>
+                <!-- 10. ครู ป.5 -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1nESMhTlED65rBjl_0COilVhBp_UjJAjh&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นางสาวนันท์นภัส ปาโมกข์</h3>
+                    <p class="team-role">ครูประจำชั้นประถมศึกษาปีที่ 5</p>
+                </div>
+                <!-- 11. ครู ป.6 -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1o8degWBg8it-9cC7oTCqAJKyqxdohcha&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นางสาวจันทนา มหาภูวตานนท์</h3>
+                    <p class="team-role">ครูประจำชั้นประถมศึกษาปีที่ 6</p>
+                </div>
+                <!-- 12. ครูภาษาอังกฤษ -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1nIYjBcowGI8TBt3e7FQvn_WhJz2N8bLH&sz=w500" alt="Teacher" class="team-img">
+                    <h3 class="team-name">นางสาวปิยรัตน์ ทองคำ</h3>
+                    <p class="team-role">ครูสอนภาษาอังกฤษ</p>
+                </div>
+                <!-- 13. เจ้าหน้าที่ธุรการ -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1bA8QJrKsIBm5Jt9b2glaV6a7l7h4dzEC&sz=w500" alt="Staff" class="team-img">
+                    <h3 class="team-name">นางสาวภัทรีพร ผ่องแผ้ว</h3>
+                    <p class="team-role">เจ้าหน้าที่ธุรการ</p>
+                </div>
+                <!-- 14. นักการภารโรง -->
+                <div class="team-card">
+                    <img src="https://drive.google.com/thumbnail?id=1zA4FVmEuboiekG4sYd5MeBvQqjkOuRLH&sz=w500" alt="Staff" class="team-img">
+                    <h3 class="team-name">นายธวัชชัย ฉิมกูล</h3>
+                    <p class="team-role">นักการภารโรง</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">ภาพกิจกรรม</h2>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://drive.google.com/thumbnail?id=1e_g8-GwG5C-M97_9xH6HR10uykVmVRGO&sz=w400" alt="Activity">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h4>กิจกรรมรับบริจาค</h4>
+                            <p style="font-size: 0.8rem;">ผู้ใจบุญร่วมสนับสนุนการศึกษา</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://drive.google.com/thumbnail?id=1xdEVr1DWuvlpXec3lntiQBzkhhYndznH&sz=w400" alt="Activity">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h4>พิธีไหว้ครู</h4>
+                            <p style="font-size: 0.8rem;">น้อมวันทา บูชาครู</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="gallery-item">
+                    <img src="https://lh5.googleusercontent.com/d/1O9jP9HNPq4ewMDhHw4Hp6EfSHrmJb8kM" alt="Activity">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h4>แหล่งเรียนรู้</h4>
+                            <p style="font-size: 0.8rem;">ศึกษาธรรมชาติในโรงเรียน</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="gallery-item">
+                    <img src="https://drive.google.com/thumbnail?id=1va1Au_6cu7Setw8BXXeLAz6met5Td1k8&sz=w400" alt="Activity">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h4>วิชาการ</h4>
+                            <p style="font-size: 0.8rem;">กิจกรรมส่งเสริมความรู้</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>โรงเรียนบ้านโคกยางหนองถนน</h2>
+                    <p style="margin-bottom: 1rem; opacity: 0.8;">มุ่งมั่นพัฒนาผู้เรียนให้เป็นมนุษย์ที่สมบูรณ์ เป็นคนดี มีปัญญา มีความสุข และมีความเป็นไทย</p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" style="color: white; font-size: 1.5rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color: white; font-size: 1.5rem;"><i class="fab fa-line"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>หน่วยงานที่เกี่ยวข้อง</h3>
+                    <ul>
+                        <li><a href="https://web.brm3.go.th/" target="_blank">สพป.บุรีรัมย์ เขต 3</a></li>
+                        <li><a href="https://www.obec.go.th/" target="_blank">กระทรวงศึกษาธิการ</a></li>
+                        <li><a href="https://www.ksp.or.th/" target="_blank">คุรุสภา</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>ติดต่อสอบถาม</h3>
+                    <ul>
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>บ้านโคกยางหนองถนน ต.โคกยาง อ.หนองถนน จ.บุรีรัมย์ 31230</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>089-947-2938</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>admin1@rkt.ac.th</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2567 โรงเรียนบ้านโคกยางหนองถนน. All Rights Reserved. </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Sticky Header Effect ---
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // --- Mobile Menu Logic ---
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const closeBtn = document.getElementById('closeMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const overlay = document.getElementById('mobileOverlay');
+
+        function toggleMenu() {
+            mobileNav.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        mobileBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        // Close menu when link is clicked
+        document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+
+        // --- Smooth Scroll for Anchor Links ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Offset for sticky header
+                    const headerOffset = 80;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
