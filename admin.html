@@ -725,6 +725,17 @@ async function saveModal() {
     let rows = [...(allData[currentModal] || [])];
     if (editingRow !== null) rows[editingRow] = data;
     else rows.push(data);
+
+    // ถ้ายังไม่มี API URL → บันทึกแค่ใน memory (offline mode)
+    if (!API_URL) {
+        allData[currentModal] = rows;
+        renderTable(currentModal, rows);
+        updateDashboard();
+        closeModal();
+        toast('บันทึกในหน่วยความจำแล้ว (ยังไม่ได้เชื่อม API)', 'warning');
+        return;
+    }
+
     const r = await apiPost('saveSheet', currentModal, rows);
     if (r?.success) {
         allData[currentModal] = rows;
@@ -732,7 +743,11 @@ async function saveModal() {
         updateDashboard();
         closeModal();
         toast('บันทึกสำเร็จ', 'success');
-    } else toast('เกิดข้อผิดพลาด', 'error');
+    } else {
+        const errMsg = r?.error || 'ไม่ทราบสาเหตุ';
+        toast(`เกิดข้อผิดพลาด: ${errMsg}`, 'error');
+        console.error('saveModal error:', r);
+    }
 }
 
 function editRow(name, idx) {
@@ -837,7 +852,7 @@ function getSheetData(name) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const s = ss.getSheetByName(name);
   if (!s) return null;
-  const rows = s.getDataRange().getValues();
+  const rows = s.getDataRange().getDisplayValues(); // ใช้ getDisplayValues แทน getValues เพื่อได้ text จริง
   if (!rows || rows.length === 0) return (name==='settings'||name==='director') ? {} : [];
   if (name === 'settings' || name === 'director') {
     const obj = {};
