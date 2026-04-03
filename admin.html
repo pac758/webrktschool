@@ -600,9 +600,9 @@ async function saveDirector() {
 // ===== TABLE RENDER =====
 const tableConfig = {
     news: {
-        cols: ['date','title','excerpt','link'],
-        labels: ['วันที่','หัวข้อ','เนื้อหาย่อ','ลิงก์'],
-        render: (row, i) => `<td>${i+1}</td><td>${row.date||''}</td><td>${row.title||''}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${row.excerpt||''}</td>`
+        cols: ['date','title','excerpt','link','fb_post'],
+        labels: ['วันที่','หัวข้อ','เนื้อหาย่อ','ลิงก์','Facebook Post'],
+        render: (row, i) => `<td>${i+1}</td><td>${row.date||''}</td><td>${row.title||''}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${row.excerpt||''}</td><td>${row.fb_post ? '<i class="fab fa-facebook" style="color:#1877F2"></i>' : '—'}</td>`
     },
     calendar: {
         cols: ['day','month','title','detail'],
@@ -651,7 +651,12 @@ const modalForms = {
         <div class="field"><label>วันที่</label><input type="text" id="mf_date" placeholder="29 พ.ค."></div>
         <div class="field"><label>หัวข้อข่าว</label><input type="text" id="mf_title" placeholder="กิจกรรมวันสุนทรภู่..."></div>
         <div class="field"><label>เนื้อหาย่อ</label><textarea id="mf_excerpt" placeholder="คณะครูและนักเรียนร่วมจัดกิจกรรม..."></textarea></div>
-        <div class="field"><label>ลิงก์ (ถ้ามี)</label><input type="text" id="mf_link" placeholder="https://..."></div>`,
+        <div class="field"><label>ลิงก์ข่าว (ถ้ามี)</label><input type="text" id="mf_link" placeholder="https://..."></div>
+        <div class="field">
+            <label>Facebook Post URL (ถ้ามี — จะ embed โพสต์ในหน้าข่าว)</label>
+            <input type="text" id="mf_fb_post" placeholder="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn/posts/...">
+            <small style="color:var(--muted);font-size:.78rem;margin-top:.3rem;display:block">วิธีได้ URL: เปิดโพสต์ใน Facebook → คลิก ··· → ฝังโพสต์ → คัดลอก URL จาก iframe src="..." หรือ copy link ของโพสต์</small>
+        </div>`,
     calendar: () => `
         <div class="field-row">
             <div class="field"><label>วัน (ตัวเลข)</label><input type="text" id="mf_day" placeholder="12"></div>
