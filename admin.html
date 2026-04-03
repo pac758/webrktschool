@@ -498,6 +498,11 @@ function showPage(name) {
     document.getElementById('page-' + name).classList.add('active');
     document.querySelector(`[data-page="${name}"]`).classList.add('active');
     document.getElementById('pageTitle').textContent = pageTitles[name] || name;
+    // ถ้ามีข้อมูลใน cache แล้ว render เลย ไม่ต้องรอ
+    if (allData[name] && name !== 'settings' && name !== 'director') {
+        renderTable(name, allData[name]);
+    }
+    // โหลดใหม่จาก API เสมอ
     if (API_URL && name !== 'setup' && name !== 'dashboard') loadSection(name);
 }
 
@@ -544,12 +549,17 @@ async function loadAllData() {
     let loaded = 0;
     for (const s of sheets) {
         const d = await apiGet(s);
-        if (d !== null) { allData[s] = d; loaded++; }
+        if (d !== null) {
+            allData[s] = d;
+            loaded++;
+            // render table ทันทีถ้าไม่ใช่ settings/director
+            if (s !== 'settings' && s !== 'director') renderTable(s, d);
+        }
     }
     if (loaded > 0) {
         toast(`โหลดข้อมูลสำเร็จ (${loaded}/7 sheets)`, 'success');
     } else {
-        toast('ไม่สามารถดึงข้อมูลได้ — ตรวจสอบ API URL และ Deploy settings', 'error');
+        toast('ไม่สามารถดึงข้อมูลได้ — ตรวจสอบ API URL', 'error');
     }
     updateDashboard();
     fillSettings();
@@ -639,8 +649,16 @@ const tableConfig = {
 function renderTable(name, rows) {
     const cfg = tableConfig[name];
     if (!cfg) return;
-    const tbody = document.getElementById(name === 'achievements' ? 'achieveTbody' : name + 'Tbody');
-    if (!tbody) return;
+    // map ชื่อ tbody ให้ถูกต้องทุก section
+    const tbodyMap = {
+        achievements: 'achieveTbody',
+        news: 'newsTbody',
+        calendar: 'calTbody',
+        team: 'teamTbody',
+        gallery: 'galleryTbody'
+    };
+    const tbody = document.getElementById(tbodyMap[name] || name + 'Tbody');
+    if (!tbody) { console.warn('tbody not found for:', name); return; }
     if (!rows || rows.length === 0) {
         tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:2rem">ยังไม่มีข้อมูล</td></tr>`;
         return;
