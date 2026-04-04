@@ -129,16 +129,20 @@
         .modal-body{padding:1.5rem}
         .modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.75rem}
 
-        /* ===== CROP POSITION ===== */
-        .crop-preview-wrap{display:flex;gap:1rem;align-items:flex-start;margin-top:.5rem}
-        .crop-preview-box{width:100px;height:100px;border-radius:50%;overflow:hidden;border:3px solid var(--primary);flex-shrink:0;background:#f1f5f9}
-        .crop-preview-box img{width:100%;height:100%;object-fit:cover;transition:object-position .3s}
-        .crop-pos-btns{display:flex;flex-direction:column;gap:.4rem}
-        .crop-pos-btns .crop-btn-row{display:flex;gap:.4rem}
-        .crop-btn{padding:.35rem .65rem;border:1.5px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:.72rem;color:var(--text);transition:var(--trans);line-height:1}
-        .crop-btn:hover{border-color:var(--primary);background:#EFF6FF}
-        .crop-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-        .crop-hint{font-size:.75rem;color:var(--muted);margin-top:.3rem}
+        /* ===== CROP TOOL ===== */
+        .crop-tool{display:flex;gap:1.25rem;align-items:flex-start;margin-top:.75rem}
+        .crop-area{position:relative;width:160px;height:160px;border-radius:50%;overflow:hidden;border:3px solid var(--primary);flex-shrink:0;background:#f1f5f9;cursor:grab;touch-action:none;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+        .crop-area:active{cursor:grabbing}
+        .crop-area img{position:absolute;top:0;left:0;min-width:100%;min-height:100%;object-fit:cover;pointer-events:none;user-select:none}
+        .crop-area .crop-crosshair{position:absolute;inset:0;pointer-events:none;z-index:2}
+        .crop-area .crop-crosshair::before,.crop-area .crop-crosshair::after{content:'';position:absolute;background:rgba(255,255,255,.35)}
+        .crop-area .crop-crosshair::before{width:1px;height:100%;left:50%;top:0}
+        .crop-area .crop-crosshair::after{height:1px;width:100%;top:50%;left:0}
+        .crop-info{display:flex;flex-direction:column;gap:.5rem}
+        .crop-info .crop-label{font-weight:600;font-size:.85rem;color:var(--text)}
+        .crop-info .crop-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
+        .crop-reset-btn{padding:.4rem .8rem;border:1.5px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:.78rem;color:var(--text);transition:var(--trans)}
+        .crop-reset-btn:hover{border-color:var(--primary);background:#EFF6FF}
 
         /* ===== IMAGE PREVIEW ===== */
         .thumb-preview{cursor:pointer;transition:transform .2s;border:2px solid transparent}
@@ -826,7 +830,7 @@ const tableConfig = {
         cols: ['photo','name','role','order','crop'],
         labels: ['URL รูป','ชื่อ-นามสกุล','ตำแหน่ง','ลำดับ','ครอป'],
         render: (row, i) => `<td>${i+1}</td><td>${row.photo ? `<img src="${row.photo}" class="thumb-preview" onclick="previewImage('${row.photo.replace(/'/g,"\\'")}')"
-            style="width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:${row.crop||'top center'}">` : '—'}</td><td>${row.name||''}</td><td>${row.role||''}</td><td>${row.order||''}</td>`
+            style="width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:${row.crop||'50% 0%'}">` : '—'}</td><td>${row.name||''}</td><td>${row.role||''}</td><td>${row.order||''}</td>`
     },
     achievements: {
         cols: ['icon','title','detail'],
@@ -906,29 +910,17 @@ const modalForms = {
         </div>
         <div class="field"><label>URL รูปภาพ</label><input type="text" id="mf_photo" placeholder="https://drive.google.com/thumbnail?id=..." oninput="updateCropPreview()"></div>
         <div class="field">
-            <label>ตำแหน่งการครอป (เลือกส่วนที่ต้องการแสดง)</label>
-            <input type="hidden" id="mf_crop" value="top center">
-            <div class="crop-preview-wrap">
-                <div class="crop-preview-box"><img id="cropPreviewImg" src="https://placehold.co/200x200/334155/white?text=รูป" alt="preview"></div>
-                <div>
-                    <div class="crop-pos-btns">
-                        <div class="crop-btn-row">
-                            <button type="button" class="crop-btn" onclick="setCrop('top left',this)">↖ บนซ้าย</button>
-                            <button type="button" class="crop-btn active" onclick="setCrop('top center',this)">↑ บนกลาง</button>
-                            <button type="button" class="crop-btn" onclick="setCrop('top right',this)">↗ บนขวา</button>
-                        </div>
-                        <div class="crop-btn-row">
-                            <button type="button" class="crop-btn" onclick="setCrop('center left',this)">← กลางซ้าย</button>
-                            <button type="button" class="crop-btn" onclick="setCrop('center center',this)">● กลาง</button>
-                            <button type="button" class="crop-btn" onclick="setCrop('center right',this)">→ กลางขวา</button>
-                        </div>
-                        <div class="crop-btn-row">
-                            <button type="button" class="crop-btn" onclick="setCrop('bottom left',this)">↙ ล่างซ้าย</button>
-                            <button type="button" class="crop-btn" onclick="setCrop('bottom center',this)">↓ ล่างกลาง</button>
-                            <button type="button" class="crop-btn" onclick="setCrop('bottom right',this)">↘ ล่างขวา</button>
-                        </div>
-                    </div>
-                    <div class="crop-hint">กดปุ่มเพื่อเลือกส่วนของรูปที่จะแสดงในวงกลม</div>
+            <label>ครอบตัดรูป — ลากรูปเพื่อเลือกส่วนที่จะแสดง</label>
+            <input type="hidden" id="mf_crop" value="50% 0%">
+            <div class="crop-tool">
+                <div class="crop-area" id="cropArea">
+                    <img id="cropPreviewImg" src="https://placehold.co/300x300/334155/white?text=รูป" alt="preview" draggable="false">
+                    <div class="crop-crosshair"></div>
+                </div>
+                <div class="crop-info">
+                    <div class="crop-label"><i class="fas fa-hand-pointer"></i> ลากรูปเพื่อจัดตำแหน่ง</div>
+                    <div class="crop-desc">ลากรูปในวงกลมเพื่อเลือกส่วนที่ต้องการแสดงเป็นรูปโปรไฟล์</div>
+                    <button type="button" class="crop-reset-btn" onclick="resetCrop()"><i class="fas fa-undo"></i> รีเซ็ตตำแหน่ง</button>
                 </div>
             </div>
         </div>
@@ -1027,31 +1019,88 @@ function pickIcon(cls) {
     if (picked) picked.classList.add('selected');
 }
 
-function setCrop(pos, el) {
-    document.getElementById('mf_crop').value = pos;
-    document.querySelectorAll('.crop-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    const img = document.getElementById('cropPreviewImg');
-    if (img) img.style.objectPosition = pos;
-}
+// ===== DRAG CROP TOOL =====
+let cropState = { dragging: false, startX: 0, startY: 0, imgX: 0, imgY: 0, maxX: 0, maxY: 0 };
 
 function updateCropPreview() {
     const url = document.getElementById('mf_photo')?.value || '';
     const img = document.getElementById('cropPreviewImg');
     if (!img) return;
-    img.src = url || 'https://placehold.co/200x200/334155/white?text=\u0e23\u0e39\u0e1b';
-    img.style.objectPosition = document.getElementById('mf_crop')?.value || 'top center';
+    img.src = url || 'https://placehold.co/300x300/334155/white?text=\u0e23\u0e39\u0e1b';
+    // รีเซ็ตตำแหน่งเมื่อเปลี่ยนรูป
+    const cropVal = document.getElementById('mf_crop')?.value || '50% 0%';
+    applyCropFromValue(cropVal);
 }
 
-function initCropButtons(cropVal) {
-    const val = cropVal || 'top center';
-    document.getElementById('mf_crop').value = val;
-    document.querySelectorAll('.crop-btn').forEach(b => {
-        b.classList.remove('active');
-        if (b.getAttribute('onclick')?.includes(val)) b.classList.add('active');
-    });
+function applyCropFromValue(val) {
     const img = document.getElementById('cropPreviewImg');
-    if (img) img.style.objectPosition = val;
+    const area = document.getElementById('cropArea');
+    if (!img || !area) return;
+    // parse "50% 20%" -> {x:50, y:20}
+    const parts = val.replace(/%/g,'').split(/\s+/).map(Number);
+    const px = isNaN(parts[0]) ? 50 : parts[0];
+    const py = isNaN(parts[1]) ? 0 : parts[1];
+    // ต้องรอรูปโหลดเพื่อรู้ขนาดจริง
+    const apply = () => {
+        const aW = area.offsetWidth, aH = area.offsetHeight;
+        const iW = Math.max(img.naturalWidth, aW);
+        const iH = Math.max(img.naturalHeight, aH);
+        // scale ให้ cover วงกลม
+        const scale = Math.max(aW/iW, aH/iH);
+        const sW = iW * scale, sH = iH * scale;
+        img.style.width = sW + 'px';
+        img.style.height = sH + 'px';
+        const maxX = sW - aW, maxY = sH - aH;
+        cropState.maxX = maxX; cropState.maxY = maxY;
+        const x = -(px / 100) * maxX;
+        const y = -(py / 100) * maxY;
+        cropState.imgX = x; cropState.imgY = y;
+        img.style.left = x + 'px';
+        img.style.top = y + 'px';
+    };
+    if (img.complete && img.naturalWidth) apply();
+    else img.onload = apply;
+}
+
+function saveCropValue() {
+    const px = cropState.maxX > 0 ? Math.round((-cropState.imgX / cropState.maxX) * 100) : 50;
+    const py = cropState.maxY > 0 ? Math.round((-cropState.imgY / cropState.maxY) * 100) : 0;
+    document.getElementById('mf_crop').value = `${Math.max(0,Math.min(100,px))}% ${Math.max(0,Math.min(100,py))}%`;
+}
+
+function resetCrop() {
+    document.getElementById('mf_crop').value = '50% 0%';
+    applyCropFromValue('50% 0%');
+}
+
+function initCropDrag() {
+    const area = document.getElementById('cropArea');
+    if (!area) return;
+    const onStart = (ex, ey) => {
+        cropState.dragging = true;
+        cropState.startX = ex - cropState.imgX;
+        cropState.startY = ey - cropState.imgY;
+    };
+    const onMove = (ex, ey) => {
+        if (!cropState.dragging) return;
+        const img = document.getElementById('cropPreviewImg');
+        let nx = ex - cropState.startX;
+        let ny = ey - cropState.startY;
+        nx = Math.min(0, Math.max(-cropState.maxX, nx));
+        ny = Math.min(0, Math.max(-cropState.maxY, ny));
+        cropState.imgX = nx; cropState.imgY = ny;
+        img.style.left = nx + 'px';
+        img.style.top = ny + 'px';
+    };
+    const onEnd = () => { if (cropState.dragging) { cropState.dragging = false; saveCropValue(); } };
+    // mouse
+    area.addEventListener('mousedown', e => { e.preventDefault(); onStart(e.clientX, e.clientY); });
+    document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+    document.addEventListener('mouseup', onEnd);
+    // touch
+    area.addEventListener('touchstart', e => { e.preventDefault(); const t=e.touches[0]; onStart(t.clientX, t.clientY); }, {passive:false});
+    document.addEventListener('touchmove', e => { const t=e.touches[0]; onMove(t.clientX, t.clientY); });
+    document.addEventListener('touchend', onEnd);
 }
 
 function openModal(type, data = null) {
@@ -1077,9 +1126,9 @@ function openModal(type, data = null) {
     if (type === 'features' || type === 'achievements') {
         buildIconPicker(data?.icon || '');
     }
-    // ตั้งค่า crop preview สำหรับ team
+    // ตั้งค่า crop tool สำหรับ team
     if (type === 'team') {
-        initCropButtons(data?.crop || 'top center');
+        initCropDrag();
         updateCropPreview();
     }
     document.getElementById('modalOverlay').classList.add('open');

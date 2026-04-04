@@ -1045,7 +1045,7 @@
             const sorted = [...rows].sort((a,b) => (parseInt(a.order)||99) - (parseInt(b.order)||99));
             el.innerHTML = sorted.map(r => `
                 <div class="team-card">
-                    <img src="${r.photo||'https://placehold.co/200x200/334155/white?text=ครู'}" alt="${r.name||''}" class="team-photo" style="object-position:${r.crop||'top center'}" onerror="this.src='https://placehold.co/200x200/334155/white?text=ครู'">
+                    <img src="${r.photo||'https://placehold.co/200x200/334155/white?text=ครู'}" alt="${r.name||''}" class="team-photo" style="object-position:${r.crop||'50% 0%'}" onerror="this.src='https://placehold.co/200x200/334155/white?text=ครู'">
                     <div class="team-name">${r.name||''}</div>
                     <div class="team-role">${r.role||''}</div>
                 </div>`).join('');
