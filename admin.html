@@ -208,6 +208,7 @@
             <div class="nav-item" onclick="showPage('news')" data-page="news"><i class="fas fa-newspaper"></i>ข่าวประชาสัมพันธ์</div>
             <div class="nav-item" onclick="showPage('calendar')" data-page="calendar"><i class="far fa-calendar-alt"></i>ปฏิทินกิจกรรม</div>
             <div class="nav-item" onclick="showPage('team')" data-page="team"><i class="fas fa-users"></i>บุคลากร</div>
+            <div class="nav-item" onclick="showPage('features')" data-page="features"><i class="fas fa-star"></i>จุดเด่นโรงเรียน</div>
             <div class="nav-item" onclick="showPage('achievements')" data-page="achievements"><i class="fas fa-trophy"></i>รางวัล/ความภาคภูมิใจ</div>
             <div class="nav-item" onclick="showPage('gallery')" data-page="gallery"><i class="fas fa-images"></i>ภาพกิจกรรม</div>
             <div class="nav-divider"></div>
@@ -237,6 +238,7 @@
                     <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-trophy"></i></div><div><div class="stat-num" id="cnt-achieve">—</div><div class="stat-lbl">รางวัล</div></div></div>
                     <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-images"></i></div><div><div class="stat-num" id="cnt-gallery">—</div><div class="stat-lbl">ภาพกิจกรรม</div></div></div>
                     <div class="stat-card"><div class="stat-icon slate"><i class="far fa-calendar-alt"></i></div><div><div class="stat-num" id="cnt-cal">—</div><div class="stat-lbl">กิจกรรม</div></div></div>
+                    <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-star"></i></div><div><div class="stat-num" id="cnt-features">—</div><div class="stat-lbl">จุดเด่น</div></div></div>
                 </div>
                 <div class="card">
                     <div class="card-header"><h4><i class="fas fa-info-circle"></i>วิธีใช้งาน</h4></div>
@@ -353,6 +355,21 @@
                             <table id="achieveTable">
                                 <thead><tr><th>#</th><th>ไอคอน</th><th>ชื่อรางวัล</th><th>รายละเอียด</th><th>จัดการ</th></tr></thead>
                                 <tbody id="achieveTbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">กำลังโหลด...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FEATURES -->
+            <div class="page" id="page-features">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-star"></i>จุดเด่นโรงเรียน</h4><button class="btn btn-primary btn-sm" onclick="openModal('features')"><i class="fas fa-plus"></i>เพิ่มจุดเด่น</button></div>
+                    <div class="card-body">
+                        <div class="table-wrap">
+                            <table id="featuresTable">
+                                <thead><tr><th>#</th><th>รูป</th><th>ชื่อ</th><th>รายละเอียด</th><th>ไอคอน</th><th>จัดการ</th></tr></thead>
+                                <tbody id="featuresTbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">กำลังโหลด...</td></tr></tbody>
                             </table>
                         </div>
                     </div>
@@ -512,7 +529,7 @@ function updateApiStatus() {
 const pageTitles = {
     dashboard: 'ภาพรวม', settings: 'ข้อมูลโรงเรียน', director: 'สาส์นผู้บริหาร',
     news: 'ข่าวประชาสัมพันธ์', calendar: 'ปฏิทินกิจกรรม', team: 'บุคลากร',
-    achievements: 'รางวัล/ความภาคภูมิใจ', gallery: 'ภาพกิจกรรม', setup: 'ตั้งค่า API'
+    features: 'จุดเด่นโรงเรียน', achievements: 'รางวัล/ความภาคภูมิใจ', gallery: 'ภาพกิจกรรม', setup: 'ตั้งค่า API'
 };
 function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -574,7 +591,7 @@ async function apiPost(action, sheet, data) {
 
 async function loadAllData() {
     toast('กำลังโหลดข้อมูลจาก Google Sheet...', 'warning');
-    const sheets = ['settings', 'director', 'news', 'calendar', 'team', 'achievements', 'gallery'];
+    const sheets = ['settings', 'director', 'news', 'calendar', 'team', 'achievements', 'gallery', 'features'];
     let loaded = 0;
     for (const s of sheets) {
         const d = await apiGet(s);
@@ -611,6 +628,7 @@ function updateDashboard() {
     document.getElementById('cnt-achieve').textContent = (allData.achievements || []).length;
     document.getElementById('cnt-gallery').textContent = (allData.gallery || []).length;
     document.getElementById('cnt-cal').textContent = (allData.calendar || []).length;
+    document.getElementById('cnt-features').textContent = (allData.features || []).length;
 }
 
 // ===== SETTINGS =====
@@ -668,6 +686,11 @@ const tableConfig = {
         labels: ['ไอคอน (FA class)','ชื่อรางวัล','รายละเอียด'],
         render: (row, i) => `<td>${i+1}</td><td><i class="${row.icon||'fas fa-trophy'}"></i> <code style="font-size:.75rem">${row.icon||''}</code></td><td>${row.title||''}</td><td>${row.detail||''}</td>`
     },
+    features: {
+        cols: ['photo','title','desc','icon','order'],
+        labels: ['URL รูป','ชื่อจุดเด่น','รายละเอียด','ไอคอน','ลำดับ'],
+        render: (row, i) => `<td>${i+1}</td><td>${row.photo ? `<img src="${row.photo}" style="width:60px;height:45px;border-radius:6px;object-fit:cover">` : '—'}</td><td>${row.title||''}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${row.desc||''}</td><td><i class="${row.icon||'fas fa-star'}"></i> <code style="font-size:.7rem">${row.icon||''}</code></td>`
+    },
     gallery: {
         cols: ['photos','title','caption'],
         labels: ['รูปภาพ','หัวข้อ','คำบรรยาย'],
@@ -689,6 +712,7 @@ function renderTable(name, rows) {
         news: 'newsTbody',
         calendar: 'calTbody',
         team: 'teamTbody',
+        features: 'featuresTbody',
         gallery: 'galleryTbody'
     };
     const tbody = document.getElementById(tbodyMap[name] || name + 'Tbody');
@@ -733,6 +757,14 @@ const modalForms = {
         </div>
         <div class="field"><label>URL รูปภาพ</label><input type="text" id="mf_photo" placeholder="https://drive.google.com/thumbnail?id=..."></div>
         <div class="field"><label>ลำดับการแสดง</label><input type="number" id="mf_order" placeholder="1"></div>`,
+    features: () => `
+        <div class="field"><label>ชื่อจุดเด่น</label><input type="text" id="mf_title" placeholder="วิชาการเข้มข้น"></div>
+        <div class="field"><label>รายละเอียด</label><textarea id="mf_desc" placeholder="เน้นทักษะการคิดวิเคราะห์..."></textarea></div>
+        <div class="field"><label>URL รูปภาพ</label><input type="text" id="mf_photo" placeholder="https://drive.google.com/thumbnail?id=...&sz=w800"></div>
+        <div class="field-row">
+            <div class="field"><label>ไอคอน Font Awesome</label><input type="text" id="mf_icon" placeholder="fas fa-brain"><small style="color:var(--muted);font-size:.78rem">เช่น fas fa-brain, fas fa-laptop, fas fa-heart, fas fa-leaf</small></div>
+            <div class="field"><label>ลำดับการแสดง</label><input type="number" id="mf_order" placeholder="1"></div>
+        </div>`,
     achievements: () => `
         <div class="field"><label>ชื่อรางวัล</label><input type="text" id="mf_title" placeholder="รางวัลโรงเรียนพระราชทาน"></div>
         <div class="field"><label>รายละเอียด</label><textarea id="mf_detail" placeholder="ประเภทสถานศึกษาขนาดเล็ก..."></textarea></div>
@@ -754,7 +786,7 @@ const modalForms = {
         <div class="field"><label>คำบรรยาย</label><input type="text" id="mf_caption" placeholder="ผู้ใจบุญร่วมสนับสนุนการศึกษา"></div>`
 };
 
-const modalTitles = { news:'ข่าวประชาสัมพันธ์', calendar:'กิจกรรม', team:'บุคลากร', achievements:'รางวัล', gallery:'ภาพกิจกรรม' };
+const modalTitles = { news:'ข่าวประชาสัมพันธ์', calendar:'กิจกรรม', team:'บุคลากร', features:'จุดเด่น', achievements:'รางวัล', gallery:'ภาพกิจกรรม' };
 
 function openModal(type, data = null) {
     currentModal = type;

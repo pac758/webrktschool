@@ -353,7 +353,7 @@
                 <h2 class="sec-title">เสริมสร้าง<span>ศักยภาพผู้เรียน</span></h2>
                 <p class="sec-desc">หลักสูตรที่ทันสมัย ครอบคลุมทุกด้านของการพัฒนาผู้เรียน</p>
             </div>
-            <div class="feat-grid">
+            <div class="feat-grid" id="featGridFront">
                 <div class="feat-card">
                     <div class="feat-img">
                         <img src="https://drive.google.com/thumbnail?id=1va1Au_6cu7Setw8BXXeLAz6met5Td1k8&sz=w800" alt="วิชาการ" onerror="this.src='https://placehold.co/800x200/9B1C1C/white?text=วิชาการ'">
@@ -953,15 +953,16 @@
 
         async function loadCMS() {
             if (!CMS_API) return;
-            const [settings, director, news, calendar, team, achievements, gallery] = await Promise.all([
+            const [settings, director, news, calendar, team, features, achievements, gallery] = await Promise.all([
                 cmsGet('settings'), cmsGet('director'), cmsGet('news'),
-                cmsGet('calendar'), cmsGet('team'), cmsGet('achievements'), cmsGet('gallery')
+                cmsGet('calendar'), cmsGet('team'), cmsGet('features'), cmsGet('achievements'), cmsGet('gallery')
             ]);
             if (settings) applySettings(settings);
             if (director) applyDirector(director);
             if (news) renderNews(news);
             if (calendar) renderCalendar(calendar);
             if (team) renderTeam(team);
+            if (features) renderFeatures(features);
             if (achievements) renderAchievements(achievements);
             if (gallery) renderGallery(gallery);
             initFadeUp();
@@ -1047,6 +1048,20 @@
                     <img src="${r.photo||'https://placehold.co/200x200/334155/white?text=ครู'}" alt="${r.name||''}" class="team-photo" onerror="this.src='https://placehold.co/200x200/334155/white?text=ครู'">
                     <div class="team-name">${r.name||''}</div>
                     <div class="team-role">${r.role||''}</div>
+                </div>`).join('');
+        }
+
+        function renderFeatures(rows) {
+            const el = document.getElementById('featGridFront');
+            if (!el || !rows.length) return;
+            const sorted = [...rows].sort((a,b) => (parseInt(a.order)||99) - (parseInt(b.order)||99));
+            el.innerHTML = sorted.map(r => `
+                <div class="feat-card">
+                    <div class="feat-img">
+                        <img src="${r.photo||'https://placehold.co/800x200/9B1C1C/white?text=จุดเด่น'}" alt="${r.title||''}" onerror="this.src='https://placehold.co/800x200/9B1C1C/white?text=จุดเด่น'">
+                        <div class="feat-icon"><i class="${r.icon||'fas fa-star'}"></i></div>
+                    </div>
+                    <div class="feat-body"><h3>${r.title||''}</h3><p>${r.desc||''}</p></div>
                 </div>`).join('');
         }
 
