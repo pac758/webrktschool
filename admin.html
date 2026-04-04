@@ -573,9 +573,10 @@ async function changePassword() {
     if (newPass !== confirmPass) { toast('รหัสผ่านใหม่ไม่ตรงกัน', 'error'); return; }
 
     const finalUser = newUser || getAdminUser();
-    // บันทึกรหัสผ่านรวมกับ settings เดิม
-    const settingsData = Object.assign({}, allData.settings || {}, { admin_user: finalUser, admin_pass: newPass });
+    // ดึง settings ล่าสุดจาก API ก่อนเสมอ เพื่อไม่ให้ข้อมูลเดิมหาย
     toast('กำลังบันทึกรหัสผ่าน...', 'warning');
+    const freshSettings = await apiGet('settings') || {};
+    const settingsData = Object.assign({}, freshSettings, { admin_user: finalUser, admin_pass: newPass });
     const r = await apiPost('saveSettings', 'settings', settingsData);
     if (r?.success) {
         cachedAuth = { user: finalUser, pass: newPass };
@@ -594,8 +595,9 @@ async function changePassword() {
 async function resetPassword() {
     const ok = await confirmAction('รีเซ็ตรหัสผ่าน', 'ต้องการรีเซ็ตเป็น admin / admin123 หรือไม่?');
     if (!ok) return;
-    const settingsData = Object.assign({}, allData.settings || {}, { admin_user: DEFAULT_USER, admin_pass: DEFAULT_PASS });
     toast('กำลังรีเซ็ต...', 'warning');
+    const freshSettings = await apiGet('settings') || {};
+    const settingsData = Object.assign({}, freshSettings, { admin_user: DEFAULT_USER, admin_pass: DEFAULT_PASS });
     const r = await apiPost('saveSettings', 'settings', settingsData);
     if (r?.success) {
         cachedAuth = null;
