@@ -236,6 +236,8 @@
             <div class="nav-divider"></div>
             <div class="nav-item" onclick="showPage('settings')" data-page="settings"><i class="fas fa-cog"></i>ข้อมูลโรงเรียน</div>
             <div class="nav-item" onclick="showPage('hero')" data-page="hero"><i class="fas fa-image"></i>Hero Banner</div>
+            <div class="nav-item" onclick="showPage('about')" data-page="about"><i class="fas fa-eye"></i>วิสัยทัศน์/พันธกิจ</div>
+            <div class="nav-item" onclick="showPage('video')" data-page="video"><i class="fas fa-video"></i>วิดีโอ</div>
             <div class="nav-item" onclick="showPage('director')" data-page="director"><i class="fas fa-user-tie"></i>สาส์นผู้บริหาร</div>
             <div class="nav-item" onclick="showPage('news')" data-page="news"><i class="fas fa-newspaper"></i>ข่าวประชาสัมพันธ์</div>
             <div class="nav-item" onclick="showPage('calendar')" data-page="calendar"><i class="far fa-calendar-alt"></i>ปฏิทินกิจกรรม</div>
@@ -368,6 +370,51 @@
                                 <div class="field"><label>URL ลิงก์</label><input type="text" id="h_btn4_url" placeholder="https://..."></div>
                             </div>
                             <div class="field"><label>ไอคอน (FA class)</label><input type="text" id="h_btn4_icon" placeholder="fas fa-briefcase"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABOUT (วิสัยทัศน์/พันธกิจ) -->
+            <div class="page" id="page-about">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-eye"></i>วิสัยทัศน์ / พันธกิจ</h4><button class="btn btn-success btn-sm" onclick="saveAbout()"><i class="fas fa-save"></i>บันทึก</button></div>
+                    <div class="card-body">
+                        <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:1rem;margin-bottom:1.5rem;font-size:.85rem;color:#1E40AF">
+                            <i class="fas fa-info-circle"></i> แก้ไขข้อความในส่วนวิสัยทัศน์ พันธกิจ และเป้าประสงค์ของโรงเรียน
+                        </div>
+                        <div class="field"><label>คำอธิบายส่วนหัว</label><input type="text" id="ab_section_desc" placeholder="โรงเรียนบ้านโคกยางหนองถนน มุ่งมั่นจัดการศึกษาขั้นพื้นฐาน..."></div>
+
+                        <h5 style="margin:1.5rem 0 .75rem;font-weight:700"><i class="fas fa-eye"></i> วิสัยทัศน์ (Vision)</h5>
+                        <div class="field"><label>ข้อความวิสัยทัศน์</label><textarea id="ab_vision" placeholder="พัฒนาผู้เรียนให้มีคุณภาพตามมาตรฐาน..."></textarea></div>
+
+                        <h5 style="margin:1.5rem 0 .75rem;font-weight:700"><i class="fas fa-bullseye"></i> พันธกิจ (Mission)</h5>
+                        <div class="field"><label>รายการพันธกิจ (บรรทัดละ 1 ข้อ)</label><textarea id="ab_mission" rows="8" placeholder="ส่งเสริมความร่วมมือระหว่างโรงเรียน ครอบครัว และชุมชน&#10;พัฒนาระบบบริหารจัดการให้มีความปลอดภัย&#10;..."></textarea></div>
+
+                        <h5 style="margin:1.5rem 0 .75rem;font-weight:700"><i class="fas fa-flag-checkered"></i> เป้าประสงค์ (Goals)</h5>
+                        <div class="field"><label>รายการเป้าประสงค์ (บรรทัดละ 1 ข้อ)</label><textarea id="ab_goals" rows="7" placeholder="นักเรียนรักชาติ ศาสน์ กษัตริย์ และเป็นพลเมืองดี&#10;..."></textarea></div>
+
+                        <h5 style="margin:1.5rem 0 .75rem;font-weight:700"><i class="fas fa-star"></i> คุณลักษณะอันพึงประสงค์ 8 ประการ</h5>
+                        <div class="field"><label>รายการคุณลักษณะ (บรรทัดละ 1 ข้อ, รูปแบบ: ไอคอน|ข้อความ)</label><textarea id="ab_attributes" rows="9" placeholder="fas fa-heart|รักชาติ ศาสน์ กษัตริย์&#10;fas fa-balance-scale|ซื่อสัตย์สุจริต&#10;fas fa-user-clock|มีวินัย&#10;fas fa-book-reader|ใฝ่เรียนรู้&#10;fas fa-seedling|อยู่อย่างพอเพียง&#10;fas fa-briefcase|มุ่งมั่นในการทำงาน&#10;fas fa-praying-hands|รักความเป็นไทย&#10;fas fa-hands-helping|มีจิตสาธารณะ"></textarea></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIDEO -->
+            <div class="page" id="page-video">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-video"></i>วิดีโอ</h4><button class="btn btn-success btn-sm" onclick="saveVideo()"><i class="fas fa-save"></i>บันทึก</button></div>
+                    <div class="card-body">
+                        <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:1rem;margin-bottom:1.5rem;font-size:.85rem;color:#1E40AF">
+                            <i class="fas fa-info-circle"></i> แก้ไขหัวข้อและ URL วิดีโอ YouTube ที่แสดงในหน้าเว็บ
+                        </div>
+                        <div class="field"><label>หัวข้อส่วนที่ 1</label><input type="text" id="vid_title1" placeholder="รั้วแดง-ทอง"></div>
+                        <div class="field"><label>หัวข้อส่วนที่ 2 (เน้นสี)</label><input type="text" id="vid_title2" placeholder="บ้านโคกยางหนองถนน"></div>
+                        <div class="field"><label>คำอธิบาย</label><input type="text" id="vid_desc" placeholder="บรรยากาศการเรียนรู้ที่ส่งเสริมความสุขและพัฒนาการของผู้เรียน"></div>
+                        <div class="field"><label>YouTube Embed URL</label><input type="text" id="vid_url" placeholder="https://www.youtube.com/embed/VIDEO_ID"></div>
+                        <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:.75rem;font-size:.8rem;color:#92400E;margin-top:.5rem">
+                            <i class="fas fa-lightbulb"></i> ใช้ URL แบบ embed เช่น <code>https://www.youtube.com/embed/VIDEO_ID</code><br>
+                            คัดลอก VIDEO_ID จาก URL ปกติ เช่น youtube.com/watch?v=<strong>VIDEO_ID</strong>
                         </div>
                     </div>
                 </div>
@@ -729,7 +776,7 @@ function updateApiStatus() {
 
 // ===== NAVIGATION =====
 const pageTitles = {
-    dashboard: 'ภาพรวม', settings: 'ข้อมูลโรงเรียน', hero: 'Hero Banner', director: 'สาส์นผู้บริหาร',
+    dashboard: 'ภาพรวม', settings: 'ข้อมูลโรงเรียน', hero: 'Hero Banner', about: 'วิสัยทัศน์/พันธกิจ', video: 'วิดีโอ', director: 'สาส์นผู้บริหาร',
     news: 'ข่าวประชาสัมพันธ์', calendar: 'ปฏิทินกิจกรรม', team: 'บุคลากร',
     features: 'จุดเด่นโรงเรียน', achievements: 'รางวัล/ความภาคภูมิใจ', gallery: 'ภาพกิจกรรม', setup: 'ตั้งค่า API', password: 'เปลี่ยนรหัสผ่าน'
 };
@@ -744,7 +791,7 @@ function showPage(name) {
         renderTable(name, allData[name]);
     }
     // โหลดใหม่จาก API เสมอ
-    if (API_URL && name !== 'setup' && name !== 'dashboard' && name !== 'password') loadSection(name === 'hero' ? 'settings' : name);
+    if (API_URL && name !== 'setup' && name !== 'dashboard' && name !== 'password') loadSection((name === 'hero' || name === 'about' || name === 'video') ? 'settings' : name);
     // แสดงชื่อผู้ใช้ปัจจุบันในหน้าเปลี่ยนรหัส
     if (name === 'password') {
         document.getElementById('cp_currentUser').value = getAdminUser();
@@ -816,6 +863,8 @@ async function loadAllData() {
     updateDashboard();
     fillSettings();
     fillHero();
+    fillAbout();
+    fillVideo();
     fillDirector();
 }
 
@@ -823,7 +872,7 @@ async function loadSection(name) {
     const d = await apiGet(name);
     if (!d) return;
     allData[name] = d;
-    if (name === 'settings') { fillSettings(); fillHero(); }
+    if (name === 'settings') { fillSettings(); fillHero(); fillAbout(); fillVideo(); }
     else if (name === 'director') fillDirector();
     else renderTable(name, d);
 }
@@ -885,6 +934,44 @@ async function saveHero() {
     heroFields.forEach(f => { data['hero_'+f] = document.getElementById('h_' + f)?.value || ''; });
     const r = await apiPost('saveSettings', 'settings', data);
     if (r?.success) { toast('บันทึก Hero Banner สำเร็จ ✓', 'success'); allData.settings = data; }
+    else toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
+}
+
+// ===== ABOUT (วิสัยทัศน์/พันธกิจ) =====
+const aboutFields = ['section_desc','vision','mission','goals','attributes'];
+function fillAbout() {
+    const d = allData.settings || {};
+    aboutFields.forEach(f => {
+        const el = document.getElementById('ab_' + f);
+        if (el && d['about_'+f] !== undefined) el.value = d['about_'+f];
+    });
+}
+async function saveAbout() {
+    toast('กำลังบันทึก...', 'warning');
+    const freshSettings = await apiGet('settings') || {};
+    const data = Object.assign({}, freshSettings);
+    aboutFields.forEach(f => { data['about_'+f] = document.getElementById('ab_' + f)?.value || ''; });
+    const r = await apiPost('saveSettings', 'settings', data);
+    if (r?.success) { toast('บันทึกวิสัยทัศน์/พันธกิจสำเร็จ ✓', 'success'); allData.settings = data; }
+    else toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
+}
+
+// ===== VIDEO =====
+const videoFields = ['title1','title2','desc','url'];
+function fillVideo() {
+    const d = allData.settings || {};
+    videoFields.forEach(f => {
+        const el = document.getElementById('vid_' + f);
+        if (el && d['vid_'+f] !== undefined) el.value = d['vid_'+f];
+    });
+}
+async function saveVideo() {
+    toast('กำลังบันทึก...', 'warning');
+    const freshSettings = await apiGet('settings') || {};
+    const data = Object.assign({}, freshSettings);
+    videoFields.forEach(f => { data['vid_'+f] = document.getElementById('vid_' + f)?.value || ''; });
+    const r = await apiPost('saveSettings', 'settings', data);
+    if (r?.success) { toast('บันทึกวิดีโอสำเร็จ ✓', 'success'); allData.settings = data; }
     else toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
 }
 

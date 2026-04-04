@@ -271,16 +271,16 @@
             <div class="sec-header">
                 <div class="sec-tag"><i class="fas fa-info-circle" style="margin-right:.3rem"></i>เกี่ยวกับเรา</div>
                 <h2 class="sec-title">วิสัยทัศน์<span>และพันธกิจ</span></h2>
-                <p class="sec-desc">โรงเรียนบ้านโคกยางหนองถนน มุ่งมั่นจัดการศึกษาขั้นพื้นฐานเพื่อพัฒนาคุณภาพชีวิตของเยาวชนในชุมชน</p>
+                <p class="sec-desc" id="aboutSectionDesc">โรงเรียนบ้านโคกยางหนองถนน มุ่งมั่นจัดการศึกษาขั้นพื้นฐานเพื่อพัฒนาคุณภาพชีวิตของเยาวชนในชุมชน</p>
             </div>
             <div class="vision-box">
                 <h3><i class="fas fa-eye" style="margin-right:.5rem"></i>วิสัยทัศน์ (Vision)</h3>
-                <p>"พัฒนาผู้เรียนให้มีคุณภาพตามมาตรฐาน สร้างสังคมแห่งการเรียนรู้ ควบคู่คุณธรรม น้อมนำหลักปรัชญาของเศรษฐกิจพอเพียง เน้นความปลอดภัยใส่ใจสิ่งแวดล้อม"</p>
+                <p id="aboutVision">"พัฒนาผู้เรียนให้มีคุณภาพตามมาตรฐาน สร้างสังคมแห่งการเรียนรู้ ควบคู่คุณธรรม น้อมนำหลักปรัชญาของเศรษฐกิจพอเพียง เน้นความปลอดภัยใส่ใจสิ่งแวดล้อม"</p>
             </div>
             <div class="mission-grid">
                 <div class="info-card">
                     <h4><i class="fas fa-bullseye"></i>พันธกิจ (Mission)</h4>
-                    <ul class="info-list">
+                    <ul class="info-list" id="aboutMission">
                         <li>ส่งเสริมความร่วมมือระหว่างโรงเรียน ครอบครัว และชุมชน</li>
                         <li>พัฒนาระบบบริหารจัดการให้มีความปลอดภัย</li>
                         <li>ส่งเสริมความเป็นเลิศและสมรรถนะผู้เรียน</li>
@@ -292,7 +292,7 @@
                 </div>
                 <div class="info-card">
                     <h4><i class="fas fa-flag-checkered"></i>เป้าประสงค์ (Goals)</h4>
-                    <ul class="info-list">
+                    <ul class="info-list" id="aboutGoals">
                         <li>นักเรียนรักชาติ ศาสน์ กษัตริย์ และเป็นพลเมืองดี</li>
                         <li>นักเรียนได้รับโอกาสทางการศึกษาอย่างทั่วถึงและเท่าเทียม</li>
                         <li>สถานศึกษามีความปลอดภัยจากภัยคุกคามทุกรูปแบบ</li>
@@ -304,7 +304,7 @@
             </div>
             <div class="info-card">
                 <h4><i class="fas fa-star"></i>คุณลักษณะอันพึงประสงค์ 8 ประการ</h4>
-                <div class="attr-grid">
+                <div class="attr-grid" id="aboutAttributes">
                     <div class="attr-item"><i class="fas fa-heart"></i>รักชาติ ศาสน์ กษัตริย์</div>
                     <div class="attr-item"><i class="fas fa-balance-scale"></i>ซื่อสัตย์สุจริต</div>
                     <div class="attr-item"><i class="fas fa-user-clock"></i>มีวินัย</div>
@@ -406,11 +406,11 @@
         <div class="container">
             <div class="sec-header">
                 <div class="sec-tag"><i class="fas fa-play-circle" style="margin-right:.3rem"></i>วิดีโอ</div>
-                <h2 class="sec-title">รั้วแดง-ทอง<span>บ้านโคกยางหนองถนน</span></h2>
-                <p class="sec-desc">บรรยากาศการเรียนรู้ที่ส่งเสริมความสุขและพัฒนาการของผู้เรียน</p>
+                <h2 class="sec-title" id="videoTitle">รั้วแดง-ทอง<span>บ้านโคกยางหนองถนน</span></h2>
+                <p class="sec-desc" id="videoDesc">บรรยากาศการเรียนรู้ที่ส่งเสริมความสุขและพัฒนาการของผู้เรียน</p>
             </div>
             <div class="video-wrap">
-                <iframe src="https://www.youtube.com/embed/E7PcDSLRSdo" title="โรงเรียนบ้านโคกยางหนองถนน" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="videoIframe" src="https://www.youtube.com/embed/E7PcDSLRSdo" title="โรงเรียนบ้านโคกยางหนองถนน" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
     </section>
@@ -957,7 +957,7 @@
                 cmsGet('settings'), cmsGet('director'), cmsGet('news'),
                 cmsGet('calendar'), cmsGet('team'), cmsGet('features'), cmsGet('achievements'), cmsGet('gallery')
             ]);
-            if (settings) { applySettings(settings); applyHero(settings); }
+            if (settings) { applySettings(settings); applyHero(settings); applyAbout(settings); applyVideo(settings); }
             if (director) applyDirector(director);
             if (news) renderNews(news);
             if (calendar) renderCalendar(calendar);
@@ -1006,6 +1006,36 @@
                 }
             }
             if (btns.length) document.getElementById('heroBtns').innerHTML = btns.join('');
+        }
+
+        function applyAbout(s) {
+            if (s.about_section_desc) document.getElementById('aboutSectionDesc').textContent = s.about_section_desc;
+            if (s.about_vision) document.getElementById('aboutVision').textContent = '"' + s.about_vision + '"';
+            if (s.about_mission) {
+                const items = s.about_mission.split('\n').filter(Boolean);
+                document.getElementById('aboutMission').innerHTML = items.map(t => `<li>${t}</li>`).join('');
+            }
+            if (s.about_goals) {
+                const items = s.about_goals.split('\n').filter(Boolean);
+                document.getElementById('aboutGoals').innerHTML = items.map(t => `<li>${t}</li>`).join('');
+            }
+            if (s.about_attributes) {
+                const items = s.about_attributes.split('\n').filter(Boolean);
+                document.getElementById('aboutAttributes').innerHTML = items.map(line => {
+                    const [icon, text] = line.split('|');
+                    return `<div class="attr-item"><i class="${(icon||'fas fa-check').trim()}"></i>${(text||icon||'').trim()}</div>`;
+                }).join('');
+            }
+        }
+
+        function applyVideo(s) {
+            if (s.vid_title1 || s.vid_title2) {
+                const t1 = s.vid_title1 || '';
+                const t2 = s.vid_title2 || '';
+                document.getElementById('videoTitle').innerHTML = `${t1}<span>${t2}</span>`;
+            }
+            if (s.vid_desc) document.getElementById('videoDesc').textContent = s.vid_desc;
+            if (s.vid_url) document.getElementById('videoIframe').src = s.vid_url;
         }
 
         function applyDirector(d) {
