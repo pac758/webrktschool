@@ -129,6 +129,14 @@
         .modal-body{padding:1.5rem}
         .modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.75rem}
 
+        /* ===== ICON PICKER ===== */
+        .icon-picker{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-top:.5rem}
+        .icon-pick{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.6rem .25rem;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;transition:var(--trans);background:var(--bg);font-size:.65rem;color:var(--muted);text-align:center;line-height:1.2}
+        .icon-pick i{font-size:1.3rem;color:var(--primary)}
+        .icon-pick:hover{border-color:var(--primary);background:#EFF6FF;transform:scale(1.05)}
+        .icon-pick.selected{border-color:var(--primary);background:#DBEAFE;box-shadow:0 0 0 2px rgba(51,65,85,.2)}
+        .icon-pick.selected i{color:var(--danger)}
+
         /* ===== CONFIRM DIALOG ===== */
         .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem}
         .confirm-overlay.open{display:flex}
@@ -761,14 +769,21 @@ const modalForms = {
         <div class="field"><label>ชื่อจุดเด่น</label><input type="text" id="mf_title" placeholder="วิชาการเข้มข้น"></div>
         <div class="field"><label>รายละเอียด</label><textarea id="mf_desc" placeholder="เน้นทักษะการคิดวิเคราะห์..."></textarea></div>
         <div class="field"><label>URL รูปภาพ</label><input type="text" id="mf_photo" placeholder="https://drive.google.com/thumbnail?id=...&sz=w800"></div>
-        <div class="field-row">
-            <div class="field"><label>ไอคอน Font Awesome</label><input type="text" id="mf_icon" placeholder="fas fa-brain"><small style="color:var(--muted);font-size:.78rem">เช่น fas fa-brain, fas fa-laptop, fas fa-heart, fas fa-leaf</small></div>
-            <div class="field"><label>ลำดับการแสดง</label><input type="number" id="mf_order" placeholder="1"></div>
-        </div>`,
+        <div class="field">
+            <label>เลือกไอคอน (กดเลือกได้เลย)</label>
+            <input type="hidden" id="mf_icon">
+            <div class="icon-picker" id="iconPicker"></div>
+        </div>
+        <div class="field"><label>ลำดับการแสดง</label><input type="number" id="mf_order" placeholder="1"></div>`,
+
     achievements: () => `
         <div class="field"><label>ชื่อรางวัล</label><input type="text" id="mf_title" placeholder="รางวัลโรงเรียนพระราชทาน"></div>
         <div class="field"><label>รายละเอียด</label><textarea id="mf_detail" placeholder="ประเภทสถานศึกษาขนาดเล็ก..."></textarea></div>
-        <div class="field"><label>ไอคอน Font Awesome</label><input type="text" id="mf_icon" placeholder="fas fa-trophy"><small style="color:var(--muted);font-size:.78rem">เช่น fas fa-trophy, fas fa-leaf, fas fa-medal</small></div>`,
+        <div class="field">
+            <label>เลือกไอคอน (กดเลือกได้เลย)</label>
+            <input type="hidden" id="mf_icon">
+            <div class="icon-picker" id="iconPicker"></div>
+        </div>`,
     gallery: () => `
         <div class="field">
             <label>URL รูปภาพ (ใส่ได้หลายรูป — บรรทัดละ 1 URL)</label>
@@ -788,6 +803,62 @@ const modalForms = {
 
 const modalTitles = { news:'ข่าวประชาสัมพันธ์', calendar:'กิจกรรม', team:'บุคลากร', features:'จุดเด่น', achievements:'รางวัล', gallery:'ภาพกิจกรรม' };
 
+const iconChoices = [
+    { cls:'fas fa-brain', label:'สมอง' },
+    { cls:'fas fa-laptop', label:'คอมพ์' },
+    { cls:'fas fa-heart', label:'หัวใจ' },
+    { cls:'fas fa-leaf', label:'ใบไม้' },
+    { cls:'fas fa-trophy', label:'ถ้วย' },
+    { cls:'fas fa-medal', label:'เหรียญ' },
+    { cls:'fas fa-star', label:'ดาว' },
+    { cls:'fas fa-award', label:'รางวัล' },
+    { cls:'fas fa-book', label:'หนังสือ' },
+    { cls:'fas fa-book-reader', label:'อ่าน' },
+    { cls:'fas fa-graduation-cap', label:'จบการศึกษา' },
+    { cls:'fas fa-school', label:'โรงเรียน' },
+    { cls:'fas fa-chalkboard-teacher', label:'ครูสอน' },
+    { cls:'fas fa-users', label:'กลุ่มคน' },
+    { cls:'fas fa-child', label:'เด็ก' },
+    { cls:'fas fa-hands-helping', label:'ช่วยเหลือ' },
+    { cls:'fas fa-seedling', label:'ต้นกล้า' },
+    { cls:'fas fa-tree', label:'ต้นไม้' },
+    { cls:'fas fa-globe-asia', label:'โลก' },
+    { cls:'fas fa-recycle', label:'รีไซเคิล' },
+    { cls:'fas fa-paint-brush', label:'พู่กัน' },
+    { cls:'fas fa-music', label:'ดนตรี' },
+    { cls:'fas fa-futbol', label:'ฟุตบอล' },
+    { cls:'fas fa-running', label:'วิ่ง' },
+    { cls:'fas fa-robot', label:'หุ่นยนต์' },
+    { cls:'fas fa-lightbulb', label:'หลอดไฟ' },
+    { cls:'fas fa-microscope', label:'กล้อง' },
+    { cls:'fas fa-flask', label:'วิทย์' },
+    { cls:'fas fa-praying-hands', label:'ไหว้' },
+    { cls:'fas fa-flag', label:'ธง' },
+    { cls:'fas fa-shield-alt', label:'โล่' },
+    { cls:'fas fa-certificate', label:'เกียรติ' },
+    { cls:'fas fa-bullseye', label:'เป้า' },
+    { cls:'fas fa-chess', label:'หมากรุก' },
+    { cls:'fas fa-comments', label:'สนทนา' },
+    { cls:'fas fa-camera', label:'กล้อง' },
+];
+
+function buildIconPicker(selectedIcon) {
+    const picker = document.getElementById('iconPicker');
+    if (!picker) return;
+    picker.innerHTML = iconChoices.map(ic => 
+        `<div class="icon-pick${ic.cls === selectedIcon ? ' selected' : ''}" onclick="pickIcon('${ic.cls}')" title="${ic.cls}">
+            <i class="${ic.cls}"></i>${ic.label}
+        </div>`
+    ).join('');
+}
+
+function pickIcon(cls) {
+    document.getElementById('mf_icon').value = cls;
+    document.querySelectorAll('.icon-pick').forEach(el => el.classList.remove('selected'));
+    const picked = document.querySelector(`.icon-pick[title="${cls}"]`);
+    if (picked) picked.classList.add('selected');
+}
+
 function openModal(type, data = null) {
     currentModal = type;
     editingRow = data ? data._idx : null;
@@ -806,6 +877,10 @@ function openModal(type, data = null) {
             const el = document.getElementById('mf_photos');
             if (el && !el.value) el.value = data.photo;
         }
+    }
+    // สร้าง icon picker ถ้า modal นี้มี
+    if (type === 'features' || type === 'achievements') {
+        buildIconPicker(data?.icon || '');
     }
     document.getElementById('modalOverlay').classList.add('open');
 }
