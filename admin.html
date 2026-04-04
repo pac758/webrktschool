@@ -669,9 +669,14 @@ const tableConfig = {
         render: (row, i) => `<td>${i+1}</td><td><i class="${row.icon||'fas fa-trophy'}"></i> <code style="font-size:.75rem">${row.icon||''}</code></td><td>${row.title||''}</td><td>${row.detail||''}</td>`
     },
     gallery: {
-        cols: ['photo','title','caption'],
-        labels: ['URL รูปภาพ','หัวข้อ','คำบรรยาย'],
-        render: (row, i) => `<td>${i+1}</td><td>${row.photo ? `<img src="${row.photo}" style="width:60px;height:45px;border-radius:6px;object-fit:cover">` : '—'}</td><td>${row.title||''}</td><td>${row.caption||''}</td>`
+        cols: ['photos','title','caption'],
+        labels: ['รูปภาพ','หัวข้อ','คำบรรยาย'],
+        render: (row, i) => {
+            const pics = (row.photos || row.photo || '').split('|||').filter(Boolean);
+            const thumb = pics[0] || '';
+            const cnt = pics.length;
+            return `<td>${i+1}</td><td style="position:relative">${thumb ? `<img src="${thumb}" style="width:60px;height:45px;border-radius:6px;object-fit:cover">${cnt > 1 ? `<span style="position:absolute;top:0;right:0;background:var(--primary);color:#fff;font-size:.65rem;padding:1px 5px;border-radius:8px;font-weight:700">${cnt}</span>` : ''}` : '—'}</td><td>${row.title||''}</td><td>${row.caption||''}</td>`;
+        }
     }
 };
 
@@ -733,7 +738,18 @@ const modalForms = {
         <div class="field"><label>รายละเอียด</label><textarea id="mf_detail" placeholder="ประเภทสถานศึกษาขนาดเล็ก..."></textarea></div>
         <div class="field"><label>ไอคอน Font Awesome</label><input type="text" id="mf_icon" placeholder="fas fa-trophy"><small style="color:var(--muted);font-size:.78rem">เช่น fas fa-trophy, fas fa-leaf, fas fa-medal</small></div>`,
     gallery: () => `
-        <div class="field"><label>URL รูปภาพ</label><input type="text" id="mf_photo" placeholder="https://drive.google.com/thumbnail?id=..."></div>
+        <div class="field">
+            <label>URL รูปภาพ (ใส่ได้หลายรูป — บรรทัดละ 1 URL)</label>
+            <textarea id="mf_photos" rows="5" placeholder="https://drive.google.com/thumbnail?id=FILE_ID&sz=w600&#10;https://drive.google.com/thumbnail?id=FILE_ID2&sz=w600"></textarea>
+            <div style="background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;padding:.875rem;margin-top:.6rem;font-size:.8rem;color:#0369A1;line-height:1.7">
+                <strong><i class="fas fa-info-circle"></i> วิธีนำ ID รูปจาก Google Drive:</strong><br>
+                1. เปิดรูปใน Google Drive → คลิกขวา → <strong>แชร์</strong> → ตั้งเป็น <strong>"ทุกคนที่มีลิงก์"</strong><br>
+                2. คลิก <strong>"คัดลอกลิงก์"</strong> จะได้ URL แบบ:<br>
+                <code style="background:#E0F2FE;padding:2px 6px;border-radius:4px;word-break:break-all">https://drive.google.com/file/d/<strong>FILE_ID</strong>/view</code><br>
+                3. คัดลอกส่วน <strong>FILE_ID</strong> มาใส่ URL:<br>
+                <code style="background:#E0F2FE;padding:2px 6px;border-radius:4px;word-break:break-all">https://drive.google.com/thumbnail?id=<strong>FILE_ID</strong>&sz=w600</code>
+            </div>
+        </div>
         <div class="field"><label>หัวข้อ</label><input type="text" id="mf_title" placeholder="กิจกรรมรับบริจาค"></div>
         <div class="field"><label>คำบรรยาย</label><input type="text" id="mf_caption" placeholder="ผู้ใจบุญร่วมสนับสนุนการศึกษา"></div>`
 };
@@ -748,8 +764,16 @@ function openModal(type, data = null) {
     if (data) {
         Object.keys(data).forEach(k => {
             const el = document.getElementById('mf_' + k);
-            if (el) el.value = data[k];
+            if (!el) return;
+            // photos: แปลง ||| → newline สำหรับ textarea
+            if (k === 'photos') el.value = (data[k]||'').split('|||').join('\n');
+            else el.value = data[k];
         });
+        // backward compat: ถ้ามี photo (ไม่มี s) ให้ใส่ใน photos textarea
+        if (data.photo && !data.photos) {
+            const el = document.getElementById('mf_photos');
+            if (el && !el.value) el.value = data.photo;
+        }
     }
     document.getElementById('modalOverlay').classList.add('open');
 }
@@ -767,6 +791,10 @@ function getModalData() {
         const el = document.getElementById('mf_' + c);
         if (!el) return;
         let val = el.value.trim();
+        // photos: แปลง newline → ||| สำหรับเก็บใน Google Sheet
+        if (c === 'photos') {
+            val = val.split(/\n+/).map(u => u.trim()).filter(Boolean).join('|||');
+        }
         // ถ้าเป็น field fb_post และผู้ใช้วาง iframe code ทั้งก้อน → ดึงแค่ src URL
         if (c === 'fb_post' && val.includes('<iframe')) {
             const match = val.match(/src=["']([^"']+)["']/);
