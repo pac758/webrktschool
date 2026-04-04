@@ -513,14 +513,23 @@ async function apiGet(sheet) {
         // Apps Script redirect ต้องใช้ fetch แบบ follow redirect
         const url = `${API_URL}?sheet=${sheet}&t=${Date.now()}`;
         const res = await fetch(url, { redirect: 'follow' });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const text = await res.text();
-        // Apps Script บางครั้ง return HTML error page
-        if (text.trim().startsWith('<')) throw new Error('Got HTML instead of JSON');
-        return JSON.parse(text);
+        return await parseApiJsonResponse(res);
     } catch(e) {
         console.warn(`apiGet(${sheet}) failed:`, e.message);
         return null;
+    }
+}
+
+async function parseApiJsonResponse(res) {
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+    const trimmed = text.trim();
+    if (!trimmed) return null;
+    if (trimmed.startsWith('<')) throw new Error('API returned HTML instead of JSON');
+    try {
+        return JSON.parse(trimmed);
+    } catch (e) {
+        throw new Error('Invalid JSON response from API');
     }
 }
 
@@ -533,9 +542,7 @@ async function apiPost(action, sheet, data) {
             headers: { 'Content-Type': 'text/plain' }, // Apps Script ต้องการ text/plain
             body: JSON.stringify({ action, sheet, data, secret: API_SECRET })
         });
-        const text = await res.text();
-        if (text.trim().startsWith('<')) throw new Error('Got HTML instead of JSON');
-        return JSON.parse(text);
+        return await parseApiJsonResponse(res);
     } catch(e) {
         toast('เกิดข้อผิดพลาด: ' + e.message, 'error');
         console.error('apiPost error:', e);
@@ -788,10 +795,19 @@ function editRow(name, idx) {
 
 async function deleteRow(name, idx) {
     if (!confirm('ยืนยันการลบข้อมูลนี้?')) return;
-    setBtnLoading(true);
-    toast('กำลังลบข้อมูล...', 'warning');
     let rows = [...(allData[name] || [])];
     rows.splice(idx, 1);
+
+    if (!API_URL) {
+        allData[name] = rows;
+        renderTable(name, rows);
+        updateDashboard();
+        toast('ลบข้อมูลในหน่วยความจำแล้ว (ยังไม่ได้เชื่อม API)', 'warning');
+        return;
+    }
+
+    setBtnLoading(true);
+    toast('กำลังลบข้อมูล...', 'warning');
     const r = await apiPost('saveSheet', name, rows);
     setBtnLoading(false);
     if (r?.success) {
@@ -832,8 +848,8 @@ async function testApi() {
     if (!url) { toast('กรุณากรอก URL ก่อน', 'warning'); return; }
     toast('กำลังทดสอบ...', 'warning');
     try {
-        const res = await fetch(`${url}?sheet=settings&t=${Date.now()}`);
-        const d = await res.json();
+        const res = await fetch(`${url}?sheet=settings&t=${Date.now()}`, { redirect: 'follow' });
+        const d = await parseApiJsonResponse(res);
         if (d !== null) toast('เชื่อมต่อสำเร็จ ✓', 'success');
         else toast('เชื่อมต่อได้แต่ไม่มีข้อมูล', 'warning');
     } catch(e) { toast('เชื่อมต่อไม่ได้: ' + e.message, 'error'); }
