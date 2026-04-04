@@ -221,6 +221,7 @@
             <div class="nav-item" onclick="showPage('gallery')" data-page="gallery"><i class="fas fa-images"></i>ภาพกิจกรรม</div>
             <div class="nav-divider"></div>
             <div class="nav-item" onclick="showPage('setup')" data-page="setup"><i class="fas fa-plug"></i>ตั้งค่า API</div>
+            <div class="nav-item" onclick="showPage('password')" data-page="password"><i class="fas fa-key"></i>เปลี่ยนรหัสผ่าน</div>
         </nav>
         <div class="sidebar-footer">
             <button class="btn-logout" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i>ออกจากระบบ</button>
@@ -430,6 +431,30 @@
                 </div>
             </div>
 
+            <!-- CHANGE PASSWORD -->
+            <div class="page" id="page-password">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-key"></i>เปลี่ยนรหัสผ่าน</h4></div>
+                    <div class="card-body">
+                        <div style="background:#FEF3C7;border:1px solid #F59E0B;border-radius:8px;padding:1rem;margin-bottom:1.5rem;font-size:.85rem;color:#92400E;display:flex;align-items:flex-start;gap:.6rem">
+                            <i class="fas fa-exclamation-triangle" style="margin-top:2px"></i>
+                            <div>รหัสผ่านจะถูกเก็บไว้ในเบราว์เซอร์นี้เท่านั้น หากล้างข้อมูลเบราว์เซอร์หรือเปลี่ยนเครื่อง รหัสผ่านจะกลับเป็นค่าเริ่มต้น (<strong>admin / admin123</strong>)</div>
+                        </div>
+                        <div class="field"><label>ชื่อผู้ใช้ปัจจุบัน</label><input type="text" id="cp_currentUser" readonly style="background:#F1F5F9"></div>
+                        <div class="field"><label>รหัสผ่านปัจจุบัน</label><input type="password" id="cp_currentPass" placeholder="กรอกรหัสผ่านปัจจุบัน"></div>
+                        <div class="field-row">
+                            <div class="field"><label>ชื่อผู้ใช้ใหม่</label><input type="text" id="cp_newUser" placeholder="ชื่อผู้ใช้ใหม่ (หรือเว้นว่างถ้าไม่เปลี่ยน)"></div>
+                            <div class="field"><label>รหัสผ่านใหม่</label><input type="password" id="cp_newPass" placeholder="รหัสผ่านใหม่"></div>
+                        </div>
+                        <div class="field"><label>ยืนยันรหัสผ่านใหม่</label><input type="password" id="cp_confirmPass" placeholder="กรอกรหัสผ่านใหม่อีกครั้ง"></div>
+                        <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.5rem">
+                            <button class="btn btn-primary" onclick="changePassword()"><i class="fas fa-save"></i>บันทึกรหัสผ่านใหม่</button>
+                            <button class="btn btn-danger" onclick="resetPassword()"><i class="fas fa-undo"></i>รีเซ็ตเป็นค่าเริ่มต้น</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div><!-- /content -->
     </div><!-- /main -->
 </div><!-- /app -->
@@ -467,8 +492,8 @@
 
 <script>
 // ===== CONFIG =====
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'admin123';
+const DEFAULT_USER = 'admin';
+const DEFAULT_PASS = 'admin123';
 
 // Safe storage — fallback to sessionStorage if localStorage blocked (e.g. iframe)
 const store = (() => {
@@ -490,11 +515,14 @@ let currentModal = null;
 let editingRow = null;
 let allData = {};
 
+function getAdminUser() { return storeGet('rkt_admin_user', DEFAULT_USER); }
+function getAdminPass() { return storeGet('rkt_admin_pass', DEFAULT_PASS); }
+
 // ===== LOGIN =====
 function doLogin() {
     const u = document.getElementById('loginUser').value.trim();
     const p = document.getElementById('loginPass').value;
-    if (u === ADMIN_USER && p === ADMIN_PASS) {
+    if (u === getAdminUser() && p === getAdminPass()) {
         document.getElementById('loginWrap').style.display = 'none';
         document.getElementById('app').style.display = 'flex';
         initApp();
@@ -511,6 +539,45 @@ function doLogout() {
     document.getElementById('loginWrap').style.display = 'flex';
     document.getElementById('loginUser').value = '';
     document.getElementById('loginPass').value = '';
+}
+
+// ===== CHANGE PASSWORD =====
+function changePassword() {
+    const curPass = document.getElementById('cp_currentPass').value;
+    const newUser = document.getElementById('cp_newUser').value.trim();
+    const newPass = document.getElementById('cp_newPass').value;
+    const confirmPass = document.getElementById('cp_confirmPass').value;
+
+    if (!curPass) { toast('กรุณากรอกรหัสผ่านปัจจุบัน', 'error'); return; }
+    if (curPass !== getAdminPass()) { toast('รหัสผ่านปัจจุบันไม่ถูกต้อง', 'error'); return; }
+    if (!newPass) { toast('กรุณากรอกรหัสผ่านใหม่', 'error'); return; }
+    if (newPass.length < 4) { toast('รหัสผ่านใหม่ต้องยาวอย่างน้อย 4 ตัวอักษร', 'error'); return; }
+    if (newPass !== confirmPass) { toast('รหัสผ่านใหม่ไม่ตรงกัน', 'error'); return; }
+
+    if (newUser) storeSet('rkt_admin_user', newUser);
+    storeSet('rkt_admin_pass', newPass);
+
+    toast('เปลี่ยนรหัสผ่านสำเร็จ ✓', 'success');
+    document.getElementById('cp_currentPass').value = '';
+    document.getElementById('cp_newUser').value = '';
+    document.getElementById('cp_newPass').value = '';
+    document.getElementById('cp_confirmPass').value = '';
+    document.getElementById('cp_currentUser').value = getAdminUser();
+}
+
+async function resetPassword() {
+    const ok = await confirmAction('รีเซ็ตรหัสผ่าน', 'ต้องการรีเซ็ตเป็น admin / admin123 หรือไม่?');
+    if (!ok) return;
+    storeSet('rkt_admin_user', '');
+    storeSet('rkt_admin_pass', '');
+    store.removeItem('rkt_admin_user');
+    store.removeItem('rkt_admin_pass');
+    toast('รีเซ็ตเป็นค่าเริ่มต้นแล้ว (admin / admin123)', 'success');
+    document.getElementById('cp_currentUser').value = getAdminUser();
+    document.getElementById('cp_currentPass').value = '';
+    document.getElementById('cp_newUser').value = '';
+    document.getElementById('cp_newPass').value = '';
+    document.getElementById('cp_confirmPass').value = '';
 }
 
 // ===== INIT =====
@@ -537,7 +604,7 @@ function updateApiStatus() {
 const pageTitles = {
     dashboard: 'ภาพรวม', settings: 'ข้อมูลโรงเรียน', director: 'สาส์นผู้บริหาร',
     news: 'ข่าวประชาสัมพันธ์', calendar: 'ปฏิทินกิจกรรม', team: 'บุคลากร',
-    features: 'จุดเด่นโรงเรียน', achievements: 'รางวัล/ความภาคภูมิใจ', gallery: 'ภาพกิจกรรม', setup: 'ตั้งค่า API'
+    features: 'จุดเด่นโรงเรียน', achievements: 'รางวัล/ความภาคภูมิใจ', gallery: 'ภาพกิจกรรม', setup: 'ตั้งค่า API', password: 'เปลี่ยนรหัสผ่าน'
 };
 function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -550,7 +617,11 @@ function showPage(name) {
         renderTable(name, allData[name]);
     }
     // โหลดใหม่จาก API เสมอ
-    if (API_URL && name !== 'setup' && name !== 'dashboard') loadSection(name);
+    if (API_URL && name !== 'setup' && name !== 'dashboard' && name !== 'password') loadSection(name);
+    // แสดงชื่อผู้ใช้ปัจจุบันในหน้าเปลี่ยนรหัส
+    if (name === 'password') {
+        document.getElementById('cp_currentUser').value = getAdminUser();
+    }
 }
 
 // ===== API CALLS =====
