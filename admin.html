@@ -913,19 +913,19 @@ const modalForms = {
                 <div>
                     <div class="crop-pos-btns">
                         <div class="crop-btn-row">
-                            <button type="button" class="crop-btn" onclick="setCrop('top left')">↖ บนซ้าย</button>
-                            <button type="button" class="crop-btn active" onclick="setCrop('top center')">↑ บนกลาง</button>
-                            <button type="button" class="crop-btn" onclick="setCrop('top right')">↗ บนขวา</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('top left',this)">↖ บนซ้าย</button>
+                            <button type="button" class="crop-btn active" onclick="setCrop('top center',this)">↑ บนกลาง</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('top right',this)">↗ บนขวา</button>
                         </div>
                         <div class="crop-btn-row">
-                            <button type="button" class="crop-btn" onclick="setCrop('center left')">← กลางซ้าย</button>
-                            <button type="button" class="crop-btn" onclick="setCrop('center center')">● กลาง</button>
-                            <button type="button" class="crop-btn" onclick="setCrop('center right')">→ กลางขวา</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('center left',this)">← กลางซ้าย</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('center center',this)">● กลาง</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('center right',this)">→ กลางขวา</button>
                         </div>
                         <div class="crop-btn-row">
-                            <button type="button" class="crop-btn" onclick="setCrop('bottom left')">↙ ล่างซ้าย</button>
-                            <button type="button" class="crop-btn" onclick="setCrop('bottom center')">↓ ล่างกลาง</button>
-                            <button type="button" class="crop-btn" onclick="setCrop('bottom right')">↘ ล่างขวา</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('bottom left',this)">↙ ล่างซ้าย</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('bottom center',this)">↓ ล่างกลาง</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('bottom right',this)">↘ ล่างขวา</button>
                         </div>
                     </div>
                     <div class="crop-hint">กดปุ่มเพื่อเลือกส่วนของรูปที่จะแสดงในวงกลม</div>
@@ -1027,10 +1027,10 @@ function pickIcon(cls) {
     if (picked) picked.classList.add('selected');
 }
 
-function setCrop(pos) {
+function setCrop(pos, el) {
     document.getElementById('mf_crop').value = pos;
     document.querySelectorAll('.crop-btn').forEach(b => b.classList.remove('active'));
-    event.target.closest('.crop-btn').classList.add('active');
+    el.classList.add('active');
     const img = document.getElementById('cropPreviewImg');
     if (img) img.style.objectPosition = pos;
 }
