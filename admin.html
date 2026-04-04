@@ -129,6 +129,15 @@
         .modal-body{padding:1.5rem}
         .modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.75rem}
 
+        /* ===== CONFIRM DIALOG ===== */
+        .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem}
+        .confirm-overlay.open{display:flex}
+        .confirm-box{background:#fff;border-radius:16px;width:min(380px,90vw);padding:2rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+        .confirm-icon{font-size:2.5rem;color:var(--danger);margin-bottom:1rem}
+        .confirm-box h4{font-size:1.05rem;margin-bottom:.5rem;color:var(--text)}
+        .confirm-box p{font-size:.88rem;color:var(--muted);margin-bottom:1.5rem}
+        .confirm-btns{display:flex;gap:.75rem;justify-content:center}
+
         /* ===== SETUP ===== */
         .setup-box{background:linear-gradient(135deg,#EFF6FF,#F0FDF4);border:1.5px solid #BFDBFE;border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
         .setup-box h4{color:#1D4ED8;font-size:.95rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
@@ -411,6 +420,19 @@
         <div class="modal-footer">
             <button class="btn btn-ghost" onclick="closeModal()">ยกเลิก</button>
             <button class="btn btn-success" id="modalSaveBtn" onclick="saveModal()"><i class="fas fa-save"></i>บันทึก</button>
+        </div>
+    </div>
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+        <div class="confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <h4 id="confirmTitle">ยืนยันการลบ</h4>
+        <p id="confirmMsg">คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?</p>
+        <div class="confirm-btns">
+            <button class="btn btn-ghost" id="confirmNo" onclick="resolveConfirm(false)">ยกเลิก</button>
+            <button class="btn btn-danger" id="confirmYes" onclick="resolveConfirm(true)"><i class="fas fa-trash"></i>ลบข้อมูล</button>
         </div>
     </div>
 </div>
@@ -793,8 +815,23 @@ function editRow(name, idx) {
     openModal(name, row);
 }
 
+let _confirmResolve = null;
+function confirmAction(title, msg) {
+    return new Promise(resolve => {
+        _confirmResolve = resolve;
+        document.getElementById('confirmTitle').textContent = title || 'ยืนยันการลบ';
+        document.getElementById('confirmMsg').textContent = msg || 'คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?';
+        document.getElementById('confirmOverlay').classList.add('open');
+    });
+}
+function resolveConfirm(val) {
+    document.getElementById('confirmOverlay').classList.remove('open');
+    if (_confirmResolve) { _confirmResolve(val); _confirmResolve = null; }
+}
+
 async function deleteRow(name, idx) {
-    if (!confirm('ยืนยันการลบข้อมูลนี้?')) return;
+    const ok = await confirmAction('ยืนยันการลบ', 'คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?');
+    if (!ok) return;
     let rows = [...(allData[name] || [])];
     rows.splice(idx, 1);
 
@@ -806,10 +843,8 @@ async function deleteRow(name, idx) {
         return;
     }
 
-    setBtnLoading(true);
     toast('กำลังลบข้อมูล...', 'warning');
     const r = await apiPost('saveSheet', name, rows);
-    setBtnLoading(false);
     if (r?.success) {
         allData[name] = rows;
         renderTable(name, rows);
