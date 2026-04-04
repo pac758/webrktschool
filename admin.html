@@ -523,12 +523,12 @@ function getAdminPass() { return (cachedAuth && cachedAuth.pass) || DEFAULT_PASS
 async function fetchAuth() {
     if (!API_URL) return;
     try {
-        const url = `${API_URL}?sheet=auth&t=${Date.now()}`;
+        const url = `${API_URL}?sheet=settings&t=${Date.now()}`;
         const res = await fetch(url, { redirect: 'follow' });
         const text = (await res.text()).trim();
         if (!text || text.startsWith('<')) return;
         const data = JSON.parse(text);
-        if (data && data.user) cachedAuth = data;
+        if (data && data.admin_user) cachedAuth = { user: data.admin_user, pass: data.admin_pass || DEFAULT_PASS };
     } catch(e) { console.warn('fetchAuth:', e.message); }
 }
 
@@ -572,11 +572,14 @@ async function changePassword() {
     if (newPass.length < 4) { toast('รหัสผ่านใหม่ต้องยาวอย่างน้อย 4 ตัวอักษร', 'error'); return; }
     if (newPass !== confirmPass) { toast('รหัสผ่านใหม่ไม่ตรงกัน', 'error'); return; }
 
-    const authData = { user: newUser || getAdminUser(), pass: newPass };
+    const finalUser = newUser || getAdminUser();
+    // บันทึกรหัสผ่านรวมกับ settings เดิม
+    const settingsData = Object.assign({}, allData.settings || {}, { admin_user: finalUser, admin_pass: newPass });
     toast('กำลังบันทึกรหัสผ่าน...', 'warning');
-    const r = await apiPost('saveSettings', 'auth', authData);
+    const r = await apiPost('saveSettings', 'settings', settingsData);
     if (r?.success) {
-        cachedAuth = authData;
+        cachedAuth = { user: finalUser, pass: newPass };
+        allData.settings = settingsData;
         toast('เปลี่ยนรหัสผ่านสำเร็จ ✓ (เก็บถาวรใน Google Sheet)', 'success');
         document.getElementById('cp_currentPass').value = '';
         document.getElementById('cp_newUser').value = '';
@@ -591,11 +594,12 @@ async function changePassword() {
 async function resetPassword() {
     const ok = await confirmAction('รีเซ็ตรหัสผ่าน', 'ต้องการรีเซ็ตเป็น admin / admin123 หรือไม่?');
     if (!ok) return;
-    const authData = { user: DEFAULT_USER, pass: DEFAULT_PASS };
+    const settingsData = Object.assign({}, allData.settings || {}, { admin_user: DEFAULT_USER, admin_pass: DEFAULT_PASS });
     toast('กำลังรีเซ็ต...', 'warning');
-    const r = await apiPost('saveSettings', 'auth', authData);
+    const r = await apiPost('saveSettings', 'settings', settingsData);
     if (r?.success) {
         cachedAuth = null;
+        allData.settings = settingsData;
         toast('รีเซ็ตเป็นค่าเริ่มต้นแล้ว (admin / admin123)', 'success');
     } else {
         toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
