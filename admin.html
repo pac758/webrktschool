@@ -436,9 +436,9 @@
                 <div class="card">
                     <div class="card-header"><h4><i class="fas fa-key"></i>เปลี่ยนรหัสผ่าน</h4></div>
                     <div class="card-body">
-                        <div style="background:#FEF3C7;border:1px solid #F59E0B;border-radius:8px;padding:1rem;margin-bottom:1.5rem;font-size:.85rem;color:#92400E;display:flex;align-items:flex-start;gap:.6rem">
-                            <i class="fas fa-exclamation-triangle" style="margin-top:2px"></i>
-                            <div>รหัสผ่านจะถูกเก็บไว้ในเบราว์เซอร์นี้เท่านั้น หากล้างข้อมูลเบราว์เซอร์หรือเปลี่ยนเครื่อง รหัสผ่านจะกลับเป็นค่าเริ่มต้น (<strong>admin / admin123</strong>)</div>
+                        <div style="background:#ECFDF5;border:1px solid #6EE7B7;border-radius:8px;padding:1rem;margin-bottom:1.5rem;font-size:.85rem;color:#065F46;display:flex;align-items:flex-start;gap:.6rem">
+                            <i class="fas fa-shield-alt" style="margin-top:2px"></i>
+                            <div>รหัสผ่านจะถูกเก็บถาวรใน <strong>Google Sheet</strong> เปลี่ยนแล้วใช้ได้ทันที แม้เปลี่ยนเครื่องหรือล้างเบราว์เซอร์ก็ไม่หาย</div>
                         </div>
                         <div class="field"><label>ชื่อผู้ใช้ปัจจุบัน</label><input type="text" id="cp_currentUser" readonly style="background:#F1F5F9"></div>
                         <div class="field"><label>รหัสผ่านปัจจุบัน</label><input type="password" id="cp_currentPass" placeholder="กรอกรหัสผ่านปัจจุบัน"></div>
@@ -515,13 +515,31 @@ let currentModal = null;
 let editingRow = null;
 let allData = {};
 
-function getAdminUser() { return storeGet('rkt_admin_user', DEFAULT_USER); }
-function getAdminPass() { return storeGet('rkt_admin_pass', DEFAULT_PASS); }
+let cachedAuth = null;
+
+function getAdminUser() { return (cachedAuth && cachedAuth.user) || DEFAULT_USER; }
+function getAdminPass() { return (cachedAuth && cachedAuth.pass) || DEFAULT_PASS; }
+
+async function fetchAuth() {
+    if (!API_URL) return;
+    try {
+        const url = `${API_URL}?sheet=auth&t=${Date.now()}`;
+        const res = await fetch(url, { redirect: 'follow' });
+        const text = (await res.text()).trim();
+        if (!text || text.startsWith('<')) return;
+        const data = JSON.parse(text);
+        if (data && data.user) cachedAuth = data;
+    } catch(e) { console.warn('fetchAuth:', e.message); }
+}
 
 // ===== LOGIN =====
-function doLogin() {
+async function doLogin() {
     const u = document.getElementById('loginUser').value.trim();
     const p = document.getElementById('loginPass').value;
+    const btn = document.querySelector('.btn-login');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:.5rem"></i>กำลังตรวจสอบ...'; }
+    await fetchAuth();
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right:.5rem"></i>เข้าสู่ระบบ'; }
     if (u === getAdminUser() && p === getAdminPass()) {
         document.getElementById('loginWrap').style.display = 'none';
         document.getElementById('app').style.display = 'flex';
@@ -542,7 +560,7 @@ function doLogout() {
 }
 
 // ===== CHANGE PASSWORD =====
-function changePassword() {
+async function changePassword() {
     const curPass = document.getElementById('cp_currentPass').value;
     const newUser = document.getElementById('cp_newUser').value.trim();
     const newPass = document.getElementById('cp_newPass').value;
@@ -554,25 +572,34 @@ function changePassword() {
     if (newPass.length < 4) { toast('รหัสผ่านใหม่ต้องยาวอย่างน้อย 4 ตัวอักษร', 'error'); return; }
     if (newPass !== confirmPass) { toast('รหัสผ่านใหม่ไม่ตรงกัน', 'error'); return; }
 
-    if (newUser) storeSet('rkt_admin_user', newUser);
-    storeSet('rkt_admin_pass', newPass);
-
-    toast('เปลี่ยนรหัสผ่านสำเร็จ ✓', 'success');
-    document.getElementById('cp_currentPass').value = '';
-    document.getElementById('cp_newUser').value = '';
-    document.getElementById('cp_newPass').value = '';
-    document.getElementById('cp_confirmPass').value = '';
-    document.getElementById('cp_currentUser').value = getAdminUser();
+    const authData = { user: newUser || getAdminUser(), pass: newPass };
+    toast('กำลังบันทึกรหัสผ่าน...', 'warning');
+    const r = await apiPost('saveSettings', 'auth', authData);
+    if (r?.success) {
+        cachedAuth = authData;
+        toast('เปลี่ยนรหัสผ่านสำเร็จ ✓ (เก็บถาวรใน Google Sheet)', 'success');
+        document.getElementById('cp_currentPass').value = '';
+        document.getElementById('cp_newUser').value = '';
+        document.getElementById('cp_newPass').value = '';
+        document.getElementById('cp_confirmPass').value = '';
+        document.getElementById('cp_currentUser').value = getAdminUser();
+    } else {
+        toast('เกิดข้อผิดพลาด: ' + (r?.error||'ไม่ทราบสาเหตุ'), 'error');
+    }
 }
 
 async function resetPassword() {
     const ok = await confirmAction('รีเซ็ตรหัสผ่าน', 'ต้องการรีเซ็ตเป็น admin / admin123 หรือไม่?');
     if (!ok) return;
-    storeSet('rkt_admin_user', '');
-    storeSet('rkt_admin_pass', '');
-    store.removeItem('rkt_admin_user');
-    store.removeItem('rkt_admin_pass');
-    toast('รีเซ็ตเป็นค่าเริ่มต้นแล้ว (admin / admin123)', 'success');
+    const authData = { user: DEFAULT_USER, pass: DEFAULT_PASS };
+    toast('กำลังรีเซ็ต...', 'warning');
+    const r = await apiPost('saveSettings', 'auth', authData);
+    if (r?.success) {
+        cachedAuth = null;
+        toast('รีเซ็ตเป็นค่าเริ่มต้นแล้ว (admin / admin123)', 'success');
+    } else {
+        toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
+    }
     document.getElementById('cp_currentUser').value = getAdminUser();
     document.getElementById('cp_currentPass').value = '';
     document.getElementById('cp_newUser').value = '';
