@@ -235,6 +235,7 @@
             <div class="nav-item active" onclick="showPage('dashboard')" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>ภาพรวม</div>
             <div class="nav-divider"></div>
             <div class="nav-item" onclick="showPage('settings')" data-page="settings"><i class="fas fa-cog"></i>ข้อมูลโรงเรียน</div>
+            <div class="nav-item" onclick="showPage('hero')" data-page="hero"><i class="fas fa-image"></i>Hero Banner</div>
             <div class="nav-item" onclick="showPage('director')" data-page="director"><i class="fas fa-user-tie"></i>สาส์นผู้บริหาร</div>
             <div class="nav-item" onclick="showPage('news')" data-page="news"><i class="fas fa-newspaper"></i>ข่าวประชาสัมพันธ์</div>
             <div class="nav-item" onclick="showPage('calendar')" data-page="calendar"><i class="far fa-calendar-alt"></i>ปฏิทินกิจกรรม</div>
@@ -313,6 +314,61 @@
                         <div class="field"><label>URL YouTube วิดีโอ (embed)</label><input type="text" id="s_youtube" placeholder="https://www.youtube.com/embed/..."></div>
                         <div class="field"><label>Google Maps Embed URL</label><input type="text" id="s_maps" placeholder="https://maps.google.com/maps?q=..."></div>
                         <div class="field"><label>Google Maps นำทาง URL</label><input type="text" id="s_maps_nav" placeholder="https://maps.app.goo.gl/..."></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HERO BANNER -->
+            <div class="page" id="page-hero">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-image"></i>Hero Banner</h4><button class="btn btn-success btn-sm" onclick="saveHero()"><i class="fas fa-save"></i>บันทึก</button></div>
+                    <div class="card-body">
+                        <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:1rem;margin-bottom:1.5rem;font-size:.85rem;color:#1E40AF">
+                            <i class="fas fa-info-circle"></i> แก้ไขข้อความ ปุ่มลิงก์ รูปภาพ และป้ายรางวัลที่แสดงใน Banner หน้าแรกของเว็บไซต์
+                        </div>
+                        <h5 style="margin-bottom:.75rem;font-weight:700">ข้อความหลัก</h5>
+                        <div class="field"><label>ป้ายข้อความเล็ก (บรรทัดแรก)</label><input type="text" id="h_badge" placeholder="ยินดีต้อนรับสู่รั้วแดง-ทอง"></div>
+                        <div class="field"><label>หัวข้อใหญ่ บรรทัดที่ 1</label><input type="text" id="h_heading1" placeholder="พัฒนาผู้เรียน"></div>
+                        <div class="field"><label>หัวข้อใหญ่ บรรทัดที่ 2 (ส่วนที่เน้นสีทอง)</label><input type="text" id="h_heading2" placeholder="ความเป็นเลิศ"></div>
+                        <div class="field"><label>คำอธิบาย</label><textarea id="h_desc" placeholder="มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ..."></textarea></div>
+
+                        <h5 style="margin:1.5rem 0 .75rem;font-weight:700">รูปภาพและป้ายรางวัล</h5>
+                        <div class="field"><label>URL รูปภาพ Hero</label><input type="text" id="h_image" placeholder="https://drive.google.com/thumbnail?id=...&sz=w800"></div>
+                        <div class="field"><label>ข้อความป้ายรางวัล (มุมขวาล่างของรูป)</label><input type="text" id="h_image_badge" placeholder="รางวัลโรงเรียนพระราชทาน"></div>
+
+                        <h5 style="margin:1.5rem 0 .75rem;font-weight:700">ปุ่มลิงก์ (4 ปุ่ม)</h5>
+                        <div style="background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem">
+                            <div style="font-weight:600;font-size:.85rem;margin-bottom:.5rem">ปุ่มที่ 1 (ปุ่มหลัก)</div>
+                            <div class="field-row">
+                                <div class="field"><label>ข้อความ</label><input type="text" id="h_btn1_text" placeholder="ตรวจสอบผลการเรียน"></div>
+                                <div class="field"><label>URL ลิงก์</label><input type="text" id="h_btn1_url" placeholder="https://..."></div>
+                            </div>
+                            <div class="field"><label>ไอคอน (FA class)</label><input type="text" id="h_btn1_icon" placeholder="fas fa-chart-line"></div>
+                        </div>
+                        <div style="background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem">
+                            <div style="font-weight:600;font-size:.85rem;margin-bottom:.5rem">ปุ่มที่ 2</div>
+                            <div class="field-row">
+                                <div class="field"><label>ข้อความ</label><input type="text" id="h_btn2_text" placeholder="ระบบ ปพ.5"></div>
+                                <div class="field"><label>URL ลิงก์</label><input type="text" id="h_btn2_url" placeholder="https://..."></div>
+                            </div>
+                            <div class="field"><label>ไอคอน (FA class)</label><input type="text" id="h_btn2_icon" placeholder="fas fa-user-plus"></div>
+                        </div>
+                        <div style="background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem">
+                            <div style="font-weight:600;font-size:.85rem;margin-bottom:.5rem">ปุ่มที่ 3</div>
+                            <div class="field-row">
+                                <div class="field"><label>ข้อความ</label><input type="text" id="h_btn3_text" placeholder="เรียนออนไลน์"></div>
+                                <div class="field"><label>URL ลิงก์</label><input type="text" id="h_btn3_url" placeholder="https://..."></div>
+                            </div>
+                            <div class="field"><label>ไอคอน (FA class)</label><input type="text" id="h_btn3_icon" placeholder="fas fa-laptop"></div>
+                        </div>
+                        <div style="background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:1rem">
+                            <div style="font-weight:600;font-size:.85rem;margin-bottom:.5rem">ปุ่มที่ 4</div>
+                            <div class="field-row">
+                                <div class="field"><label>ข้อความ</label><input type="text" id="h_btn4_text" placeholder="ศูนย์กลางงาน"></div>
+                                <div class="field"><label>URL ลิงก์</label><input type="text" id="h_btn4_url" placeholder="https://..."></div>
+                            </div>
+                            <div class="field"><label>ไอคอน (FA class)</label><input type="text" id="h_btn4_icon" placeholder="fas fa-briefcase"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -673,7 +729,7 @@ function updateApiStatus() {
 
 // ===== NAVIGATION =====
 const pageTitles = {
-    dashboard: 'ภาพรวม', settings: 'ข้อมูลโรงเรียน', director: 'สาส์นผู้บริหาร',
+    dashboard: 'ภาพรวม', settings: 'ข้อมูลโรงเรียน', hero: 'Hero Banner', director: 'สาส์นผู้บริหาร',
     news: 'ข่าวประชาสัมพันธ์', calendar: 'ปฏิทินกิจกรรม', team: 'บุคลากร',
     features: 'จุดเด่นโรงเรียน', achievements: 'รางวัล/ความภาคภูมิใจ', gallery: 'ภาพกิจกรรม', setup: 'ตั้งค่า API', password: 'เปลี่ยนรหัสผ่าน'
 };
@@ -684,7 +740,7 @@ function showPage(name) {
     document.querySelector(`[data-page="${name}"]`).classList.add('active');
     document.getElementById('pageTitle').textContent = pageTitles[name] || name;
     // ถ้ามีข้อมูลใน cache แล้ว render เลย ไม่ต้องรอ
-    if (allData[name] && name !== 'settings' && name !== 'director') {
+    if (allData[name] && name !== 'settings' && name !== 'director' && name !== 'hero') {
         renderTable(name, allData[name]);
     }
     // โหลดใหม่จาก API เสมอ
@@ -741,7 +797,7 @@ async function apiPost(action, sheet, data) {
 
 async function loadAllData() {
     toast('กำลังโหลดข้อมูลจาก Google Sheet...', 'warning');
-    const sheets = ['settings', 'director', 'news', 'calendar', 'team', 'achievements', 'gallery', 'features'];
+    const sheets = ['settings', 'hero', 'director', 'news', 'calendar', 'team', 'achievements', 'gallery', 'features'];
     let loaded = 0;
     for (const s of sheets) {
         const d = await apiGet(s);
@@ -759,6 +815,7 @@ async function loadAllData() {
     }
     updateDashboard();
     fillSettings();
+    fillHero();
     fillDirector();
 }
 
@@ -767,6 +824,7 @@ async function loadSection(name) {
     if (!d) return;
     allData[name] = d;
     if (name === 'settings') fillSettings();
+    else if (name === 'hero') fillHero();
     else if (name === 'director') fillDirector();
     else renderTable(name, d);
 }
@@ -789,9 +847,10 @@ function fillSettings() {
 }
 async function saveSettings() {
     const fields = ['name_th','name_en','dept','phone','email','website','address','vision','motto','students','staff','years','awards','logo','facebook','youtube','maps','maps_nav'];
-    const data = {};
-    fields.forEach(f => { data[f] = document.getElementById('s_' + f)?.value || ''; });
     toast('กำลังบันทึก...', 'warning');
+    const freshSettings = await apiGet('settings') || {};
+    const data = Object.assign({}, freshSettings);
+    fields.forEach(f => { data[f] = document.getElementById('s_' + f)?.value || ''; });
     const r = await apiPost('saveSettings', 'settings', data);
     if (r?.success) { toast('บันทึกข้อมูลโรงเรียนสำเร็จ ✓', 'success'); allData.settings = data; }
     else toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
@@ -811,6 +870,21 @@ async function saveDirector() {
     toast('กำลังบันทึก...', 'warning');
     const r = await apiPost('saveDirector', 'director', data);
     if (r?.success) { toast('บันทึกสาส์นผู้บริหารสำเร็จ ✓', 'success'); allData.director = data; }
+    else toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
+}
+
+// ===== HERO BANNER =====
+const heroFields = ['badge','heading1','heading2','desc','image','image_badge','btn1_text','btn1_url','btn1_icon','btn2_text','btn2_url','btn2_icon','btn3_text','btn3_url','btn3_icon','btn4_text','btn4_url','btn4_icon'];
+function fillHero() {
+    const d = allData.hero || {};
+    heroFields.forEach(f => { const el = document.getElementById('h_' + f); if (el && d[f] !== undefined) el.value = d[f]; });
+}
+async function saveHero() {
+    const data = {};
+    heroFields.forEach(f => { data[f] = document.getElementById('h_' + f)?.value || ''; });
+    toast('กำลังบันทึก...', 'warning');
+    const r = await apiPost('saveSettings', 'hero', data);
+    if (r?.success) { toast('บันทึก Hero Banner สำเร็จ ✓', 'success'); allData.hero = data; }
     else toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
 }
 
