@@ -740,11 +740,11 @@ function showPage(name) {
     document.querySelector(`[data-page="${name}"]`).classList.add('active');
     document.getElementById('pageTitle').textContent = pageTitles[name] || name;
     // ถ้ามีข้อมูลใน cache แล้ว render เลย ไม่ต้องรอ
-    if (allData[name] && name !== 'settings' && name !== 'director' && name !== 'hero') {
+    if (allData[name] && name !== 'settings' && name !== 'director') {
         renderTable(name, allData[name]);
     }
     // โหลดใหม่จาก API เสมอ
-    if (API_URL && name !== 'setup' && name !== 'dashboard' && name !== 'password') loadSection(name);
+    if (API_URL && name !== 'setup' && name !== 'dashboard' && name !== 'password') loadSection(name === 'hero' ? 'settings' : name);
     // แสดงชื่อผู้ใช้ปัจจุบันในหน้าเปลี่ยนรหัส
     if (name === 'password') {
         document.getElementById('cp_currentUser').value = getAdminUser();
@@ -797,7 +797,7 @@ async function apiPost(action, sheet, data) {
 
 async function loadAllData() {
     toast('กำลังโหลดข้อมูลจาก Google Sheet...', 'warning');
-    const sheets = ['settings', 'hero', 'director', 'news', 'calendar', 'team', 'achievements', 'gallery', 'features'];
+    const sheets = ['settings', 'director', 'news', 'calendar', 'team', 'achievements', 'gallery', 'features'];
     let loaded = 0;
     for (const s of sheets) {
         const d = await apiGet(s);
@@ -823,8 +823,7 @@ async function loadSection(name) {
     const d = await apiGet(name);
     if (!d) return;
     allData[name] = d;
-    if (name === 'settings') fillSettings();
-    else if (name === 'hero') fillHero();
+    if (name === 'settings') { fillSettings(); fillHero(); }
     else if (name === 'director') fillDirector();
     else renderTable(name, d);
 }
@@ -873,18 +872,19 @@ async function saveDirector() {
     else toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
 }
 
-// ===== HERO BANNER =====
+// ===== HERO BANNER (เก็บใน settings sheet ด้วย prefix hero_) =====
 const heroFields = ['badge','heading1','heading2','desc','image','image_badge','btn1_text','btn1_url','btn1_icon','btn2_text','btn2_url','btn2_icon','btn3_text','btn3_url','btn3_icon','btn4_text','btn4_url','btn4_icon'];
 function fillHero() {
-    const d = allData.hero || {};
-    heroFields.forEach(f => { const el = document.getElementById('h_' + f); if (el && d[f] !== undefined) el.value = d[f]; });
+    const d = allData.settings || {};
+    heroFields.forEach(f => { const el = document.getElementById('h_' + f); if (el && d['hero_'+f] !== undefined) el.value = d['hero_'+f]; });
 }
 async function saveHero() {
-    const data = {};
-    heroFields.forEach(f => { data[f] = document.getElementById('h_' + f)?.value || ''; });
     toast('กำลังบันทึก...', 'warning');
-    const r = await apiPost('saveSettings', 'hero', data);
-    if (r?.success) { toast('บันทึก Hero Banner สำเร็จ ✓', 'success'); allData.hero = data; }
+    const freshSettings = await apiGet('settings') || {};
+    const data = Object.assign({}, freshSettings);
+    heroFields.forEach(f => { data['hero_'+f] = document.getElementById('h_' + f)?.value || ''; });
+    const r = await apiPost('saveSettings', 'settings', data);
+    if (r?.success) { toast('บันทึก Hero Banner สำเร็จ ✓', 'success'); allData.settings = data; }
     else toast('เกิดข้อผิดพลาด: ' + (r?.error||''), 'error');
 }
 
