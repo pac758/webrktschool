@@ -129,6 +129,17 @@
         .modal-body{padding:1.5rem}
         .modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.75rem}
 
+        /* ===== CROP POSITION ===== */
+        .crop-preview-wrap{display:flex;gap:1rem;align-items:flex-start;margin-top:.5rem}
+        .crop-preview-box{width:100px;height:100px;border-radius:50%;overflow:hidden;border:3px solid var(--primary);flex-shrink:0;background:#f1f5f9}
+        .crop-preview-box img{width:100%;height:100%;object-fit:cover;transition:object-position .3s}
+        .crop-pos-btns{display:flex;flex-direction:column;gap:.4rem}
+        .crop-pos-btns .crop-btn-row{display:flex;gap:.4rem}
+        .crop-btn{padding:.35rem .65rem;border:1.5px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:.72rem;color:var(--text);transition:var(--trans);line-height:1}
+        .crop-btn:hover{border-color:var(--primary);background:#EFF6FF}
+        .crop-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+        .crop-hint{font-size:.75rem;color:var(--muted);margin-top:.3rem}
+
         /* ===== IMAGE PREVIEW ===== */
         .thumb-preview{cursor:pointer;transition:transform .2s;border:2px solid transparent}
         .thumb-preview:hover{transform:scale(1.15);border-color:var(--primary)}
@@ -812,10 +823,10 @@ const tableConfig = {
         render: (row, i) => `<td>${i+1}</td><td>${row.day||''}</td><td>${row.month||''}</td><td>${row.title||''}</td><td>${row.detail||''}</td>`
     },
     team: {
-        cols: ['photo','name','role','order'],
-        labels: ['URL รูป','ชื่อ-นามสกุล','ตำแหน่ง','ลำดับ'],
+        cols: ['photo','name','role','order','crop'],
+        labels: ['URL รูป','ชื่อ-นามสกุล','ตำแหน่ง','ลำดับ','ครอป'],
         render: (row, i) => `<td>${i+1}</td><td>${row.photo ? `<img src="${row.photo}" class="thumb-preview" onclick="previewImage('${row.photo.replace(/'/g,"\\'")}')"
-            style="width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:top">` : '—'}</td><td>${row.name||''}</td><td>${row.role||''}</td><td>${row.order||''}</td>`
+            style="width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:${row.crop||'top center'}">` : '—'}</td><td>${row.name||''}</td><td>${row.role||''}</td><td>${row.order||''}</td>`
     },
     achievements: {
         cols: ['icon','title','detail'],
@@ -893,7 +904,34 @@ const modalForms = {
             <div class="field"><label>ชื่อ-นามสกุล</label><input type="text" id="mf_name" placeholder="นายนัฐวุฒิ สนทนา"></div>
             <div class="field"><label>ตำแหน่ง</label><input type="text" id="mf_role" placeholder="ผู้อำนวยการโรงเรียน"></div>
         </div>
-        <div class="field"><label>URL รูปภาพ</label><input type="text" id="mf_photo" placeholder="https://drive.google.com/thumbnail?id=..."></div>
+        <div class="field"><label>URL รูปภาพ</label><input type="text" id="mf_photo" placeholder="https://drive.google.com/thumbnail?id=..." oninput="updateCropPreview()"></div>
+        <div class="field">
+            <label>ตำแหน่งการครอป (เลือกส่วนที่ต้องการแสดง)</label>
+            <input type="hidden" id="mf_crop" value="top center">
+            <div class="crop-preview-wrap">
+                <div class="crop-preview-box"><img id="cropPreviewImg" src="https://placehold.co/200x200/334155/white?text=รูป" alt="preview"></div>
+                <div>
+                    <div class="crop-pos-btns">
+                        <div class="crop-btn-row">
+                            <button type="button" class="crop-btn" onclick="setCrop('top left')">↖ บนซ้าย</button>
+                            <button type="button" class="crop-btn active" onclick="setCrop('top center')">↑ บนกลาง</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('top right')">↗ บนขวา</button>
+                        </div>
+                        <div class="crop-btn-row">
+                            <button type="button" class="crop-btn" onclick="setCrop('center left')">← กลางซ้าย</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('center center')">● กลาง</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('center right')">→ กลางขวา</button>
+                        </div>
+                        <div class="crop-btn-row">
+                            <button type="button" class="crop-btn" onclick="setCrop('bottom left')">↙ ล่างซ้าย</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('bottom center')">↓ ล่างกลาง</button>
+                            <button type="button" class="crop-btn" onclick="setCrop('bottom right')">↘ ล่างขวา</button>
+                        </div>
+                    </div>
+                    <div class="crop-hint">กดปุ่มเพื่อเลือกส่วนของรูปที่จะแสดงในวงกลม</div>
+                </div>
+            </div>
+        </div>
         <div class="field"><label>ลำดับการแสดง</label><input type="number" id="mf_order" placeholder="1"></div>`,
     features: () => `
         <div class="field"><label>ชื่อจุดเด่น</label><input type="text" id="mf_title" placeholder="วิชาการเข้มข้น"></div>
@@ -989,6 +1027,33 @@ function pickIcon(cls) {
     if (picked) picked.classList.add('selected');
 }
 
+function setCrop(pos) {
+    document.getElementById('mf_crop').value = pos;
+    document.querySelectorAll('.crop-btn').forEach(b => b.classList.remove('active'));
+    event.target.closest('.crop-btn').classList.add('active');
+    const img = document.getElementById('cropPreviewImg');
+    if (img) img.style.objectPosition = pos;
+}
+
+function updateCropPreview() {
+    const url = document.getElementById('mf_photo')?.value || '';
+    const img = document.getElementById('cropPreviewImg');
+    if (!img) return;
+    img.src = url || 'https://placehold.co/200x200/334155/white?text=\u0e23\u0e39\u0e1b';
+    img.style.objectPosition = document.getElementById('mf_crop')?.value || 'top center';
+}
+
+function initCropButtons(cropVal) {
+    const val = cropVal || 'top center';
+    document.getElementById('mf_crop').value = val;
+    document.querySelectorAll('.crop-btn').forEach(b => {
+        b.classList.remove('active');
+        if (b.getAttribute('onclick')?.includes(val)) b.classList.add('active');
+    });
+    const img = document.getElementById('cropPreviewImg');
+    if (img) img.style.objectPosition = val;
+}
+
 function openModal(type, data = null) {
     currentModal = type;
     editingRow = data ? data._idx : null;
@@ -1011,6 +1076,11 @@ function openModal(type, data = null) {
     // สร้าง icon picker ถ้า modal นี้มี
     if (type === 'features' || type === 'achievements') {
         buildIconPicker(data?.icon || '');
+    }
+    // ตั้งค่า crop preview สำหรับ team
+    if (type === 'team') {
+        initCropButtons(data?.crop || 'top center');
+        updateCropPreview();
     }
     document.getElementById('modalOverlay').classList.add('open');
 }
