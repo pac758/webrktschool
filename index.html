@@ -957,7 +957,7 @@
             if (!id) { const m4 = url.match(/drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/); if (m4) id = m4[1]; }
             // lhN.googleusercontent.com/d/ID
             if (!id) { const m5 = url.match(/lh\d\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/); if (m5) id = m5[1]; }
-            if (id) return `https://drive.google.com/uc?export=view&id=${id}`;
+            if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
             return url;
         }
 
@@ -1166,8 +1166,15 @@
                 const raw = r.photos || r.photo || '';
                 console.log('Raw photos:', raw);
                 const pics = raw.split('|||').filter(Boolean).map(u => {
-                    const fixed = fixDriveUrl(u);
-                    console.log('Fixed URL:', u, '→', fixed);
+                    let id = '';
+                    const m1 = u.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+                    if (m1) id = m1[1];
+                    if (!id) { const m2 = u.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/); if (m2) id = m2[1]; }
+                    if (!id) { const m3 = u.match(/drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/); if (m3) id = m3[1]; }
+                    if (!id) { const m4 = u.match(/drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/); if (m4) id = m4[1]; }
+                    if (!id) { const m5 = u.match(/lh\d\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/); if (m5) id = m5[1]; }
+                    const fixed = id ? `https://drive.google.com/uc?export=view&id=${id}` : u;
+                    console.log('Gallery URL:', u, '→', fixed);
                     return fixed;
                 });
                 return { photos: pics, title: r.title||'', caption: r.caption||'' };
