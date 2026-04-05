@@ -1157,15 +1157,38 @@
             const el = document.getElementById('galleryGridFront');
             if (!el || !rows.length) return;
             galleryAlbums = rows.map(r => {
-                const pics = (r.photos || r.photo || '').split('|||').filter(Boolean).map(fixDriveUrl);
+                const pics = (r.photos || r.photo || '').split('|||').filter(Boolean).map(u => {
+                    // ดึง ID จากทุกลิงก์ Drive
+                    let id = '';
+                    const m1 = u.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+                    if (m1) id = m1[1];
+                    if (!id) { const m2 = u.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/); if (m2) id = m2[1]; }
+                    if (!id) { const m3 = u.match(/drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/); if (m3) id = m3[1]; }
+                    
+                    if (id) {
+                        // ส่งค่ากลับเป็น object เพื่อเก็บทั้ง 2 format
+                        return {
+                            id: id,
+                            thumb: `https://drive.google.com/thumbnail?id=${id}&sz=w800`,
+                            view: `https://drive.google.com/uc?export=view&id=${id}`
+                        };
+                    }
+                    return { thumb: u, view: u };
+                });
                 return { photos: pics, title: r.title||'', caption: r.caption||'' };
             });
+
             el.innerHTML = galleryAlbums.map((album, ai) => {
-                const cover = album.photos[0] || '';
+                const p0 = album.photos[0];
+                const cover = p0 ? p0.thumb : '';
+                const altView = p0 ? p0.view : '';
                 const cnt = album.photos.length;
+                
                 return `
                 <div class="gallery-item" onclick="openLightbox(${ai},0)">
-                    <img src="${cover}" alt="${album.title}" onerror="this.onerror=null;this.src='https://placehold.co/600x450/334155/white?text=ภาพกิจกรรม'">
+                    <img src="${cover}" alt="${album.title}" 
+                         onload="if(this.naturalWidth < 100 && '${altView}' !== '') { this.src='${altView}'; }"
+                         onerror="this.onerror=null;this.src='https://placehold.co/600x450/334155/white?text=ภาพกิจกรรม'">
                     ${cnt > 1 ? `<div class="gallery-badge"><i class="fas fa-images"></i>${cnt} ภาพ</div>` : ''}
                     <div class="gallery-overlay"><div class="gallery-text"><h4>${album.title}</h4><p>${album.caption}</p></div></div>
                 </div>`;
@@ -1205,13 +1228,27 @@
         function updateLightbox() {
             const album = galleryAlbums[lbAlbum];
             if (!album) return;
-            document.getElementById('lightboxImg').src = fixDriveUrl(album.photos[lbIdx] || '');
+            const photo = album.photos[lbIdx];
+            if (!photo) return;
+
+            const img = document.getElementById('lightboxImg');
+            // ใช้ thumb เป็นค่าเริ่มต้น
+            img.src = photo.thumb;
+            
+            // ตรวจสอบ naturalWidth เพื่อสลับไปใช้ view format (uc?export=view) หากเจอรูปพัง (????)
+            img.onload = function() {
+                if (this.naturalWidth < 100 && photo.view && this.src !== photo.view) {
+                    this.src = photo.view;
+                }
+            };
+            img.onerror = function() {
+                this.onerror = null;
+                this.src = 'https://placehold.co/1200x800/334155/white?text=ไม่สามารถโหลดรูปภาพได้';
+            };
+
             document.getElementById('lightboxTitle').textContent = album.title;
             document.getElementById('lightboxCaption').textContent = album.caption;
-            const cnt = album.photos.length;
-            document.getElementById('lightboxCounter').textContent = cnt > 1 ? `${lbIdx+1} / ${cnt}` : '';
-            document.querySelector('.lightbox-prev').style.display = cnt > 1 ? '' : 'none';
-            document.querySelector('.lightbox-next').style.display = cnt > 1 ? '' : 'none';
+            document.getElementById('lightboxCounter').textContent = `ภาพที่ ${lbIdx + 1} จาก ${album.photos.length}`;
         }
         document.getElementById('lightboxOverlay').addEventListener('click', function(e) {
             if (e.target === this) closeLightbox();
