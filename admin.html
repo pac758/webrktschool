@@ -246,6 +246,10 @@
             <div class="nav-item" onclick="showPage('achievements')" data-page="achievements"><i class="fas fa-trophy"></i>รางวัล/ความภาคภูมิใจ</div>
             <div class="nav-item" onclick="showPage('gallery')" data-page="gallery"><i class="fas fa-images"></i>ภาพกิจกรรม</div>
             <div class="nav-divider"></div>
+            <div class="nav-item" onclick="showPage('quicklinks')" data-page="quicklinks"><i class="fas fa-link"></i>ลิงก์ด่วน</div>
+            <div class="nav-item" onclick="showPage('docs')" data-page="docs"><i class="fas fa-file-download"></i>เอกสารเผยแพร่</div>
+            <div class="nav-item" onclick="showPage('footerlinks')" data-page="footerlinks"><i class="fas fa-building"></i>ลิงก์หน่วยงาน</div>
+            <div class="nav-divider"></div>
             <div class="nav-item" onclick="showPage('setup')" data-page="setup"><i class="fas fa-plug"></i>ตั้งค่า API</div>
             <div class="nav-item" onclick="showPage('password')" data-page="password"><i class="fas fa-key"></i>เปลี่ยนรหัสผ่าน</div>
         </nav>
@@ -274,6 +278,9 @@
                     <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-images"></i></div><div><div class="stat-num" id="cnt-gallery">—</div><div class="stat-lbl">ภาพกิจกรรม</div></div></div>
                     <div class="stat-card"><div class="stat-icon slate"><i class="far fa-calendar-alt"></i></div><div><div class="stat-num" id="cnt-cal">—</div><div class="stat-lbl">กิจกรรม</div></div></div>
                     <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-star"></i></div><div><div class="stat-num" id="cnt-features">—</div><div class="stat-lbl">จุดเด่น</div></div></div>
+                    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-link"></i></div><div><div class="stat-num" id="cnt-quicklinks">—</div><div class="stat-lbl">ลิงก์ด่วน</div></div></div>
+                    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-file-download"></i></div><div><div class="stat-num" id="cnt-docs">—</div><div class="stat-lbl">เอกสาร</div></div></div>
+                    <div class="stat-card"><div class="stat-icon slate"><i class="fas fa-building"></i></div><div><div class="stat-num" id="cnt-footerlinks">—</div><div class="stat-lbl">ลิงก์หน่วยงาน</div></div></div>
                 </div>
                 <div class="card">
                     <div class="card-header"><h4><i class="fas fa-info-circle"></i>วิธีใช้งาน</h4></div>
@@ -526,13 +533,70 @@
                 </div>
             </div>
 
+            <!-- QUICK LINKS -->
+            <div class="page" id="page-quicklinks">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-link"></i>ลิงก์ด่วน</h4><button class="btn btn-primary btn-sm" onclick="openModal('quicklinks')"><i class="fas fa-plus"></i>เพิ่มลิงก์</button></div>
+                    <div class="card-body">
+                        <div style="background:#EFF6FF;border:1px solid #93C5FD;border-radius:8px;padding:.875rem;margin-bottom:1rem;font-size:.82rem;color:#1E40AF;display:flex;align-items:flex-start;gap:.5rem">
+                            <i class="fas fa-info-circle" style="margin-top:2px"></i>
+                            <div>ลิงก์ด่วนจะแสดงเป็นแถบด้านบนหน้าเว็บ ใต้ Hero Banner เช่น ตรวจผลการเรียน, ระบบ ปพ.5 ฯลฯ</div>
+                        </div>
+                        <div class="table-wrap">
+                            <table id="quicklinksTable">
+                                <thead><tr><th>#</th><th>ไอคอน</th><th>ชื่อลิงก์</th><th>URL</th><th>จัดการ</th></tr></thead>
+                                <tbody id="quicklinksTbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">กำลังโหลด...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOCS -->
+            <div class="page" id="page-docs">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-file-download"></i>เอกสารเผยแพร่</h4><button class="btn btn-primary btn-sm" onclick="openModal('docs')"><i class="fas fa-plus"></i>เพิ่มเอกสาร</button></div>
+                    <div class="card-body">
+                        <div style="background:#EFF6FF;border:1px solid #93C5FD;border-radius:8px;padding:.875rem;margin-bottom:1rem;font-size:.82rem;color:#1E40AF;display:flex;align-items:flex-start;gap:.5rem">
+                            <i class="fas fa-info-circle" style="margin-top:2px"></i>
+                            <div>เอกสารเผยแพร่จะแสดงใน Sidebar ด้านขวาของหน้าข่าวสาร เช่น ปฏิทินวิชาการ, คู่มือ, แบบฟอร์ม</div>
+                        </div>
+                        <div class="table-wrap">
+                            <table id="docsTable">
+                                <thead><tr><th>#</th><th>ไอคอน</th><th>ชื่อเอกสาร</th><th>URL</th><th>จัดการ</th></tr></thead>
+                                <tbody id="docsTbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">กำลังโหลด...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER LINKS -->
+            <div class="page" id="page-footerlinks">
+                <div class="card">
+                    <div class="card-header"><h4><i class="fas fa-building"></i>ลิงก์หน่วยงาน</h4><button class="btn btn-primary btn-sm" onclick="openModal('footerlinks')"><i class="fas fa-plus"></i>เพิ่มลิงก์</button></div>
+                    <div class="card-body">
+                        <div style="background:#EFF6FF;border:1px solid #93C5FD;border-radius:8px;padding:.875rem;margin-bottom:1rem;font-size:.82rem;color:#1E40AF;display:flex;align-items:flex-start;gap:.5rem">
+                            <i class="fas fa-info-circle" style="margin-top:2px"></i>
+                            <div>ลิงก์หน่วยงานที่เกี่ยวข้องจะแสดงที่ Footer ด้านล่างของหน้าเว็บ เช่น สพป., กระทรวงศึกษาธิการ ฯลฯ</div>
+                        </div>
+                        <div class="table-wrap">
+                            <table id="footerlinksTable">
+                                <thead><tr><th>#</th><th>ชื่อหน่วยงาน</th><th>URL</th><th>จัดการ</th></tr></thead>
+                                <tbody id="footerlinksTbody"><tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem">กำลังโหลด...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- SETUP -->
             <div class="page" id="page-setup">
                 <div class="setup-box">
                     <h4><i class="fas fa-info-circle"></i>วิธีตั้งค่า Google Apps Script</h4>
                     <div class="setup-steps">
                         <div class="setup-step"><div class="step-num">1</div><div class="step-text">เปิด <a href="https://sheets.google.com" target="_blank" style="color:#1D4ED8">Google Sheets</a> สร้าง Spreadsheet ใหม่ ตั้งชื่อว่า <code>RKT School CMS</code></div></div>
-                        <div class="setup-step"><div class="step-num">2</div><div class="step-text">สร้าง Sheet ชื่อ: <code>settings</code>, <code>director</code>, <code>news</code>, <code>calendar</code>, <code>team</code>, <code>achievements</code>, <code>gallery</code></div></div>
+                        <div class="setup-step"><div class="step-num">2</div><div class="step-text">สร้าง Sheet ชื่อ: <code>settings</code>, <code>director</code>, <code>news</code>, <code>calendar</code>, <code>team</code>, <code>achievements</code>, <code>gallery</code>, <code>features</code>, <code>quicklinks</code>, <code>docs</code>, <code>footerlinks</code></div></div>
                         <div class="setup-step"><div class="step-num">3</div><div class="step-text">ไปที่ <strong>Extensions → Apps Script</strong> แล้ว copy โค้ดจากกล่องด้านล่างวางลงไป</div></div>
                         <div class="setup-step"><div class="step-num">4</div><div class="step-text">กด <strong>Deploy → New deployment → Web app</strong> ตั้ง Execute as: <code>Me</code>, Who has access: <code>Anyone</code></div></div>
                         <div class="setup-step"><div class="step-num">5</div><div class="step-text">Copy URL ที่ได้มากรอกในช่องด้านล่าง แล้วกด <strong>บันทึกและทดสอบ</strong></div></div>
@@ -858,7 +922,7 @@ async function apiPost(action, sheet, data) {
 
 async function loadAllData() {
     toast('กำลังโหลดข้อมูลจาก Google Sheet...', 'warning');
-    const sheets = ['settings', 'director', 'news', 'calendar', 'team', 'achievements', 'gallery', 'features'];
+    const sheets = ['settings', 'director', 'news', 'calendar', 'team', 'achievements', 'gallery', 'features', 'quicklinks', 'docs', 'footerlinks'];
     let loaded = 0;
     for (const s of sheets) {
         const d = await apiGet(s);
@@ -870,7 +934,7 @@ async function loadAllData() {
         }
     }
     if (loaded > 0) {
-        toast(`โหลดข้อมูลสำเร็จ (${loaded}/7 sheets)`, 'success');
+        toast(`โหลดข้อมูลสำเร็จ (${loaded}/${sheets.length} sheets)`, 'success');
     } else {
         toast('ไม่สามารถดึงข้อมูลได้ — ตรวจสอบ API URL', 'error');
     }
@@ -899,6 +963,9 @@ function updateDashboard() {
     document.getElementById('cnt-gallery').textContent = (allData.gallery || []).length;
     document.getElementById('cnt-cal').textContent = (allData.calendar || []).length;
     document.getElementById('cnt-features').textContent = (allData.features || []).length;
+    document.getElementById('cnt-quicklinks').textContent = (allData.quicklinks || []).length;
+    document.getElementById('cnt-docs').textContent = (allData.docs || []).length;
+    document.getElementById('cnt-footerlinks').textContent = (allData.footerlinks || []).length;
 }
 
 // ===== SETTINGS =====
@@ -1028,6 +1095,21 @@ const tableConfig = {
             return `<td>${i+1}</td><td style="position:relative">${thumb ? `<img src="${thumb}" class="thumb-preview" onclick="previewImage('${thumb.replace(/'/g,"\\'")}')"
                 style="width:70px;height:50px;border-radius:6px;object-fit:cover">${cnt > 1 ? `<span style="position:absolute;top:0;right:0;background:var(--primary);color:#fff;font-size:.65rem;padding:1px 5px;border-radius:8px;font-weight:700">${cnt}</span>` : ''}` : '—'}</td><td>${row.title||''}</td><td>${row.caption||''}</td>`;
         }
+    },
+    quicklinks: {
+        cols: ['icon','title','url'],
+        labels: ['ไอคอน (FA class)','ชื่อลิงก์','URL'],
+        render: (row, i) => `<td>${i+1}</td><td><i class="${row.icon||'fas fa-link'}"></i> <code style="font-size:.7rem">${row.icon||''}</code></td><td>${row.title||''}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><a href="${row.url||'#'}" target="_blank" style="color:#1D4ED8">${row.url||''}</a></td>`
+    },
+    docs: {
+        cols: ['icon','title','url'],
+        labels: ['ไอคอน (FA class)','ชื่อเอกสาร','URL ดาวน์โหลด'],
+        render: (row, i) => `<td>${i+1}</td><td><i class="${row.icon||'fas fa-file-pdf'}"></i> <code style="font-size:.7rem">${row.icon||''}</code></td><td>${row.title||''}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><a href="${row.url||'#'}" target="_blank" style="color:#1D4ED8">${row.url||''}</a></td>`
+    },
+    footerlinks: {
+        cols: ['title','url'],
+        labels: ['ชื่อหน่วยงาน','URL'],
+        render: (row, i) => `<td>${i+1}</td><td>${row.title||''}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><a href="${row.url||'#'}" target="_blank" style="color:#1D4ED8">${row.url||''}</a></td>`
     }
 };
 
@@ -1041,7 +1123,10 @@ function renderTable(name, rows) {
         calendar: 'calTbody',
         team: 'teamTbody',
         features: 'featuresTbody',
-        gallery: 'galleryTbody'
+        gallery: 'galleryTbody',
+        quicklinks: 'quicklinksTbody',
+        docs: 'docsTbody',
+        footerlinks: 'footerlinksTbody'
     };
     const tbody = document.getElementById(tbodyMap[name] || name + 'Tbody');
     if (!tbody) { console.warn('tbody not found for:', name); return; }
@@ -1132,10 +1217,29 @@ const modalForms = {
             </div>
         </div>
         <div class="field"><label>หัวข้อ</label><input type="text" id="mf_title" placeholder="กิจกรรมรับบริจาค"></div>
-        <div class="field"><label>คำบรรยาย</label><input type="text" id="mf_caption" placeholder="ผู้ใจบุญร่วมสนับสนุนการศึกษา"></div>`
+        <div class="field"><label>คำบรรยาย</label><input type="text" id="mf_caption" placeholder="ผู้ใจบุญร่วมสนับสนุนการศึกษา"></div>`,
+    quicklinks: () => `
+        <div class="field"><label>ชื่อลิงก์</label><input type="text" id="mf_title" placeholder="ตรวจสอบผลการเรียน"></div>
+        <div class="field"><label>URL</label><input type="text" id="mf_url" placeholder="https://..."></div>
+        <div class="field">
+            <label>เลือกไอคอน (กดเลือกได้เลย)</label>
+            <input type="hidden" id="mf_icon">
+            <div class="icon-picker" id="iconPicker"></div>
+        </div>`,
+    docs: () => `
+        <div class="field"><label>ชื่อเอกสาร</label><input type="text" id="mf_title" placeholder="ปฏิทินวิชาการ 2567"></div>
+        <div class="field"><label>URL ดาวน์โหลด</label><input type="text" id="mf_url" placeholder="https://drive.google.com/file/d/.../view"></div>
+        <div class="field">
+            <label>เลือกไอคอน (กดเลือกได้เลย)</label>
+            <input type="hidden" id="mf_icon">
+            <div class="icon-picker" id="iconPicker"></div>
+        </div>`,
+    footerlinks: () => `
+        <div class="field"><label>ชื่อหน่วยงาน</label><input type="text" id="mf_title" placeholder="สพป.บุรีรัมย์ เขต 3"></div>
+        <div class="field"><label>URL</label><input type="text" id="mf_url" placeholder="https://..."></div>`
 };
 
-const modalTitles = { news:'ข่าวประชาสัมพันธ์', calendar:'กิจกรรม', team:'บุคลากร', features:'จุดเด่น', achievements:'รางวัล', gallery:'ภาพกิจกรรม' };
+const modalTitles = { news:'ข่าวประชาสัมพันธ์', calendar:'กิจกรรม', team:'บุคลากร', features:'จุดเด่น', achievements:'รางวัล', gallery:'ภาพกิจกรรม', quicklinks:'ลิงก์ด่วน', docs:'เอกสารเผยแพร่', footerlinks:'ลิงก์หน่วยงาน' };
 
 const iconChoices = [
     { cls:'fas fa-brain', label:'สมอง' },
@@ -1174,6 +1278,15 @@ const iconChoices = [
     { cls:'fas fa-chess', label:'หมากรุก' },
     { cls:'fas fa-comments', label:'สนทนา' },
     { cls:'fas fa-camera', label:'กล้อง' },
+    { cls:'fas fa-chart-bar', label:'กราฟ' },
+    { cls:'fas fa-clipboard-check', label:'คลิปบอร์ด' },
+    { cls:'fas fa-briefcase', label:'กระเป๋า' },
+    { cls:'fas fa-tv', label:'TV' },
+    { cls:'fas fa-file-pdf', label:'PDF' },
+    { cls:'fas fa-file-word', label:'Word' },
+    { cls:'fas fa-file-download', label:'ดาวน์โหลด' },
+    { cls:'fas fa-link', label:'ลิงก์' },
+    { cls:'fas fa-external-link-alt', label:'ลิงก์ภายนอก' },
 ];
 
 function buildIconPicker(selectedIcon) {
@@ -1297,7 +1410,7 @@ function openModal(type, data = null) {
         }
     }
     // สร้าง icon picker ถ้า modal นี้มี
-    if (type === 'features' || type === 'achievements') {
+    if (type === 'features' || type === 'achievements' || type === 'quicklinks' || type === 'docs') {
         buildIconPicker(data?.icon || '');
     }
     // ตั้งค่า crop tool สำหรับ team

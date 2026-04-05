@@ -71,13 +71,13 @@
     <div class="topbar">
         <div class="container">
             <div style="display:flex;gap:1.25rem;flex-wrap:wrap">
-                <span><i class="fas fa-phone-alt" style="color:var(--gold-lt);margin-right:.4rem"></i>089-947-2938</span>
-                <span><i class="fas fa-envelope" style="color:var(--gold-lt);margin-right:.4rem"></i>admin1@rkt.ac.th</span>
-                <span><i class="fas fa-map-marker-alt" style="color:var(--gold-lt);margin-right:.4rem"></i>ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์</span>
+                <span><i class="fas fa-phone-alt" style="color:var(--gold-lt);margin-right:.4rem"></i><span class="school-phone">089-947-2938</span></span>
+                <span><i class="fas fa-envelope" style="color:var(--gold-lt);margin-right:.4rem"></i><span class="school-email">admin1@rkt.ac.th</span></span>
+                <span><i class="fas fa-map-marker-alt" style="color:var(--gold-lt);margin-right:.4rem"></i><span class="school-address">ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์</span></span>
             </div>
             <div style="display:flex;gap:1rem">
                 <a href="https://www.rkt.ac.th/" target="_blank"><i class="fas fa-external-link-alt" style="margin-right:.3rem"></i>เว็บเดิม</a>
-                <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"><i class="fab fa-facebook" style="margin-right:.3rem"></i>Facebook</a>
+                <a class="school-facebook" href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"><i class="fab fa-facebook" style="margin-right:.3rem"></i>Facebook</a>
                 <a href="facebook.html" style="background:rgba(255,255,255,.15);padding:.2rem .75rem;border-radius:50px"><i class="fab fa-facebook-square" style="margin-right:.3rem"></i>เพจโรงเรียน</a>
                 <a href="admin.html" style="background:rgba(255,255,255,.15);padding:.2rem .75rem;border-radius:50px"><i class="fas fa-lock" style="margin-right:.3rem"></i>Admin</a>
             </div>
@@ -88,9 +88,9 @@
     <header class="header" id="header">
         <div class="header-inner">
             <a href="#" class="logo">
-                <img src="https://drive.google.com/thumbnail?id=16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="ตราโรงเรียน" onerror="this.src='https://placehold.co/100x100/9B1C1C/white?text=RKT'">
+                <img class="school-logo" src="https://drive.google.com/thumbnail?id=16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="ตราโรงเรียน" onerror="this.src='https://placehold.co/100x100/9B1C1C/white?text=RKT'">
                 <div class="logo-text">
-                    <h1>โรงเรียนบ้านโคกยางหนองถนน</h1>
+                    <h1 class="school-name-th">โรงเรียนบ้านโคกยางหนองถนน</h1>
                     <span>สพป.บุรีรัมย์ เขต 3</span>
                 </div>
             </a>
@@ -193,7 +193,7 @@
     <!-- QUICK LINKS -->
     <section class="quick-links">
         <div class="container">
-            <div class="quick-grid">
+            <div class="quick-grid" id="quickLinksFront">
                 <a href="https://script.google.com/macros/s/AKfycbxSarrCofSBsB_arfHLQFDG3pUEAuaqRxMbNAXmfzBYD799Jt7gM08ZKxS8hU_YrDV2/exec" target="_blank" class="quick-item"><i class="fas fa-chart-bar"></i>ตรวจสอบผลการเรียน</a>
                 <a href="https://script.google.com/a/macros/rkt.ac.th/s/AKfycbybjMo0Xs0ji_i962aznQ-Pi3pccibXzKqOGIXLlBQ0rzjVj-VJ2Degh-h57Ht04Dpb/exec" target="_blank" class="quick-item"><i class="fas fa-clipboard-check"></i>ระบบ ปพ.5 ออนไลน์</a>
                 <a href="https://script.google.com/a/macros/rkt.ac.th/s/AKfycbwtnNURBR2NSXb-_weXwTsLb8jWik_siLiGbjR91KN9XAw57OHSntOrx2x3Fvc_dH42/exec" target="_blank" class="quick-item"><i class="fas fa-briefcase"></i>ศูนย์กลางงานโรงเรียน</a>
@@ -706,7 +706,7 @@
                     <!-- DOCS -->
                     <div class="widget">
                         <div class="widget-title"><i class="fas fa-file-download"></i>เอกสารเผยแพร่</div>
-                        <ul class="link-list">
+                        <ul class="link-list" id="docsFront">
                             <li><a href="#"><i class="fas fa-file-pdf"></i>ปฏิทินวิชาการ 2567</a></li>
                             <li><a href="#"><i class="fas fa-file-pdf"></i>คู่มือนักเรียนและผู้ปกครอง</a></li>
                             <li><a href="#"><i class="fas fa-file-word"></i>แบบฟอร์มใบลา</a></li>
@@ -717,14 +717,14 @@
                         <div class="widget-title"><i class="fab fa-facebook" style="color:#1877F2"></i>ติดตามเรา</div>
                         <!-- Facebook Page Card — ทำงานได้ทุก environment -->
                         <div style="background:linear-gradient(135deg,#1877F2,#0C5FD4);border-radius:10px;padding:1.5rem;text-align:center;color:#fff;margin-bottom:1rem">
-                            <img src="https://drive.google.com/thumbnail?id=16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="Logo" style="width:56px;height:56px;border-radius:50%;object-fit:contain;margin:0 auto .75rem;border:3px solid rgba(255,255,255,.4)" onerror="this.style.display='none'">
-                            <div style="font-weight:700;font-size:1rem;margin-bottom:.25rem">โรงเรียนบ้านโคกยางหนองถนน</div>
+                            <img class="school-logo" src="https://drive.google.com/thumbnail?id=16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="Logo" style="width:56px;height:56px;border-radius:50%;object-fit:contain;margin:0 auto .75rem;border:3px solid rgba(255,255,255,.4)" onerror="this.style.display='none'">
+                            <div style="font-weight:700;font-size:1rem;margin-bottom:.25rem" class="school-name-th">โรงเรียนบ้านโคกยางหนองถนน</div>
                             <div style="font-size:.78rem;opacity:.85;margin-bottom:1rem">สพป.บุรีรัมย์ เขต 3</div>
                             <div style="display:flex;justify-content:center;gap:1.5rem;margin-bottom:1rem">
                                 <div style="text-align:center"><div style="font-size:1.2rem;font-weight:800" id="fbLikeCount">—</div><div style="font-size:.72rem;opacity:.8">ถูกใจ</div></div>
                                 <div style="text-align:center"><div style="font-size:1.2rem;font-weight:800" id="fbFollowCount">—</div><div style="font-size:.72rem;opacity:.8">ติดตาม</div></div>
                             </div>
-                            <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
+                            <a class="school-facebook" href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
                                style="display:inline-flex;align-items:center;gap:.4rem;background:#fff;color:#1877F2;padding:.5rem 1.25rem;border-radius:50px;font-weight:700;font-size:.85rem">
                                 <i class="fab fa-facebook-square"></i>กดถูกใจเพจ
                             </a>
@@ -739,7 +739,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
+                        <a class="school-facebook" href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
                            style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:#1877F2;color:#fff;padding:.7rem;border-radius:8px;font-weight:700;font-size:.88rem;margin-top:.875rem;transition:var(--trans)"
                            onmouseover="this.style.background='#0C5FD4'" onmouseout="this.style.background='#1877F2'">
                             <i class="fab fa-facebook-square"></i>ดูทั้งหมดบน Facebook
@@ -759,16 +759,16 @@
             </div>
             <div class="contact-grid">
                 <div class="map-wrap">
-                    <iframe src="https://maps.google.com/maps?q=โรงเรียนบ้านโคกยางหนองถนน&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy"></iframe>
+                    <iframe class="school-maps" src="https://maps.google.com/maps?q=โรงเรียนบ้านโคกยางหนองถนน&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy"></iframe>
                 </div>
                 <div>
                     <div class="contact-info">
-                        <h3><i class="fas fa-school" style="margin-right:.5rem"></i>โรงเรียนบ้านโคกยางหนองถนน</h3>
-                        <div class="contact-row"><div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div><span>บ้านโคกยางหนองถนน ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์ 31110</span></div>
-                        <div class="contact-row"><div class="contact-icon"><i class="fas fa-phone"></i></div><span>089-947-2938</span></div>
-                        <div class="contact-row"><div class="contact-icon"><i class="fas fa-envelope"></i></div><span>admin1@rkt.ac.th</span></div>
+                        <h3><i class="fas fa-school" style="margin-right:.5rem"></i><span class="school-name-th">โรงเรียนบ้านโคกยางหนองถนน</span></h3>
+                        <div class="contact-row"><div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div><span class="school-address">บ้านโคกยางหนองถนน ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์ 31110</span></div>
+                        <div class="contact-row"><div class="contact-icon"><i class="fas fa-phone"></i></div><span class="school-phone">089-947-2938</span></div>
+                        <div class="contact-row"><div class="contact-icon"><i class="fas fa-envelope"></i></div><span class="school-email">admin1@rkt.ac.th</span></div>
                         <div class="contact-row"><div class="contact-icon"><i class="fas fa-globe"></i></div><span><a href="https://www.rkt.ac.th" target="_blank" style="color:var(--red)">www.rkt.ac.th</a></span></div>
-                        <a href="https://maps.app.goo.gl/rZB8jnEnvNw971dW9" target="_blank" class="btn btn-red" style="margin-top:1rem;width:100%;justify-content:center"><i class="fas fa-location-arrow"></i>นำทาง Google Maps</a>
+                        <a href="https://maps.app.goo.gl/rZB8jnEnvNw971dW9" target="_blank" class="btn btn-red school-maps-nav" style="margin-top:1rem;width:100%;justify-content:center"><i class="fas fa-location-arrow"></i>นำทาง Google Maps</a>
                     </div>
                 </div>
             </div>
@@ -833,18 +833,18 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <img src="https://drive.google.com/thumbnail?id=16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="ตราโรงเรียน" onerror="this.src='https://placehold.co/128x128/9B1C1C/white?text=RKT'">
-                    <h2>โรงเรียนบ้านโคกยางหนองถนน</h2>
-                    <p>"การศึกษาดี มีวินัย ใฝ่เรียนรู้ คู่คุณธรรม"<br>มุ่งมั่นพัฒนาผู้เรียนให้เป็นมนุษย์ที่สมบูรณ์ เป็นคนดี มีปัญญา มีความสุข และมีความเป็นไทย</p>
+                    <img class="school-logo" src="https://drive.google.com/thumbnail?id=16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="ตราโรงเรียน" onerror="this.src='https://placehold.co/128x128/9B1C1C/white?text=RKT'">
+                    <h2 class="school-name-th">โรงเรียนบ้านโคกยางหนองถนน</h2>
+                    <p class="school-motto">"การศึกษาดี มีวินัย ใฝ่เรียนรู้ คู่คุณธรรม"<br>มุ่งมั่นพัฒนาผู้เรียนให้เป็นมนุษย์ที่สมบูรณ์ เป็นคนดี มีปัญญา มีความสุข และมีความเป็นไทย</p>
                     <div class="footer-social">
-                        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.youtube.com/embed/E7PcDSLRSdo" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a class="school-facebook" href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a class="school-youtube" href="https://www.youtube.com/embed/E7PcDSLRSdo" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                         <a href="mailto:admin1@rkt.ac.th" aria-label="Email"><i class="fas fa-envelope"></i></a>
                     </div>
                 </div>
                 <div class="footer-col">
                     <h3>หน่วยงานที่เกี่ยวข้อง</h3>
-                    <ul>
+                    <ul id="footerLinksFront">
                         <li><a href="https://web.brm3.go.th/" target="_blank">สพป.บุรีรัมย์ เขต 3</a></li>
                         <li><a href="https://www.obec.go.th/" target="_blank">กระทรวงศึกษาธิการ</a></li>
                         <li><a href="https://www.ksp.or.th/" target="_blank">คุรุสภา</a></li>
@@ -853,9 +853,9 @@
                 </div>
                 <div class="footer-col">
                     <h3>ติดต่อสอบถาม</h3>
-                    <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์ 31110</span></div>
-                    <div class="footer-contact-item"><i class="fas fa-phone"></i><span>089-947-2938</span></div>
-                    <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>admin1@rkt.ac.th</span></div>
+                    <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span class="school-address">ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์ 31110</span></div>
+                    <div class="footer-contact-item"><i class="fas fa-phone"></i><span class="school-phone">089-947-2938</span></div>
+                    <div class="footer-contact-item"><i class="fas fa-envelope"></i><span class="school-email">admin1@rkt.ac.th</span></div>
                     <div class="footer-contact-item"><i class="fas fa-globe"></i><span><a href="https://www.rkt.ac.th" target="_blank" style="color:var(--gold-lt)">www.rkt.ac.th</a></span></div>
                 </div>
             </div>
@@ -973,9 +973,10 @@
 
         async function loadCMS() {
             if (!CMS_API) return;
-            const [settings, director, news, calendar, team, features, achievements, gallery] = await Promise.all([
+            const [settings, director, news, calendar, team, features, achievements, gallery, quicklinks, docs, footerlinks] = await Promise.all([
                 cmsGet('settings'), cmsGet('director'), cmsGet('news'),
-                cmsGet('calendar'), cmsGet('team'), cmsGet('features'), cmsGet('achievements'), cmsGet('gallery')
+                cmsGet('calendar'), cmsGet('team'), cmsGet('features'), cmsGet('achievements'), cmsGet('gallery'),
+                cmsGet('quicklinks'), cmsGet('docs'), cmsGet('footerlinks')
             ]);
             if (settings) { applySettings(settings); applyHero(settings); applyAbout(settings); applyVideo(settings); }
             if (director) applyDirector(director);
@@ -985,7 +986,34 @@
             if (features) renderFeatures(features);
             if (achievements) renderAchievements(achievements);
             if (gallery) renderGallery(gallery);
+            if (quicklinks) renderQuickLinks(quicklinks);
+            if (docs) renderDocs(docs);
+            if (footerlinks) renderFooterLinks(footerlinks);
             initFadeUp();
+        }
+
+        function renderQuickLinks(rows) {
+            const el = document.getElementById('quickLinksFront');
+            if (!el || !rows.length) return;
+            el.innerHTML = rows.map(r => 
+                `<a href="${r.url||'#'}" target="_blank" class="quick-item"><i class="${r.icon||'fas fa-link'}"></i>${r.title||''}</a>`
+            ).join('');
+        }
+
+        function renderDocs(rows) {
+            const el = document.getElementById('docsFront');
+            if (!el || !rows.length) return;
+            el.innerHTML = rows.map(r =>
+                `<li><a href="${r.url||'#'}" target="_blank"><i class="${r.icon||'fas fa-file-pdf'}"></i>${r.title||''}</a></li>`
+            ).join('');
+        }
+
+        function renderFooterLinks(rows) {
+            const el = document.getElementById('footerLinksFront');
+            if (!el || !rows.length) return;
+            el.innerHTML = rows.map(r =>
+                `<li><a href="${r.url||'#'}" target="_blank">${r.title||''}</a></li>`
+            ).join('');
         }
 
         function applySettings(s) {
