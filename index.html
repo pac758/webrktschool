@@ -945,6 +945,8 @@
 
         function extractDriveId(url) {
             if (!url) return '';
+            // Google Photos direct URL (/pw/) → ไม่ต้องแปลง ใช้ได้เลย
+            if (/lh\d\.googleusercontent\.com\/pw\//.test(url)) return '';
             let id = '';
             const m1 = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
             if (m1) id = m1[1];
