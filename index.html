@@ -946,16 +946,11 @@
         function fixDriveUrl(url) {
             if (!url) return url;
             let id = '';
-            // drive.google.com/file/d/ID/...
             const m1 = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
             if (m1) id = m1[1];
-            // drive.google.com/open?id=ID
             if (!id) { const m2 = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/); if (m2) id = m2[1]; }
-            // drive.google.com/uc?...id=ID
             if (!id) { const m3 = url.match(/drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/); if (m3) id = m3[1]; }
-            // drive.google.com/thumbnail?id=ID
             if (!id) { const m4 = url.match(/drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/); if (m4) id = m4[1]; }
-            // lhN.googleusercontent.com/d/ID
             if (!id) { const m5 = url.match(/lh\d\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/); if (m5) id = m5[1]; }
             if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
             return url;
@@ -1161,28 +1156,13 @@
         function renderGallery(rows) {
             const el = document.getElementById('galleryGridFront');
             if (!el || !rows.length) return;
-            console.log('Gallery data:', rows);
             galleryAlbums = rows.map(r => {
-                const raw = r.photos || r.photo || '';
-                console.log('Raw photos:', raw);
-                const pics = raw.split('|||').filter(Boolean).map(u => {
-                    let id = '';
-                    const m1 = u.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-                    if (m1) id = m1[1];
-                    if (!id) { const m2 = u.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/); if (m2) id = m2[1]; }
-                    if (!id) { const m3 = u.match(/drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/); if (m3) id = m3[1]; }
-                    if (!id) { const m4 = u.match(/drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/); if (m4) id = m4[1]; }
-                    if (!id) { const m5 = u.match(/lh\d\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/); if (m5) id = m5[1]; }
-                    const fixed = id ? `https://drive.google.com/uc?export=view&id=${id}` : u;
-                    console.log('Gallery URL:', u, '→', fixed);
-                    return fixed;
-                });
+                const pics = (r.photos || r.photo || '').split('|||').filter(Boolean).map(fixDriveUrl);
                 return { photos: pics, title: r.title||'', caption: r.caption||'' };
             });
             el.innerHTML = galleryAlbums.map((album, ai) => {
                 const cover = album.photos[0] || '';
                 const cnt = album.photos.length;
-                console.log(`Album ${ai}: cover=${cover}, count=${cnt}`);
                 return `
                 <div class="gallery-item" onclick="openLightbox(${ai},0)">
                     <img src="${cover}" alt="${album.title}" onerror="this.onerror=null;this.src='https://placehold.co/600x450/334155/white?text=ภาพกิจกรรม'">
