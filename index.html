@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer">
     <title>โรงเรียนบ้านโคกยางหนองถนน - พัฒนาผู้เรียนสู่ความเป็นเลิศ</title>
     <meta name="description" content="โรงเรียนบ้านโคกยางหนองถนน สพป.บุรีรัมย์ เขต 3 มุ่งมั่นพัฒนาการศึกษาคุณภาพ เพื่อสร้างเด็กไทยที่มีความรู้ คุณธรรม และพร้อมก้าวสู่อนาคต">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -185,7 +184,7 @@
                 </div>
             </div>
             <div class="hero-img-wrap">
-                <img id="heroImage" src="https://drive.google.com/thumbnail?id=1va1Au_6cu7Setw8BXXeLAz6met5Td1k8&sz=w800" alt="กิจกรรมโรงเรียน" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://placehold.co/640x480/9B1C1C/white?text=โรงเรียนบ้านโคกยางหนองถนน'">
+                <img id="heroImage" src="https://drive.google.com/thumbnail?id=1va1Au_6cu7Setw8BXXeLAz6met5Td1k8&sz=w800" alt="กิจกรรมโรงเรียน" onerror="this.onerror=null;this.src='https://placehold.co/640x480/9B1C1C/white?text=โรงเรียนบ้านโคกยางหนองถนน'">
                 <div class="hero-img-badge"><i class="fas fa-award"></i> <span id="heroImageBadge">รางวัลโรงเรียนพระราชทาน</span></div>
             </div>
         </div>
@@ -1047,6 +1046,17 @@
             }
         }
 
+        function youtubeEmbed(url) {
+            if (!url) return url;
+            // youtube.com/watch?v=ID → embed
+            const w = url.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
+            if (w) return `https://www.youtube.com/embed/${w[1]}`;
+            // youtu.be/ID → embed
+            const s = url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+            if (s) return `https://www.youtube.com/embed/${s[1]}`;
+            return url;
+        }
+
         function applyVideo(s) {
             if (s.vid_title1 || s.vid_title2) {
                 const t1 = s.vid_title1 || '';
@@ -1054,7 +1064,7 @@
                 document.getElementById('videoTitle').innerHTML = `${t1}<span>${t2}</span>`;
             }
             if (s.vid_desc) document.getElementById('videoDesc').textContent = s.vid_desc;
-            if (s.vid_url) document.getElementById('videoIframe').src = s.vid_url;
+            if (s.vid_url) document.getElementById('videoIframe').src = youtubeEmbed(s.vid_url);
         }
 
         function applyDirector(d) {
@@ -1115,7 +1125,7 @@
             const sorted = [...rows].sort((a,b) => (parseInt(a.order)||99) - (parseInt(b.order)||99));
             el.innerHTML = sorted.map(r => `
                 <div class="team-card">
-                    <img src="${fixDriveUrl(r.photo)||'https://placehold.co/200x200/334155/white?text=ครู'}" alt="${r.name||''}" class="team-photo" style="object-position:${r.crop||'50% 0%'}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://placehold.co/200x200/334155/white?text=ครู'">
+                    <img src="${fixDriveUrl(r.photo)||'https://placehold.co/200x200/334155/white?text=ครู'}" alt="${r.name||''}" class="team-photo" style="object-position:${r.crop||'50% 0%'}" onerror="this.onerror=null;this.src='https://placehold.co/200x200/334155/white?text=ครู'">
                     <div class="team-name">${r.name||''}</div>
                     <div class="team-role">${r.role||''}</div>
                 </div>`).join('');
@@ -1128,7 +1138,7 @@
             el.innerHTML = sorted.map(r => `
                 <div class="feat-card">
                     <div class="feat-img">
-                        <img src="${fixDriveUrl(r.photo)||'https://placehold.co/800x200/9B1C1C/white?text=จุดเด่น'}" alt="${r.title||''}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://placehold.co/800x200/9B1C1C/white?text=จุดเด่น'">
+                        <img src="${fixDriveUrl(r.photo)||'https://placehold.co/800x200/9B1C1C/white?text=จุดเด่น'}" alt="${r.title||''}" onerror="this.onerror=null;this.src='https://placehold.co/800x200/9B1C1C/white?text=จุดเด่น'">
                         <div class="feat-icon"><i class="${r.icon||'fas fa-star'}"></i></div>
                     </div>
                     <div class="feat-body"><h3>${r.title||''}</h3><p>${r.desc||''}</p></div>
@@ -1160,7 +1170,7 @@
                 const cnt = album.photos.length;
                 return `
                 <div class="gallery-item" onclick="openLightbox(${ai},0)">
-                    <img src="${cover}" alt="${album.title}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://placehold.co/600x450/334155/white?text=ภาพกิจกรรม'">
+                    <img src="${cover}" alt="${album.title}" onerror="this.onerror=null;this.src='https://placehold.co/600x450/334155/white?text=ภาพกิจกรรม'">
                     ${cnt > 1 ? `<div class="gallery-badge"><i class="fas fa-images"></i>${cnt} ภาพ</div>` : ''}
                     <div class="gallery-overlay"><div class="gallery-text"><h4>${album.title}</h4><p>${album.caption}</p></div></div>
                 </div>`;
@@ -1175,7 +1185,7 @@
         <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
         <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)"><i class="fas fa-chevron-left"></i></button>
         <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)"><i class="fas fa-chevron-right"></i></button>
-        <img class="lightbox-img" id="lightboxImg" src="" alt="" referrerpolicy="no-referrer">
+        <img class="lightbox-img" id="lightboxImg" src="" alt="">
         <div class="lightbox-caption"><h4 id="lightboxTitle"></h4><p id="lightboxCaption"></p></div>
         <div class="lightbox-counter" id="lightboxCounter"></div>
     </div>
