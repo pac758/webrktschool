@@ -957,7 +957,7 @@
             if (!id) { const m4 = url.match(/drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/); if (m4) id = m4[1]; }
             // lhN.googleusercontent.com/d/ID
             if (!id) { const m5 = url.match(/lh\d\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/); if (m5) id = m5[1]; }
-            if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
+            if (id) return `https://drive.google.com/uc?export=view&id=${id}`;
             return url;
         }
 
