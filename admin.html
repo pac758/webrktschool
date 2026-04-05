@@ -656,7 +656,7 @@ function fixDriveUrl(url) {
     if (!id) { const m3 = url.match(/drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/); if (m3) id = m3[1]; }
     if (!id) { const m4 = url.match(/drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/); if (m4) id = m4[1]; }
     if (!id) { const m5 = url.match(/lh\d\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/); if (m5) id = m5[1]; }
-    if (id) return `https://lh3.googleusercontent.com/d/${id}=w800`;
+    if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
     return url;
 }
 function previewImage(src) {
