@@ -1017,10 +1017,10 @@ const tableConfig = {
             style="width:70px;height:50px;border-radius:6px;object-fit:cover">` : '—'}</td><td>${row.title||''}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${row.desc||''}</td><td><i class="${row.icon||'fas fa-star'}"></i> <code style="font-size:.7rem">${row.icon||''}</code></td>`; }
     },
     gallery: {
-        cols: ['photos','title','caption'],
+        cols: ['photo','title','caption'],
         labels: ['รูปภาพ','หัวข้อ','คำบรรยาย'],
         render: (row, i) => {
-            const pics = (row.photos || row.photo || '').split('|||').filter(Boolean).map(fixDriveUrl);
+            const pics = (row.photo || row.photos || '').split('|||').filter(Boolean).map(fixDriveUrl);
             const thumb = pics[0] || '';
             const cnt = pics.length;
             return `<td>${i+1}</td><td style="position:relative">${thumb ? `<img src="${thumb}" class="thumb-preview" onclick="previewImage('${thumb.replace(/'/g,"\\'")}')"
@@ -1120,7 +1120,7 @@ const modalForms = {
     gallery: () => `
         <div class="field">
             <label>URL รูปภาพ (ใส่ได้หลายรูป — บรรทัดละ 1 URL)</label>
-            <textarea id="mf_photos" rows="5" placeholder="https://drive.google.com/file/d/FILE_ID/view?usp=sharing&#10;https://drive.google.com/file/d/FILE_ID2/view?usp=sharing"></textarea>
+            <textarea id="mf_photo" rows="5" placeholder="https://drive.google.com/file/d/FILE_ID/view?usp=sharing&#10;https://drive.google.com/file/d/FILE_ID2/view?usp=sharing"></textarea>
             <div style="background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;padding:.875rem;margin-top:.6rem;font-size:.8rem;color:#0369A1;line-height:1.7">
                 <strong><i class="fas fa-info-circle"></i> วิธีใส่รูปจาก Google Drive:</strong><br>
                 1. เปิดรูปใน Google Drive → คลิกขวา → <strong>แชร์</strong> → ตั้งเป็น <strong>"ทุกคนที่มีลิงก์"</strong><br>
@@ -1285,13 +1285,13 @@ function openModal(type, data = null) {
             const el = document.getElementById('mf_' + k);
             if (!el) return;
             // photos: แปลง ||| → newline สำหรับ textarea
-            if (k === 'photos') el.value = (data[k]||'').split('|||').join('\n');
+            if (k === 'photo' && el.tagName === 'TEXTAREA') el.value = (data[k]||'').split('|||').join('\n');
             else el.value = data[k];
         });
-        // backward compat: ถ้ามี photo (ไม่มี s) ให้ใส่ใน photos textarea
-        if (data.photo && !data.photos) {
-            const el = document.getElementById('mf_photos');
-            if (el && !el.value) el.value = data.photo;
+        // backward compat: ถ้ามี photos (มี s) ให้ใส่ใน photo textarea
+        if (data.photos && !data.photo) {
+            const el = document.getElementById('mf_photo');
+            if (el && !el.value) el.value = (data.photos||'').split('|||').join('\n');
         }
     }
     // สร้าง icon picker ถ้า modal นี้มี
@@ -1320,7 +1320,7 @@ function getModalData() {
         if (!el) return;
         let val = el.value.trim();
         // photos: แปลง newline → ||| สำหรับเก็บใน Google Sheet
-        if (c === 'photos') {
+        if (c === 'photo' && el.tagName === 'TEXTAREA') {
             val = val.split(/\n+/).map(u => u.trim()).filter(Boolean).join('|||');
         }
         // ถ้าเป็น field fb_post และผู้ใช้วาง iframe code ทั้งก้อน → ดึงแค่ src URL

@@ -1162,7 +1162,7 @@
             const el = document.getElementById('galleryGridFront');
             if (!el || !rows.length) return;
             galleryAlbums = rows.map(r => {
-                const pics = (r.photos || r.photo || '').split('|||').filter(Boolean).map(u => {
+                const pics = (r.photo || r.photos || '').split('|||').filter(Boolean).map(u => {
                     const id = extractDriveId(u);
                     if (id) {
                         return {
