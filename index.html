@@ -943,6 +943,20 @@
             return url;
         }
 
+        function fixDriveUrl(url) {
+            if (!url) return url;
+            // drive.google.com/file/d/ID/view... → thumbnail
+            const fileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (fileMatch) return `https://drive.google.com/thumbnail?id=${fileMatch[1]}&sz=w800`;
+            // drive.google.com/open?id=ID → thumbnail
+            const openMatch = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+            if (openMatch) return `https://drive.google.com/thumbnail?id=${openMatch[1]}&sz=w800`;
+            // lh5.googleusercontent.com/d/ID → thumbnail
+            const lhMatch = url.match(/lh\d\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/);
+            if (lhMatch) return `https://drive.google.com/thumbnail?id=${lhMatch[1]}&sz=w800`;
+            return url;
+        }
+
         async function cmsGet(sheet) {
             if (!CMS_API) return null;
             try {
@@ -984,7 +998,7 @@
             if (s.youtube) document.querySelectorAll('.school-youtube').forEach(el => el.src = s.youtube);
             if (s.maps) document.querySelectorAll('.school-maps').forEach(el => el.src = s.maps);
             if (s.maps_nav) document.querySelectorAll('.school-maps-nav').forEach(el => el.href = s.maps_nav);
-            if (s.logo) document.querySelectorAll('.school-logo').forEach(el => el.src = s.logo);
+            if (s.logo) document.querySelectorAll('.school-logo').forEach(el => el.src = fixDriveUrl(s.logo));
         }
 
         function applyHero(s) {
@@ -995,7 +1009,7 @@
                 document.getElementById('heroHeading').innerHTML = `${h1}<br>สู่<span>${h2}</span>`;
             }
             if (s.hero_desc) document.getElementById('heroDesc').textContent = s.hero_desc;
-            if (s.hero_image) document.getElementById('heroImage').src = s.hero_image;
+            if (s.hero_image) document.getElementById('heroImage').src = fixDriveUrl(s.hero_image);
             if (s.hero_image_badge) document.getElementById('heroImageBadge').textContent = s.hero_image_badge;
             const btns = [];
             for (let i = 1; i <= 4; i++) {
@@ -1043,7 +1057,7 @@
             if (d.role) document.querySelectorAll('.director-role').forEach(el => el.textContent = d.role);
             if (d.title) document.querySelectorAll('.director-title-text').forEach(el => el.textContent = d.title);
             if (d.message) document.querySelectorAll('.director-message').forEach(el => el.textContent = '"' + d.message + '"');
-            if (d.photo) document.querySelectorAll('.director-photo').forEach(el => el.src = d.photo);
+            if (d.photo) document.querySelectorAll('.director-photo').forEach(el => el.src = fixDriveUrl(d.photo));
         }
 
         function renderNews(rows) {
@@ -1096,7 +1110,7 @@
             const sorted = [...rows].sort((a,b) => (parseInt(a.order)||99) - (parseInt(b.order)||99));
             el.innerHTML = sorted.map(r => `
                 <div class="team-card">
-                    <img src="${r.photo||'https://placehold.co/200x200/334155/white?text=ครู'}" alt="${r.name||''}" class="team-photo" style="object-position:${r.crop||'50% 0%'}" onerror="this.src='https://placehold.co/200x200/334155/white?text=ครู'">
+                    <img src="${fixDriveUrl(r.photo)||'https://placehold.co/200x200/334155/white?text=ครู'}" alt="${r.name||''}" class="team-photo" style="object-position:${r.crop||'50% 0%'}" onerror="this.src='https://placehold.co/200x200/334155/white?text=ครู'">
                     <div class="team-name">${r.name||''}</div>
                     <div class="team-role">${r.role||''}</div>
                 </div>`).join('');
@@ -1109,7 +1123,7 @@
             el.innerHTML = sorted.map(r => `
                 <div class="feat-card">
                     <div class="feat-img">
-                        <img src="${r.photo||'https://placehold.co/800x200/9B1C1C/white?text=จุดเด่น'}" alt="${r.title||''}" onerror="this.src='https://placehold.co/800x200/9B1C1C/white?text=จุดเด่น'">
+                        <img src="${fixDriveUrl(r.photo)||'https://placehold.co/800x200/9B1C1C/white?text=จุดเด่น'}" alt="${r.title||''}" onerror="this.src='https://placehold.co/800x200/9B1C1C/white?text=จุดเด่น'">
                         <div class="feat-icon"><i class="${r.icon||'fas fa-star'}"></i></div>
                     </div>
                     <div class="feat-body"><h3>${r.title||''}</h3><p>${r.desc||''}</p></div>
@@ -1133,7 +1147,7 @@
             const el = document.getElementById('galleryGridFront');
             if (!el || !rows.length) return;
             galleryAlbums = rows.map(r => {
-                const pics = (r.photos || r.photo || '').split('|||').filter(Boolean);
+                const pics = (r.photos || r.photo || '').split('|||').filter(Boolean).map(fixDriveUrl);
                 return { photos: pics, title: r.title||'', caption: r.caption||'' };
             });
             el.innerHTML = galleryAlbums.map((album, ai) => {
@@ -1181,7 +1195,7 @@
         function updateLightbox() {
             const album = galleryAlbums[lbAlbum];
             if (!album) return;
-            document.getElementById('lightboxImg').src = album.photos[lbIdx] || '';
+            document.getElementById('lightboxImg').src = fixDriveUrl(album.photos[lbIdx] || '');
             document.getElementById('lightboxTitle').textContent = album.title;
             document.getElementById('lightboxCaption').textContent = album.caption;
             const cnt = album.photos.length;
