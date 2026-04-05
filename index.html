@@ -1161,13 +1161,21 @@
         function renderGallery(rows) {
             const el = document.getElementById('galleryGridFront');
             if (!el || !rows.length) return;
+            console.log('Gallery data:', rows);
             galleryAlbums = rows.map(r => {
-                const pics = (r.photos || r.photo || '').split('|||').filter(Boolean).map(fixDriveUrl);
+                const raw = r.photos || r.photo || '';
+                console.log('Raw photos:', raw);
+                const pics = raw.split('|||').filter(Boolean).map(u => {
+                    const fixed = fixDriveUrl(u);
+                    console.log('Fixed URL:', u, '→', fixed);
+                    return fixed;
+                });
                 return { photos: pics, title: r.title||'', caption: r.caption||'' };
             });
             el.innerHTML = galleryAlbums.map((album, ai) => {
                 const cover = album.photos[0] || '';
                 const cnt = album.photos.length;
+                console.log(`Album ${ai}: cover=${cover}, count=${cnt}`);
                 return `
                 <div class="gallery-item" onclick="openLightbox(${ai},0)">
                     <img src="${cover}" alt="${album.title}" onerror="this.onerror=null;this.src='https://placehold.co/600x450/334155/white?text=ภาพกิจกรรม'">
