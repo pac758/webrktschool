@@ -705,8 +705,20 @@ function storeSet(key, val) {
     try { store.setItem(key, val); } catch(e) {}
 }
 
-let API_URL = storeGet('rkt_api_url', 'https://script.google.com/macros/s/AKfycbwb-ZEoRTrGu026rl7ewBSsnIHXkRHNp_j7v6tJy-yBTinpN6v4F7r7P1KQYHEy5San/exec');
+// === รองรับ ?api= สำหรับฝังใน Google Sites ===
+const _urlParams = new URLSearchParams(window.location.search);
+const _apiFromUrl = _urlParams.get('api') || '';
+if (_apiFromUrl) { storeSet('rkt_api_url', _apiFromUrl); }
+
+let API_URL = _apiFromUrl || storeGet('rkt_api_url', 'https://script.google.com/macros/s/AKfycbwb-ZEoRTrGu026rl7ewBSsnIHXkRHNp_j7v6tJy-yBTinpN6v4F7r7P1KQYHEy5San/exec');
 let API_SECRET = storeGet('rkt_api_secret', 'rkt2567');
+
+// ส่งต่อ ?api= ไปยังลิงก์ "ดูเว็บไซต์"
+if (_apiFromUrl) {
+    document.querySelectorAll('a[href="index.html"]').forEach(a => {
+        a.href = 'index.html?api=' + encodeURIComponent(_apiFromUrl);
+    });
+}
 let currentModal = null;
 let editingRow = null;
 let allData = {};

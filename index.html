@@ -831,7 +831,21 @@
             try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); return localStorage; }
             catch(e) { return sessionStorage; }
         })();
-        const CMS_API = _store.getItem('rkt_api_url') || _store.getItem('school_api_url') || '';
+        // === รองรับ ?api= สำหรับฝังใน Google Sites ===
+        const _urlParams = new URLSearchParams(window.location.search);
+        const _apiFromUrl = _urlParams.get('api') || '';
+        if (_apiFromUrl) { try { _store.setItem('rkt_api_url', _apiFromUrl); } catch(e) {} }
+        const CMS_API = _apiFromUrl || _store.getItem('rkt_api_url') || _store.getItem('school_api_url') || '';
+
+        // ส่งต่อ ?api= ไปยังลิงก์หน้าอื่นๆ (admin, facebook)
+        if (_apiFromUrl) {
+            document.querySelectorAll('a').forEach(a => {
+                const href = a.getAttribute('href');
+                if (href && /^(admin|facebook|setup-wizard)\.html/.test(href)) {
+                    a.href = href + (href.includes('?') ? '&' : '?') + 'api=' + encodeURIComponent(_apiFromUrl);
+                }
+            });
+        }
 
         async function parseCmsJsonResponse(res) {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);

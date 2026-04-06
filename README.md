@@ -36,7 +36,50 @@
 
 ---
 
-## 🚀 วิธีใช้งาน (4 ขั้นตอน)
+## 🌐 วิธีใช้งานผ่าน Google Sites (แนะนำ — ไม่ต้องใช้ GitHub)
+
+> สำหรับโรงเรียนที่ใช้ Google Sites อยู่แล้ว ทำได้ **3 ขั้นตอน** โดยไม่ต้องสร้าง GitHub เลย!
+
+### ขั้นที่ 1 — ทำสำเนา Google Sheet
+
+1. เปิดลิงก์ **Google Sheet ต้นแบบ** ที่ได้รับ
+2. ไปที่ **File → Make a copy** (ทำสำเนา)
+3. ตั้งชื่อ เช่น `เว็บโรงเรียน [ชื่อโรงเรียน]`
+4. กด **OK** — จะได้ Sheet + Apps Script ติดมาด้วย!
+
+### ขั้นที่ 2 — Deploy Apps Script
+
+1. เปิด Google Sheet ที่ทำสำเนา → **Extensions → Apps Script**
+2. เลือก function: `setupSheets` แล้วกด **Run ▶** (อนุญาต Permission)
+3. กด **Deploy → New deployment**
+4. Type: **Web app** | Execute as: **Me** | Who has access: **Anyone**
+5. กด **Deploy** → **Copy URL** ที่ได้ (เริ่มต้นด้วย `https://script.google.com/macros/s/...`)
+
+### ขั้นที่ 3 — ฝังในGoogle Sites
+
+1. เปิด Google Sites ของโรงเรียน
+2. กด **Insert → Embed** (แทรก → ฝัง)
+3. เลือกแท็บ **By URL** แล้ววาง URL นี้:
+
+```
+https://pac758.github.io/webrktschool/index.html?api=YOUR_API_URL
+```
+
+> แทนที่ `YOUR_API_URL` ด้วย URL ที่ได้จาก Deploy ในขั้นที่ 2
+
+4. กด **Insert** → ปรับขนาด iframe ให้เต็มหน้า
+
+### 🔗 ลิงก์สำคัญ (เปลี่ยน YOUR_API_URL เป็น URL ของคุณ)
+
+| หน้า | URL |
+|---|---|
+| 🏫 เว็บไซต์หลัก | `https://pac758.github.io/webrktschool/index.html?api=YOUR_API_URL` |
+| ⚙️ Admin Panel | `https://pac758.github.io/webrktschool/admin.html?api=YOUR_API_URL` |
+| 🧙 ตั้งค่าครั้งแรก | `https://pac758.github.io/webrktschool/setup-wizard.html?api=YOUR_API_URL` |
+
+---
+
+## 🚀 วิธีใช้งานผ่าน GitHub Pages (4 ขั้นตอน)
 
 ### ขั้นที่ 1 — คัดลอก Template
 

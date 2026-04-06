@@ -403,6 +403,13 @@ async function loadScriptCode() {
 }
 loadScriptCode();
 
+// === รองรับ ?api= สำหรับ auto-fill API URL ===
+const _urlParams = new URLSearchParams(window.location.search);
+const _apiFromUrl = _urlParams.get('api') || '';
+if (_apiFromUrl) {
+    document.getElementById('f_apiUrl').value = _apiFromUrl;
+}
+
 function copyScript() {
     const code = window._fullScript || document.getElementById('scriptPreview').textContent;
     navigator.clipboard.writeText(code).then(() => {
