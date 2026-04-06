@@ -206,9 +206,9 @@
 <div class="login-wrap" id="loginWrap">
     <div class="login-box">
         <div class="login-logo">
-            <img src="https://lh5.googleusercontent.com/d/16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="Logo" onerror="this.style.display='none'">
-            <h1>โรงเรียนบ้านโคกยางหนองถนน</h1>
-            <p>ระบบจัดการเนื้อหาเว็บไซต์</p>
+            <img src="" id="loginLogoImg" alt="Logo" style="display:none;" onerror="this.style.display='none'">
+            <h1 id="loginSchoolName">ระบบจัดการเว็บไซต์โรงเรียน</h1>
+            <p>Admin Panel</p>
         </div>
         <div class="login-error" id="loginError"><i class="fas fa-exclamation-circle"></i> <span id="loginErrorMsg"></span></div>
         <div class="form-group">
@@ -229,7 +229,7 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>Admin Panel</h2>
-            <p>โรงเรียนบ้านโคกยางหนองถนน</p>
+            <p id="sidebarSchoolName">ระบบจัดการเว็บไซต์โรงเรียน</p>
         </div>
         <nav class="sidebar-nav">
             <div class="nav-item active" onclick="showPage('dashboard')" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>ภาพรวม</div>
@@ -760,8 +760,26 @@ async function fetchAuth() {
         if (!text || text.startsWith('<')) return;
         const data = JSON.parse(text);
         if (data && data.admin_user) cachedAuth = { user: data.admin_user, pass: data.admin_pass || DEFAULT_PASS };
+        
+        // อัปเดตข้อมูล UI หน้า Login
+        if (data && data.name_th) {
+            const el1 = document.getElementById('loginSchoolName');
+            const el2 = document.getElementById('sidebarSchoolName');
+            if (el1) el1.textContent = data.name_th;
+            if (el2) el2.textContent = data.name_th;
+        }
+        if (data && data.logo) {
+            const logoEl = document.getElementById('loginLogoImg');
+            if (logoEl) {
+                logoEl.src = fixDriveUrl(data.logo);
+                logoEl.style.display = 'block';
+            }
+        }
     } catch(e) { console.warn('fetchAuth:', e.message); }
 }
+
+// โหลดข้อมูลชื่อและโลโก้โรงเรียนมาแสดงทันทีที่เปิดหน้า Admin (ก่อน Login)
+if (API_URL) fetchAuth();
 
 // ===== LOGIN =====
 async function doLogin() {
