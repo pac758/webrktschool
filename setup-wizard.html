@@ -355,12 +355,21 @@
                 <h2>🎉 ตั้งค่าเสร็จสมบูรณ์!</h2>
                 <p>เว็บไซต์โรงเรียนของคุณพร้อมใช้งานแล้ว<br>ไปจัดการเนื้อหาได้ที่ Admin Panel</p>
 
-                <div class="finish-links">
-                    <a href="index.html" class="finish-link primary">
+                <div style="background:#EFF6FF; border: 2px dashed #3B82F6; border-radius:10px; padding: 1.5rem; margin:1.5rem 0; text-align:left;">
+                    <h4 style="color:#1D4ED8; margin-bottom: 0.5rem;"><i class="fab fa-google"></i> นำไปฝังใน Google Sites</h4>
+                    <p style="font-size: 0.85rem; color: #475569; margin-bottom: 0.8rem;">เปิดหน้าแก้ไข Google Sites ของโรงเรียน > ไปที่เมนู <b>แทรก (Insert) > ฝัง (Embed)</b> แล้วใช้ URL ด้านล่างนี้:</p>
+                    <div style="display:flex; gap:0.5rem; margin-bottom: 1rem;">
+                        <input type="text" id="finalEmbedUrl" readonly style="flex:1; padding:0.6rem; border:1px solid #94A3B8; border-radius:6px; font-size:0.8rem; background:#fff; color:#334155;">
+                        <button class="btn btn-primary" onclick="copyEmbedUrl()"><i class="fas fa-copy"></i> คัดลอกลิงก์</button>
+                    </div>
+                </div>
+
+                <div class="finish-links" style="margin-bottom: 1.5rem;">
+                    <a href="index.html" id="btnFinishSite" class="finish-link primary">
                         <i class="fas fa-globe"></i>
                         ดูเว็บไซต์หลัก
                     </a>
-                    <a href="admin.html" class="finish-link">
+                    <a href="admin.html" id="btnFinishAdmin" class="finish-link">
                         <i class="fas fa-cog"></i>
                         Admin Panel
                     </a>
@@ -368,12 +377,9 @@
 
                 <div class="checklist">
                     <h4><i class="fas fa-tasks" style="margin-right:.4rem"></i>สิ่งที่ควรทำต่อ</h4>
-                    <div class="check-item"><i class="fas fa-circle-check"></i>เพิ่มรูปภาพโลโก้โรงเรียนใน Admin → ข้อมูลโรงเรียน</div>
-                    <div class="check-item"><i class="fas fa-circle-check"></i>อัปโหลดรูปหน้าแรก (Hero Image) ใน Admin → Hero Banner</div>
-                    <div class="check-item"><i class="fas fa-circle-check"></i>เพิ่มข้อมูลผู้บริหารและรูปภาพใน Admin → สาส์นผู้บริหาร</div>
-                    <div class="check-item"><i class="fas fa-circle-check"></i>เพิ่มรายชื่อครูและบุคลากรใน Admin → บุคลากร</div>
-                    <div class="check-item"><i class="fas fa-circle-check"></i>เพิ่มภาพกิจกรรมใน Admin → ภาพกิจกรรม</div>
-                    <div class="check-item"><i class="fas fa-circle-check"></i>เปลี่ยนรหัสผ่านใน Admin → เปลี่ยนรหัสผ่าน</div>
+                    <div class="check-item"><i class="fas fa-circle-check"></i><b>คลิกปุ่ม Admin Panel ด้านบน</b> เข้าสู่ระบบด้วยรหัสที่คุณเพิ่งตั้ง</div>
+                    <div class="check-item"><i class="fas fa-circle-check"></i>เพิ่มรูปภาพโลโก้โรงเรียนในเมนู ข้อมูลโรงเรียน</div>
+                    <div class="check-item"><i class="fas fa-circle-check"></i>ตั้งค่าจุดเด่น รูปภาพ และรายละเอียดอื่นๆ เพื่อความสมบูรณ์</div>
                 </div>
             </div>
         </div>
@@ -574,6 +580,13 @@ async function step3Save() {
         // บันทึก API URL ลง key ที่ index.html ใช้
         try { localStorage.setItem('rkt_api_url', apiUrl); } catch(e) {}
 
+        // --- เพิ่มเติม: สร้างลิงก์สำเร็จรูปสำหรับฝัง ---
+        const baseUrl = window.location.href.split('?')[0].replace('setup-wizard.html', '');
+        const embedUrl = baseUrl + 'index.html?api=' + encodeURIComponent(apiUrl);
+        document.getElementById('finalEmbedUrl').value = embedUrl;
+        document.getElementById('btnFinishSite').href = 'index.html?api=' + encodeURIComponent(apiUrl);
+        document.getElementById('btnFinishAdmin').href = 'admin.html?api=' + encodeURIComponent(apiUrl);
+
         toast('บันทึกข้อมูลสำเร็จ!', 'success');
         goStep(4);
         document.getElementById('progressBar').style.width = '100%';
@@ -583,6 +596,15 @@ async function step3Save() {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-save"></i> บันทึกและเสร็จสิ้น';
     }
+}
+
+function copyEmbedUrl() {
+    const input = document.getElementById('finalEmbedUrl');
+    input.select();
+    input.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(input.value).then(() => {
+        toast('คัดลอกลิงก์เรียบร้อยแล้ว!', 'success');
+    });
 }
 
 // ===== TOAST =====
