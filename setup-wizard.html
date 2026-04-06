@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตั้งค่าเว็บไซต์โรงเรียน — Setup Wizard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #334155;
+            --primary-dk: #1E293B;
+            --accent: #B45309;
+            --accent-lt: #FDE68A;
+            --success: #059669;
+            --danger: #DC2626;
+            --blue: #2563EB;
+            --bg: #F1F5F9;
+            --surface: #fff;
+            --text: #1E293B;
+            --muted: #64748B;
+            --border: #E2E8F0;
+            --radius: 12px;
+            --shadow: 0 4px 24px rgba(0,0,0,.08);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+        /* ===== HEADER ===== */
+        .wiz-header{background:linear-gradient(135deg,#0F172A,#334155);color:#fff;padding:2rem 1.5rem;text-align:center}
+        .wiz-header .logo-icon{width:72px;height:72px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2rem;border:3px solid rgba(255,255,255,.3)}
+        .wiz-header h1{font-size:1.5rem;font-weight:800;margin-bottom:.35rem}
+        .wiz-header p{font-size:.9rem;opacity:.75}
+
+        /* ===== STEPS BAR ===== */
+        .steps-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:1.25rem 1.5rem;position:sticky;top:0;z-index:50}
+        .steps-inner{max-width:700px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+        .step-item{display:flex;flex-direction:column;align-items:center;gap:.3rem;flex:1;position:relative}
+        .step-item:not(:last-child)::after{content:'';position:absolute;top:16px;left:calc(50% + 20px);right:calc(-50% + 20px);height:2px;background:var(--border);z-index:-1}
+        .step-item.done:not(:last-child)::after{background:var(--success)}
+        .step-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;border:2px solid var(--border);background:var(--bg);color:var(--muted);transition:all .3s}
+        .step-item.active .step-circle{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(37,99,235,.2)}
+        .step-item.done .step-circle{background:var(--success);border-color:var(--success);color:#fff}
+        .step-label{font-size:.7rem;color:var(--muted);font-weight:600;text-align:center}
+        .step-item.active .step-label{color:var(--blue)}
+        .step-item.done .step-label{color:var(--success)}
+
+        /* ===== CONTENT ===== */
+        .wiz-content{max-width:700px;margin:2rem auto;padding:0 1.5rem 4rem}
+        .step-panel{display:none}
+        .step-panel.active{display:block}
+        .step-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:2rem;margin-bottom:1.5rem}
+        .step-card h2{font-size:1.2rem;font-weight:800;color:var(--text);margin-bottom:.35rem;display:flex;align-items:center;gap:.6rem}
+        .step-card h2 i{color:var(--blue)}
+        .step-card > p{font-size:.88rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.7}
+
+        /* ===== FORM ===== */
+        .field{margin-bottom:1.1rem}
+        .field label{display:block;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.04em}
+        .field label .req{color:var(--danger)}
+        .field input,.field textarea,.field select{width:100%;padding:.65rem .875rem;border:1.5px solid var(--border);border-radius:8px;font-size:.92rem;font-family:'Sarabun',sans-serif;outline:none;transition:all .2s;color:var(--text)}
+        .field input:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+        .field textarea{resize:vertical;min-height:80px}
+        .field-hint{font-size:.75rem;color:var(--muted);margin-top:.35rem}
+        .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        @media(max-width:560px){.field-row{grid-template-columns:1fr}}
+
+        /* ===== BUTTONS ===== */
+        .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.5rem;border-radius:50px;font-size:.9rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;font-family:'Sarabun',sans-serif}
+        .btn-primary{background:var(--blue);color:#fff}
+        .btn-primary:hover{background:#1D4ED8;transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,235,.35)}
+        .btn-success{background:var(--success);color:#fff}
+        .btn-success:hover{background:#047857}
+        .btn-ghost{background:var(--bg);color:var(--text);border:1.5px solid var(--border)}
+        .btn-ghost:hover{background:var(--border)}
+        .btn-lg{padding:.85rem 2rem;font-size:1rem}
+        .btn:disabled{opacity:.5;pointer-events:none}
+        .wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;flex-wrap:wrap;gap:.75rem}
+
+        /* ===== SCRIPT BOX ===== */
+        .script-box{background:#0F172A;border-radius:8px;padding:1.25rem;position:relative;margin:1rem 0}
+        .script-box pre{color:#94A3B8;font-size:.75rem;line-height:1.7;overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:200px}
+        .copy-btn{position:absolute;top:.75rem;right:.75rem;background:rgba(255,255,255,.1);color:#CBD5E1;border:none;border-radius:6px;padding:.35rem .75rem;font-size:.75rem;cursor:pointer;display:flex;align-items:center;gap:.3rem;transition:all .2s}
+        .copy-btn:hover{background:rgba(255,255,255,.2);color:#fff}
+
+        /* ===== INFO BOX ===== */
+        .info-box{border-radius:8px;padding:1rem 1.25rem;font-size:.85rem;line-height:1.7;margin:1rem 0;display:flex;gap:.75rem}
+        .info-box i{flex-shrink:0;margin-top:.15rem}
+        .info-box.blue{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF}
+        .info-box.green{background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46}
+        .info-box.amber{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E}
+
+        /* ===== TEST RESULT ===== */
+        .test-result{border-radius:8px;padding:.875rem 1.25rem;font-size:.85rem;margin-top:.875rem;display:none;align-items:center;gap:.6rem}
+        .test-result.ok{background:#ECFDF5;border:1px solid #6EE7B7;color:var(--success);display:flex}
+        .test-result.fail{background:#FEF2F2;border:1px solid #FCA5A5;color:var(--danger);display:flex}
+
+        /* ===== STEPS LIST ===== */
+        .steps-list{margin:1rem 0}
+        .steps-list .step-row{display:flex;gap:.875rem;margin-bottom:.875rem;align-items:flex-start}
+        .step-num{background:var(--blue);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;margin-top:.1rem}
+        .step-text{font-size:.88rem;color:var(--text);line-height:1.6}
+        .step-text code{background:#E0E7FF;color:#3730A3;padding:.1rem .4rem;border-radius:4px;font-size:.8rem}
+
+        /* ===== PROGRESS ===== */
+        .progress-wrap{background:var(--border);border-radius:50px;height:6px;margin:1rem 0}
+        .progress-bar{background:linear-gradient(90deg,var(--blue),var(--success));height:100%;border-radius:50px;transition:width .5s ease}
+
+        /* ===== FINISH ===== */
+        .finish-hero{text-align:center;padding:2rem 1rem}
+        .finish-icon{width:96px;height:96px;background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:3rem;color:var(--success);border:4px solid #6EE7B7}
+        .finish-hero h2{font-size:1.6rem;font-weight:800;color:var(--text);margin-bottom:.5rem}
+        .finish-hero p{color:var(--muted);font-size:.95rem;line-height:1.7}
+        .finish-links{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem}
+        .finish-link{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1.5rem 1rem;background:var(--bg);border:2px solid var(--border);border-radius:var(--radius);font-size:.88rem;font-weight:700;color:var(--text);transition:all .2s;cursor:pointer;text-decoration:none}
+        .finish-link i{font-size:1.75rem}
+        .finish-link.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+        .finish-link.primary:hover{background:#1D4ED8}
+        .finish-link:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+        .checklist{text-align:left;margin-top:1.5rem}
+        .checklist h4{font-size:.85rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem}
+        .check-item{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.6rem;font-size:.88rem;color:var(--text)}
+        .check-item i{color:var(--success);margin-top:.15rem;flex-shrink:0}
+
+        /* ===== TOAST ===== */
+        .toast-wrap{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem}
+        .toast{background:#1E293B;color:#fff;padding:.75rem 1.25rem;border-radius:10px;font-size:.85rem;display:flex;align-items:center;gap:.6rem;animation:toastIn .3s ease;max-width:300px}
+        .toast.success{border-left:4px solid var(--success)}
+        .toast.error{border-left:4px solid var(--danger)}
+        @keyframes toastIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="wiz-header">
+    <div class="logo-icon"><i class="fas fa-school"></i></div>
+    <h1>🎉 ตั้งค่าเว็บไซต์โรงเรียน</h1>
+    <p>ทำตามขั้นตอนง่ายๆ เพื่อเปิดใช้งานเว็บไซต์โรงเรียนของคุณ</p>
+    <div style="margin-top:1rem">
+        <div class="progress-wrap" style="max-width:400px;margin:0 auto">
+            <div class="progress-bar" id="progressBar" style="width:0%"></div>
+        </div>
+    </div>
+</div>
+
+<!-- STEPS BAR -->
+<div class="steps-bar">
+    <div class="steps-inner">
+        <div class="step-item active" id="stepNav1">
+            <div class="step-circle"><i class="fas fa-school" style="font-size:.7rem"></i></div>
+            <div class="step-label">ข้อมูลโรงเรียน</div>
+        </div>
+        <div class="step-item" id="stepNav2">
+            <div class="step-circle">2</div>
+            <div class="step-label">Google Sheet</div>
+        </div>
+        <div class="step-item" id="stepNav3">
+            <div class="step-circle">3</div>
+            <div class="step-label">รหัสผ่าน</div>
+        </div>
+        <div class="step-item" id="stepNav4">
+            <div class="step-circle"><i class="fas fa-check" style="font-size:.7rem"></i></div>
+            <div class="step-label">เสร็จสิ้น!</div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="wiz-content">
+
+    <!-- ===== STEP 1: ข้อมูลโรงเรียน ===== -->
+    <div class="step-panel active" id="panel1">
+        <div class="step-card">
+            <h2><i class="fas fa-school"></i> ข้อมูลโรงเรียน</h2>
+            <p>กรอกข้อมูลพื้นฐานของโรงเรียน ข้อมูลเหล่านี้จะแสดงบนเว็บไซต์ทั้งหมด</p>
+
+            <div class="field-row">
+                <div class="field">
+                    <label>ชื่อโรงเรียน (ภาษาไทย) <span class="req">*</span></label>
+                    <input type="text" id="f_name_th" placeholder="โรงเรียนบ้านตัวอย่าง">
+                </div>
+                <div class="field">
+                    <label>ชื่อโรงเรียน (ภาษาอังกฤษ)</label>
+                    <input type="text" id="f_name_en" placeholder="Example School">
+                </div>
+            </div>
+            <div class="field">
+                <label>สังกัด <span class="req">*</span></label>
+                <input type="text" id="f_dept" placeholder="สพป.บุรีรัมย์ เขต 3">
+            </div>
+            <div class="field-row">
+                <div class="field">
+                    <label>เบอร์โทรศัพท์</label>
+                    <input type="text" id="f_phone" placeholder="0XX-XXX-XXXX">
+                </div>
+                <div class="field">
+                    <label>อีเมล</label>
+                    <input type="email" id="f_email" placeholder="admin@school.ac.th">
+                </div>
+            </div>
+            <div class="field">
+                <label>ที่อยู่โรงเรียน</label>
+                <input type="text" id="f_address" placeholder="ต.ตัวอย่าง อ.ตัวอย่าง จ.ตัวอย่าง XXXXX">
+            </div>
+            <div class="field">
+                <label>วิสัยทัศน์ (Vision)</label>
+                <textarea id="f_vision" rows="2" placeholder="พัฒนาผู้เรียนให้มีคุณภาพตามมาตรฐาน..."></textarea>
+            </div>
+            <div class="field">
+                <label>คำขวัญโรงเรียน</label>
+                <input type="text" id="f_motto" placeholder="การศึกษาดี มีวินัย ใฝ่เรียนรู้ คู่คุณธรรม">
+            </div>
+            <div class="field-row">
+                <div class="field">
+                    <label>จำนวนนักเรียน</label>
+                    <input type="text" id="f_students" placeholder="100+">
+                </div>
+                <div class="field">
+                    <label>ครูและบุคลากร</label>
+                    <input type="text" id="f_staff" placeholder="10">
+                </div>
+            </div>
+            <div class="field">
+                <label>URL โลโก้โรงเรียน</label>
+                <input type="text" id="f_logo" placeholder="https://drive.google.com/thumbnail?id=...">
+                <div class="field-hint"><i class="fas fa-info-circle"></i> วาง URL รูปโลโก้จาก Google Drive หรือ Google Photos</div>
+            </div>
+            <div class="field-row">
+                <div class="field">
+                    <label>URL Facebook Page</label>
+                    <input type="text" id="f_facebook" placeholder="https://www.facebook.com/...">
+                </div>
+                <div class="field">
+                    <label>URL YouTube (embed)</label>
+                    <input type="text" id="f_youtube" placeholder="https://www.youtube.com/embed/...">
+                </div>
+            </div>
+            <div class="field">
+                <label>Google Maps Embed URL</label>
+                <input type="text" id="f_maps" placeholder="https://maps.google.com/maps?q=...">
+            </div>
+        </div>
+        <div class="wiz-nav">
+            <div></div>
+            <button class="btn btn-primary btn-lg" onclick="step1Next()">
+                ถัดไป <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== STEP 2: Google Sheet ===== -->
+    <div class="step-panel" id="panel2">
+        <div class="step-card">
+            <h2><i class="fab fa-google"></i> เชื่อมต่อ Google Sheet</h2>
+            <p>ข้อมูลทั้งหมดของเว็บไซต์จะเก็บใน Google Sheet ของคุณ ทำตามขั้นตอนด้านล่าง</p>
+
+            <div class="info-box amber">
+                <i class="fas fa-lightbulb"></i>
+                <div>ถ้ายังไม่มี Google Sheet ให้สร้างใหม่ก่อน โดยไปที่ <a href="https://sheets.google.com" target="_blank" style="color:inherit;font-weight:700">sheets.google.com</a> แล้วสร้าง Spreadsheet ใหม่</div>
+            </div>
+
+            <div class="steps-list">
+                <div class="step-row">
+                    <div class="step-num">1</div>
+                    <div class="step-text">เปิด Google Sheet ของคุณ แล้วไปที่เมนู <strong>Extensions → Apps Script</strong></div>
+                </div>
+                <div class="step-row">
+                    <div class="step-num">2</div>
+                    <div class="step-text">ลบโค้ดเดิมออก แล้ว <strong>วางโค้ดด้านล่างนี้</strong> ลงไปทั้งหมด</div>
+                </div>
+                <div class="step-row">
+                    <div class="step-num">3</div>
+                    <div class="step-text">กด <strong>Save</strong> แล้วกด <code>setupSheets</code> เพื่อสร้าง Sheet อัตโนมัติ (Run ครั้งแรก)</div>
+                </div>
+                <div class="step-row">
+                    <div class="step-num">4</div>
+                    <div class="step-text">กด <strong>Deploy → New deployment → Web app</strong><br>ตั้งค่า: Execute as = <code>Me</code>, Who has access = <code>Anyone</code></div>
+                </div>
+                <div class="step-row">
+                    <div class="step-num">5</div>
+                    <div class="step-text">Copy URL ที่ได้ แล้วกรอกในช่องด้านล่าง</div>
+                </div>
+            </div>
+
+            <div class="script-box">
+                <button class="copy-btn" onclick="copyScript()"><i class="fas fa-copy"></i> Copy</button>
+                <pre id="scriptPreview">กำลังโหลดโค้ด...</pre>
+            </div>
+
+            <div class="field" style="margin-top:1.5rem">
+                <label>Google Apps Script Deployment URL <span class="req">*</span></label>
+                <input type="text" id="f_apiUrl" placeholder="https://script.google.com/macros/s/.../exec" oninput="clearTestResult()">
+                <div class="field-hint"><i class="fas fa-info-circle"></i> URL จะขึ้นต้นด้วย https://script.google.com/macros/s/</div>
+            </div>
+
+            <button class="btn btn-ghost" onclick="testConnection()" id="testBtn">
+                <i class="fas fa-vial"></i> ทดสอบการเชื่อมต่อ
+            </button>
+
+            <div class="test-result" id="testResult"></div>
+        </div>
+        <div class="wiz-nav">
+            <button class="btn btn-ghost" onclick="goStep(1)"><i class="fas fa-arrow-left"></i> ย้อนกลับ</button>
+            <button class="btn btn-primary btn-lg" onclick="step2Next()" id="step2NextBtn">
+                ถัดไป <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== STEP 3: รหัสผ่าน ===== -->
+    <div class="step-panel" id="panel3">
+        <div class="step-card">
+            <h2><i class="fas fa-shield-alt"></i> ตั้งรหัสผ่าน Admin</h2>
+            <p>ตั้งชื่อผู้ใช้และรหัสผ่านสำหรับเข้าสู่ระบบ Admin Panel</p>
+
+            <div class="info-box green">
+                <i class="fas fa-check-circle"></i>
+                <div>รหัสผ่านจะถูกเก็บไว้ใน Google Sheet ของคุณ สามารถเปลี่ยนได้ตลอดเวลาจาก Admin Panel</div>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label>ชื่อผู้ใช้ <span class="req">*</span></label>
+                    <input type="text" id="f_adminUser" placeholder="admin" value="admin">
+                </div>
+                <div class="field">
+                    <label>รหัสผ่าน <span class="req">*</span></label>
+                    <input type="password" id="f_adminPass" placeholder="รหัสผ่านอย่างน้อย 4 ตัวอักษร">
+                </div>
+            </div>
+            <div class="field">
+                <label>ยืนยันรหัสผ่าน <span class="req">*</span></label>
+                <input type="password" id="f_adminPassConfirm" placeholder="กรอกรหัสผ่านอีกครั้ง">
+            </div>
+
+            <div class="info-box amber">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>รหัสผ่านเริ่มต้นคือ <strong>admin / admin123</strong> — กรุณาเปลี่ยนเพื่อความปลอดภัย!</div>
+            </div>
+        </div>
+        <div class="wiz-nav">
+            <button class="btn btn-ghost" onclick="goStep(2)"><i class="fas fa-arrow-left"></i> ย้อนกลับ</button>
+            <button class="btn btn-success btn-lg" onclick="step3Save()" id="saveBtn">
+                <i class="fas fa-save"></i> บันทึกและเสร็จสิ้น
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== STEP 4: เสร็จสิ้น ===== -->
+    <div class="step-panel" id="panel4">
+        <div class="step-card">
+            <div class="finish-hero">
+                <div class="finish-icon"><i class="fas fa-check"></i></div>
+                <h2>🎉 ตั้งค่าเสร็จสมบูรณ์!</h2>
+                <p>เว็บไซต์โรงเรียนของคุณพร้อมใช้งานแล้ว<br>ไปจัดการเนื้อหาได้ที่ Admin Panel</p>
+
+                <div class="finish-links">
+                    <a href="index.html" class="finish-link primary">
+                        <i class="fas fa-globe"></i>
+                        ดูเว็บไซต์หลัก
+                    </a>
+                    <a href="admin.html" class="finish-link">
+                        <i class="fas fa-cog"></i>
+                        Admin Panel
+                    </a>
+                </div>
+
+                <div class="checklist">
+                    <h4><i class="fas fa-tasks" style="margin-right:.4rem"></i>สิ่งที่ควรทำต่อ</h4>
+                    <div class="check-item"><i class="fas fa-circle-check"></i>เพิ่มรูปภาพโลโก้โรงเรียนใน Admin → ข้อมูลโรงเรียน</div>
+                    <div class="check-item"><i class="fas fa-circle-check"></i>อัปโหลดรูปหน้าแรก (Hero Image) ใน Admin → Hero Banner</div>
+                    <div class="check-item"><i class="fas fa-circle-check"></i>เพิ่มข้อมูลผู้บริหารและรูปภาพใน Admin → สาส์นผู้บริหาร</div>
+                    <div class="check-item"><i class="fas fa-circle-check"></i>เพิ่มรายชื่อครูและบุคลากรใน Admin → บุคลากร</div>
+                    <div class="check-item"><i class="fas fa-circle-check"></i>เพิ่มภาพกิจกรรมใน Admin → ภาพกิจกรรม</div>
+                    <div class="check-item"><i class="fas fa-circle-check"></i>เปลี่ยนรหัสผ่านใน Admin → เปลี่ยนรหัสผ่าน</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /wiz-content -->
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+let currentStep = 1;
+let apiUrl = '';
+let savedData = {};
+
+const SCRIPT_URL = 'apps-script/Code.gs'; // สำหรับดึงโค้ดแสดงใน UI
+
+// ===== โหลดโค้ด Apps Script เพื่อแสดงใน textarea =====
+async function loadScriptCode() {
+    try {
+        const r = await fetch(SCRIPT_URL);
+        const text = await r.text();
+        document.getElementById('scriptPreview').textContent = text.substring(0, 800) + '\n... (โค้ดทั้งหมด ' + text.length + ' ตัวอักษร)';
+        window._fullScript = text;
+    } catch(e) {
+        document.getElementById('scriptPreview').textContent = '// ไม่สามารถโหลดโค้ดได้ กรุณาดาวน์โหลดจากไฟล์ apps-script/Code.gs';
+    }
+}
+loadScriptCode();
+
+function copyScript() {
+    const code = window._fullScript || document.getElementById('scriptPreview').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        toast('คัดลอกโค้ดสำเร็จ!', 'success');
+    }).catch(() => {
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = code;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        toast('คัดลอกโค้ดสำเร็จ!', 'success');
+    });
+}
+
+// ===== NAVIGATION =====
+function goStep(n) {
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel' + n).classList.add('active');
+
+    document.querySelectorAll('.step-item').forEach((item, i) => {
+        item.classList.remove('active', 'done');
+        if (i + 1 < n) item.classList.add('done');
+        else if (i + 1 === n) item.classList.add('active');
+    });
+
+    currentStep = n;
+    const pct = ((n - 1) / 3) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function step1Next() {
+    const name = document.getElementById('f_name_th').value.trim();
+    const dept = document.getElementById('f_dept').value.trim();
+    if (!name) { toast('กรุณากรอกชื่อโรงเรียน', 'error'); return; }
+    if (!dept) { toast('กรุณากรอกสังกัด', 'error'); return; }
+
+    // เก็บข้อมูล Step 1
+    savedData.step1 = {
+        name_th: name,
+        name_en: document.getElementById('f_name_en').value.trim(),
+        dept: dept,
+        phone: document.getElementById('f_phone').value.trim(),
+        email: document.getElementById('f_email').value.trim(),
+        address: document.getElementById('f_address').value.trim(),
+        vision: document.getElementById('f_vision').value.trim(),
+        motto: document.getElementById('f_motto').value.trim(),
+        students: document.getElementById('f_students').value.trim() || '100+',
+        staff: document.getElementById('f_staff').value.trim() || '10',
+        logo: document.getElementById('f_logo').value.trim(),
+        facebook: document.getElementById('f_facebook').value.trim(),
+        youtube: document.getElementById('f_youtube').value.trim(),
+        maps: document.getElementById('f_maps').value.trim(),
+    };
+    goStep(2);
+}
+
+async function testConnection() {
+    const url = document.getElementById('f_apiUrl').value.trim();
+    if (!url) { toast('กรุณากรอก URL ก่อน', 'error'); return; }
+    if (!url.startsWith('https://script.google.com/macros/')) {
+        toast('URL ไม่ถูกต้อง ต้องขึ้นต้นด้วย https://script.google.com/macros/', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('testBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังทดสอบ...';
+
+    const result = document.getElementById('testResult');
+    result.className = 'test-result';
+    result.style.display = 'none';
+
+    try {
+        const r = await fetch(`${url}?sheet=settings&t=${Date.now()}`, { redirect: 'follow' });
+        const text = (await r.text()).trim();
+        if (text.startsWith('<')) throw new Error('API ตอบกลับด้วย HTML — ตรวจสอบการ Deploy ใหม่');
+        const data = JSON.parse(text);
+        if (data.error) throw new Error(data.error);
+
+        apiUrl = url;
+        try { localStorage.setItem('school_api_url', url); } catch(e) {}
+        result.className = 'test-result ok';
+        result.innerHTML = '<i class="fas fa-check-circle"></i> เชื่อมต่อสำเร็จ! Google Sheet พร้อมใช้งาน';
+        document.getElementById('step2NextBtn').style.background = 'var(--success)';
+        toast('เชื่อมต่อสำเร็จ!', 'success');
+    } catch(e) {
+        result.className = 'test-result fail';
+        result.innerHTML = `<i class="fas fa-times-circle"></i> เชื่อมต่อไม่ได้: ${e.message}`;
+        toast('เชื่อมต่อไม่ได้ กรุณาตรวจสอบ URL', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-vial"></i> ทดสอบการเชื่อมต่อ';
+    }
+}
+
+function clearTestResult() {
+    const r = document.getElementById('testResult');
+    r.className = 'test-result';
+    r.style.display = 'none';
+    document.getElementById('step2NextBtn').style.background = '';
+    apiUrl = '';
+}
+
+function step2Next() {
+    const url = document.getElementById('f_apiUrl').value.trim();
+    if (!url) { toast('กรุณากรอก Apps Script URL', 'error'); return; }
+    if (!apiUrl) { toast('กรุณาทดสอบการเชื่อมต่อก่อน', 'error'); return; }
+    savedData.apiUrl = apiUrl;
+    goStep(3);
+}
+
+async function step3Save() {
+    const user = document.getElementById('f_adminUser').value.trim();
+    const pass = document.getElementById('f_adminPass').value;
+    const confirm = document.getElementById('f_adminPassConfirm').value;
+
+    if (!user) { toast('กรุณากรอกชื่อผู้ใช้', 'error'); return; }
+    if (!pass) { toast('กรุณากรอกรหัสผ่าน', 'error'); return; }
+    if (pass.length < 4) { toast('รหัสผ่านต้องยาวอย่างน้อย 4 ตัวอักษร', 'error'); return; }
+    if (pass !== confirm) { toast('รหัสผ่านไม่ตรงกัน', 'error'); return; }
+
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
+
+    try {
+        // บันทึกข้อมูลโรงเรียน + รหัสผ่านลง Google Sheet
+        const settingsData = {
+            ...savedData.step1,
+            admin_user: user,
+            admin_pass: pass,
+            // default hero
+            hero_badge: 'ยินดีต้อนรับสู่' + (savedData.step1?.name_th || 'โรงเรียนของเรา'),
+            hero_heading1: 'พัฒนาผู้เรียน',
+            hero_heading2: 'ความเป็นเลิศ',
+            hero_desc: 'มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ เพื่อสร้างเด็กไทยที่พร้อมก้าวสู่อนาคต',
+            about_section_desc: (savedData.step1?.name_th || 'โรงเรียนของเรา') + ' มุ่งมั่นจัดการศึกษาขั้นพื้นฐานเพื่อพัฒนาคุณภาพชีวิตของเยาวชน',
+            about_vision: savedData.step1?.vision || 'พัฒนาผู้เรียนให้มีคุณภาพตามมาตรฐาน',
+            about_mission: 'ส่งเสริมความร่วมมือระหว่างโรงเรียน ครอบครัว และชุมชน\nพัฒนาระบบบริหารจัดการให้มีความปลอดภัย\nส่งเสริมความเป็นเลิศและสมรรถนะผู้เรียน',
+            about_goals: 'นักเรียนรักชาติ ศาสน์ กษัตริย์ และเป็นพลเมืองดี\nนักเรียนได้รับโอกาสทางการศึกษาอย่างทั่วถึง',
+            about_attributes: 'fas fa-heart|รักชาติ ศาสน์ กษัตริย์\nfas fa-balance-scale|ซื่อสัตย์สุจริต\nfas fa-user-clock|มีวินัย\nfas fa-book-reader|ใฝ่เรียนรู้\nfas fa-seedling|อยู่อย่างพอเพียง\nfas fa-briefcase|มุ่งมั่นในการทำงาน\nfas fa-praying-hands|รักความเป็นไทย\nfas fa-hands-helping|มีจิตสาธารณะ',
+            vid_title1: 'เรียนรู้',
+            vid_title2: 'ที่' + (savedData.step1?.name_th || 'โรงเรียนของเรา'),
+            vid_desc: 'บรรยากาศการเรียนรู้ที่ส่งเสริมความสุขและพัฒนาการของผู้เรียน',
+        };
+
+        const res = await fetch(apiUrl, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'saveSettings', secret: pass, data: settingsData }),
+            redirect: 'follow'
+        });
+        const text = (await res.text()).trim();
+        const result = JSON.parse(text);
+
+        if (result.error) throw new Error(result.error);
+
+        // บันทึก API URL ลง localStorage
+        try { localStorage.setItem('school_api_url', apiUrl); } catch(e) {}
+        // บันทึก API URL ลง key ที่ index.html ใช้
+        try { localStorage.setItem('rkt_api_url', apiUrl); } catch(e) {}
+
+        toast('บันทึกข้อมูลสำเร็จ!', 'success');
+        goStep(4);
+        document.getElementById('progressBar').style.width = '100%';
+    } catch(err) {
+        toast('เกิดข้อผิดพลาด: ' + err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save"></i> บันทึกและเสร็จสิ้น';
+    }
+}
+
+// ===== TOAST =====
+function toast(msg, type = 'success') {
+    const wrap = document.getElementById('toastWrap');
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${msg}`;
+    wrap.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+}
+</script>
+
+</body>
+</html>
