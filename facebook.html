@@ -1,258 +1,263 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook — โรงเรียนบ้านโคกยางหนองถนน</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #334155;
-            --primary-dark: #1E293B;
-            --accent: #B45309;
-            --bg: #F1F5F9;
-            --surface: #FFFFFF;
-            --text: #1E293B;
-            --muted: #64748B;
-            --border: #E2E8F0;
-            --fb-blue: #1877F2;
-            --radius: 12px;
-            --shadow: 0 4px 24px rgba(0,0,0,.08);
-            --trans: all .3s ease;
-        }
-        *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-        a { text-decoration: none; color: inherit; transition: var(--trans); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facebook — โรงเรียนบ้านโคกยางหนองถนน</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #334155;
+  --primary-dark: #1E293B;
+  --accent: #B45309;
+  --bg: #F1F5F9;
+  --surface: #FFFFFF;
+  --text: #1E293B;
+  --muted: #64748B;
+  --border: #E2E8F0;
+  --fb-blue: #1877F2;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,.08);
+  --trans: all .3s ease;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { text-decoration: none; color: inherit; transition: var(--trans); }
 
-        /* ===== TOPBAR ===== */
-        .topbar { background: var(--primary-dark); color: rgba(255,255,255,.9); padding: .4rem 0; font-size: .82rem; }
-        .topbar .inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; }
-        .topbar a { color: rgba(255,255,255,.75); }
-        .topbar a:hover { color: #FDE68A; }
+/* ===== TOPBAR ===== */
+.topbar { background: var(--primary-dark); color: rgba(255,255,255,.9); padding: .4rem 0; font-size: .82rem; }
+.topbar .inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.topbar a { color: rgba(255,255,255,.75); }
+.topbar a:hover { color: #FDE68A; }
 
-        /* ===== HEADER ===== */
-        .header { background: var(--surface); box-shadow: 0 2px 12px rgba(0,0,0,.08); position: sticky; top: 0; z-index: 99; }
-        .header .inner { max-width: 1200px; margin: 0 auto; padding: .75rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
-        .logo { display: flex; align-items: center; gap: .875rem; }
-        .logo img { width: 44px; height: 44px; object-fit: contain; }
-        .logo-text h1 { font-size: 1rem; color: var(--primary); line-height: 1.2; }
-        .logo-text span { font-size: .72rem; color: var(--muted); }
-        .back-btn { display: flex; align-items: center; gap: .5rem; background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: .45rem 1rem; border-radius: 50px; font-size: .85rem; font-weight: 600; transition: var(--trans); }
-        .back-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+/* ===== HEADER ===== */
+.header { background: var(--surface); box-shadow: 0 2px 12px rgba(0,0,0,.08); position: sticky; top: 0; z-index: 99; }
+.header .inner { max-width: 1200px; margin: 0 auto; padding: .75rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: .875rem; }
+.logo img { width: 44px; height: 44px; object-fit: contain; }
+.logo-text h1 { font-size: 1rem; color: var(--primary); line-height: 1.2; }
+.logo-text span { font-size: .72rem; color: var(--muted); }
+.back-btn { display: flex; align-items: center; gap: .5rem; background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: .45rem 1rem; border-radius: 50px; font-size: .85rem; font-weight: 600; transition: var(--trans); }
+.back-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-        /* ===== HERO ===== */
-        .fb-hero { background: linear-gradient(135deg, #1877F2, #0C5FD4); color: #fff; padding: 2.5rem 0; text-align: center; }
-        .fb-hero .inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-        .fb-hero-icon { font-size: 3rem; margin-bottom: .75rem; opacity: .9; }
-        .fb-hero h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: .4rem; }
-        .fb-hero p { font-size: .9rem; opacity: .85; }
-        .fb-hero-btn { display: inline-flex; align-items: center; gap: .5rem; background: #fff; color: var(--fb-blue); padding: .6rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: .9rem; margin-top: 1.25rem; transition: var(--trans); box-shadow: 0 4px 16px rgba(0,0,0,.15); }
-        .fb-hero-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+/* ===== HERO ===== */
+.fb-hero { background: linear-gradient(135deg, #1877F2, #0C5FD4); color: #fff; padding: 2.5rem 0; text-align: center; }
+.fb-hero .inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+.fb-hero-icon { font-size: 3rem; margin-bottom: .75rem; opacity: .9; }
+.fb-hero h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: .4rem; }
+.fb-hero p { font-size: .9rem; opacity: .85; }
+.fb-hero-btn { display: inline-flex; align-items: center; gap: .5rem; background: #fff; color: var(--fb-blue); padding: .6rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: .9rem; margin-top: 1.25rem; transition: var(--trans); box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+.fb-hero-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
 
-        /* ===== MAIN LAYOUT ===== */
-        .main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+/* ===== MAIN LAYOUT ===== */
+.main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
 
-        /* ===== CARD ===== */
-        .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-        .card-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-        .card-header h3 { font-size: .95rem; font-weight: 700; display: flex; align-items: center; gap: .5rem; }
-        .card-header h3 i { color: var(--fb-blue); }
-        .card-body { padding: 1.25rem; }
+/* ===== CARD ===== */
+.card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.card-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.card-header h3 { font-size: .95rem; font-weight: 700; display: flex; align-items: center; gap: .5rem; }
+.card-header h3 i { color: var(--fb-blue); }
+.card-body { padding: 1.25rem; }
 
-        /* ===== FACEBOOK EMBED ===== */
-        .fb-embed-wrap { width: 100%; display: flex; justify-content: center; }
-        .fb-embed-wrap iframe { border-radius: 8px; max-width: 100%; }
+/* ===== FACEBOOK EMBED ===== */
+.fb-embed-wrap { width: 100%; display: flex; justify-content: center; }
+.fb-embed-wrap iframe { border-radius: 8px; max-width: 100%; }
 
-        /* ===== FB PAGE PLUGIN (responsive) ===== */
-        .fb-page-container { width: 100%; overflow: hidden; border-radius: 8px; }
+/* ===== FB PAGE PLUGIN (responsive) ===== */
+.fb-page-container { width: 100%; overflow: hidden; border-radius: 8px; }
 
-        /* ===== POSTS GRID ===== */
-        .posts-note { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 1rem 1.25rem; font-size: .88rem; color: #1D4ED8; display: flex; align-items: flex-start; gap: .75rem; }
-        .posts-note i { margin-top: .1rem; flex-shrink: 0; }
+/* ===== POSTS GRID ===== */
+.posts-note { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 1rem 1.25rem; font-size: .88rem; color: #1D4ED8; display: flex; align-items: flex-start; gap: .75rem; }
+.posts-note i { margin-top: .1rem; flex-shrink: 0; }
 
-        /* ===== FOOTER ===== */
-        .footer { background: var(--primary-dark); color: rgba(255,255,255,.6); text-align: center; padding: 1.25rem; font-size: .82rem; margin-top: 2rem; }
-        .footer a { color: #FDE68A; }
+/* ===== FOOTER ===== */
+.footer { background: var(--primary-dark); color: rgba(255,255,255,.6); text-align: center; padding: 1.25rem; font-size: .82rem; margin-top: 2rem; }
+.footer a { color: #FDE68A; }
 
-        /* ===== RESPONSIVE ===== */
-        @media(min-width: 768px) {
-            .main { grid-template-columns: 2fr 1fr; }
-            .fb-hero h2 { font-size: 2rem; }
-        }
-    </style>
+/* ===== RESPONSIVE ===== */
+@media(min-width: 768px) {
+  .main { grid-template-columns: 2fr 1fr; }
+  .fb-hero h2 { font-size: 2rem; }
+}
+</style>
 </head>
 <body>
 
-    <!-- TOPBAR -->
-    <div class="topbar">
-        <div class="inner">
-            <span><i class="fas fa-school" style="margin-right:.4rem;color:#FDE68A"></i>โรงเรียนบ้านโคกยางหนองถนน</span>
-            <div style="display:flex;gap:1rem">
-                <a href="index.html">หน้าแรก</a>
-                <a href="admin.html"><i class="fas fa-lock" style="margin-right:.3rem"></i>Admin</a>
-            </div>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="inner">
+    <span><i class="fas fa-school" style="margin-right:.4rem;color:#FDE68A"></i>โรงเรียนบ้านโคกยางหนองถนน</span>
+    <div style="display:flex;gap:1rem">
+      <a href="index.html">หน้าแรก</a>
+      <a href="admin.html"><i class="fas fa-lock" style="margin-right:.3rem"></i>Admin</a>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="inner">
+    <a href="index.html" class="logo">
+      <img src="https://lh5.googleusercontent.com/d/16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="Logo" onerror="this.src='https://placehold.co/88x88/334155/white?text=RKT'">
+      <div class="logo-text">
+        <h1>โรงเรียนบ้านโคกยางหนองถนน</h1>
+        <span>สพป.บุรีรัมย์ เขต 3</span>
+      </div>
+    </a>
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i>กลับหน้าหลัก</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="fb-hero">
+  <div class="inner">
+    <div class="fb-hero-icon"><i class="fab fa-facebook"></i></div>
+    <h2>Facebook Page โรงเรียน</h2>
+    <p>ติดตามข่าวสาร กิจกรรม และความเคลื่อนไหวล่าสุดของโรงเรียน</p>
+    <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" class="fb-hero-btn">
+      <i class="fab fa-facebook-square"></i>เปิดเพจ Facebook
+    </a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- Facebook Page Feed (ซ้าย) -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fab fa-facebook"></i>โพสต์ล่าสุด</h3>
+        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" style="font-size:.82rem;color:var(--fb-blue);font-weight:600">ดูทั้งหมด →</a>
+      </div>
+      <div class="card-body">
+
+        <!-- Facebook Page Plugin — Timeline -->
+        <div class="fb-page-container" id="fbPageWrap">
+          <div id="fb-root"></div>
+          <div class="fb-page"
+            data-href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn"
+            data-tabs="timeline"
+            data-width="500"
+            data-height="700"
+            data-small-header="false"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="true">
+          </div>
         </div>
+
+        <!-- Fallback iframe -->
+        <div id="fbFallback" style="display:none">
+          <iframe
+            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Frongreiyn.ban.khok.yang.hnxng.thnn&tabs=timeline&width=500&height=700&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
+            width="100%" height="700"
+            style="border:none;overflow:hidden;border-radius:8px"
+            scrolling="no" frameborder="0" allowfullscreen
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+          </iframe>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar (ขวา) -->
+  <div>
+
+    <!-- Page Info -->
+    <div class="card" style="margin-bottom:1.25rem">
+      <div class="card-header"><h3><i class="fas fa-info-circle"></i>ข้อมูลเพจ</h3></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div style="width:36px;height:36px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--fb-blue);flex-shrink:0"><i class="fab fa-facebook-f"></i></div>
+            <div>
+              <div style="font-size:.82rem;color:var(--muted)">ชื่อเพจ</div>
+              <div style="font-size:.9rem;font-weight:600">โรงเรียนบ้านโคกยางหนองถนน</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div style="width:36px;height:36px;background:#F0FDF4;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#059669;flex-shrink:0"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+              <div style="font-size:.82rem;color:var(--muted)">ที่ตั้ง</div>
+              <div style="font-size:.9rem;font-weight:600">ต.โคกยาง อ.ประโคนชัย จ.บุรีรัมย์</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div style="width:36px;height:36px;background:#FFFBEB;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#D97706;flex-shrink:0"><i class="fas fa-graduation-cap"></i></div>
+            <div>
+              <div style="font-size:.82rem;color:var(--muted)">ประเภท</div>
+              <div style="font-size:.9rem;font-weight:600">โรงเรียนประถมศึกษา</div>
+            </div>
+          </div>
+        </div>
+        <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
+          style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:var(--fb-blue);color:#fff;padding:.7rem;border-radius:8px;font-weight:700;font-size:.9rem;margin-top:1.25rem;transition:var(--trans)"
+          onmouseover="this.style.background='#0C5FD4'" onmouseout="this.style.background='#1877F2'">
+          <i class="fab fa-facebook-square"></i>กดถูกใจเพจ
+        </a>
+      </div>
     </div>
 
-    <!-- HEADER -->
-    <header class="header">
-        <div class="inner">
-            <a href="index.html" class="logo">
-                <img src="https://lh5.googleusercontent.com/d/16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="Logo" onerror="this.src='https://placehold.co/88x88/334155/white?text=RKT'">
-                <div class="logo-text">
-                    <h1>โรงเรียนบ้านโคกยางหนองถนน</h1>
-                    <span>สพป.บุรีรัมย์ เขต 3</span>
-                </div>
-            </a>
-            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i>กลับหน้าหลัก</a>
+    <!-- Share -->
+    <div class="card" style="margin-bottom:1.25rem">
+      <div class="card-header"><h3><i class="fas fa-share-alt"></i>แชร์เพจ</h3></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:.6rem">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
+            style="display:flex;align-items:center;gap:.6rem;padding:.65rem .875rem;background:#EFF6FF;border-radius:8px;font-size:.85rem;font-weight:600;color:var(--fb-blue);transition:var(--trans)"
+            onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
+            <i class="fab fa-facebook"></i>แชร์บน Facebook
+          </a>
+          <a href="https://line.me/R/msg/text/?โรงเรียนบ้านโคกยางหนองถนน%20https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
+            style="display:flex;align-items:center;gap:.6rem;padding:.65rem .875rem;background:#F0FDF4;border-radius:8px;font-size:.85rem;font-weight:600;color:#059669;transition:var(--trans)"
+            onmouseover="this.style.background='#DCFCE7'" onmouseout="this.style.background='#F0FDF4'">
+            <i class="fab fa-line"></i>แชร์บน LINE
+          </a>
         </div>
-    </header>
-
-    <!-- HERO -->
-    <div class="fb-hero">
-        <div class="inner">
-            <div class="fb-hero-icon"><i class="fab fa-facebook"></i></div>
-            <h2>Facebook Page โรงเรียน</h2>
-            <p>ติดตามข่าวสาร กิจกรรม และความเคลื่อนไหวล่าสุดของโรงเรียน</p>
-            <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" class="fb-hero-btn">
-                <i class="fab fa-facebook-square"></i>เปิดเพจ Facebook
-            </a>
-        </div>
+      </div>
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
-
-        <!-- Facebook Page Feed (ซ้าย) -->
-        <div>
-            <div class="card">
-                <div class="card-header">
-                    <h3><i class="fab fa-facebook"></i>โพสต์ล่าสุด</h3>
-                    <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" style="font-size:.82rem;color:var(--fb-blue);font-weight:600">ดูทั้งหมด →</a>
-                </div>
-                <div class="card-body">
-                    <!-- Facebook Page Plugin — Timeline -->
-                    <div class="fb-page-container" id="fbPageWrap">
-                        <div id="fb-root"></div>
-                        <div class="fb-page"
-                            data-href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn"
-                            data-tabs="timeline"
-                            data-width=""
-                            data-height="700"
-                            data-small-header="false"
-                            data-adapt-container-width="true"
-                            data-hide-cover="false"
-                            data-show-facepile="true">
-                        </div>
-                    </div>
-                    <!-- Fallback iframe -->
-                    <div id="fbFallback" style="display:none">
-                        <iframe
-                            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Frongreiyn.ban.khok.yang.hnxng.thnn&tabs=timeline&width=500&height=700&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
-                            width="100%" height="700"
-                            style="border:none;overflow:hidden;border-radius:8px"
-                            scrolling="no" frameborder="0" allowfullscreen
-                            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
-                        </iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sidebar (ขวา) -->
-        <div>
-            <!-- Page Info -->
-            <div class="card" style="margin-bottom:1.25rem">
-                <div class="card-header"><h3><i class="fas fa-info-circle"></i>ข้อมูลเพจ</h3></div>
-                <div class="card-body">
-                    <div style="display:flex;flex-direction:column;gap:.875rem">
-                        <div style="display:flex;align-items:center;gap:.75rem">
-                            <div style="width:36px;height:36px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--fb-blue);flex-shrink:0"><i class="fab fa-facebook-f"></i></div>
-                            <div>
-                                <div style="font-size:.82rem;color:var(--muted)">ชื่อเพจ</div>
-                                <div style="font-size:.9rem;font-weight:600">โรงเรียนบ้านโคกยางหนองถนน</div>
-                            </div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:.75rem">
-                            <div style="width:36px;height:36px;background:#F0FDF4;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#059669;flex-shrink:0"><i class="fas fa-map-marker-alt"></i></div>
-                            <div>
-                                <div style="font-size:.82rem;color:var(--muted)">ที่ตั้ง</div>
-                                <div style="font-size:.9rem;font-weight:600">ต.โคกยาง อ.ประโคนชัย จ.บุรีรัมย์</div>
-                            </div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:.75rem">
-                            <div style="width:36px;height:36px;background:#FFFBEB;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#D97706;flex-shrink:0"><i class="fas fa-graduation-cap"></i></div>
-                            <div>
-                                <div style="font-size:.82rem;color:var(--muted)">ประเภท</div>
-                                <div style="font-size:.9rem;font-weight:600">โรงเรียนประถมศึกษา</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
-                       style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:var(--fb-blue);color:#fff;padding:.7rem;border-radius:8px;font-weight:700;font-size:.9rem;margin-top:1.25rem;transition:var(--trans)"
-                       onmouseover="this.style.background='#0C5FD4'" onmouseout="this.style.background='#1877F2'">
-                        <i class="fab fa-facebook-square"></i>กดถูกใจเพจ
-                    </a>
-                </div>
-            </div>
-
-            <!-- Share -->
-            <div class="card" style="margin-bottom:1.25rem">
-                <div class="card-header"><h3><i class="fas fa-share-alt"></i>แชร์เพจ</h3></div>
-                <div class="card-body">
-                    <div style="display:flex;flex-direction:column;gap:.6rem">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
-                           style="display:flex;align-items:center;gap:.6rem;padding:.65rem .875rem;background:#EFF6FF;border-radius:8px;font-size:.85rem;font-weight:600;color:var(--fb-blue);transition:var(--trans)"
-                           onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
-                            <i class="fab fa-facebook"></i>แชร์บน Facebook
-                        </a>
-                        <a href="https://line.me/R/msg/text/?โรงเรียนบ้านโคกยางหนองถนน%20https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank"
-                           style="display:flex;align-items:center;gap:.6rem;padding:.65rem .875rem;background:#F0FDF4;border-radius:8px;font-size:.85rem;font-weight:600;color:#059669;transition:var(--trans)"
-                           onmouseover="this.style.background='#DCFCE7'" onmouseout="this.style.background='#F0FDF4'">
-                            <i class="fab fa-line"></i>แชร์บน LINE
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Note -->
-            <div class="posts-note">
-                <i class="fas fa-info-circle"></i>
-                <span>หากโพสต์ไม่แสดง กรุณาปิด Ad Blocker หรือ <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" style="color:var(--fb-blue);font-weight:600">เปิดดูบน Facebook โดยตรง</a></span>
-            </div>
-        </div>
-
+    <!-- Note -->
+    <div class="posts-note">
+      <i class="fas fa-info-circle"></i>
+      <span>หากโพสต์ไม่แสดง กรุณาปิด Ad Blocker หรือ <a href="https://www.facebook.com/rongreiyn.ban.khok.yang.hnxng.thnn" target="_blank" style="color:var(--fb-blue);font-weight:600">เปิดดูบน Facebook โดยตรง</a></span>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-        <p>&copy; 2567 โรงเรียนบ้านโคกยางหนองถนน · <a href="index.html">กลับหน้าหลัก</a></p>
-    </footer>
+  </div>
+</div>
 
-    <!-- Facebook SDK -->
-    <script>
-        window.fbAsyncInit = function() {
-            FB.init({ xfbml: true, version: 'v18.0' });
-        };
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/th_TH/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+<!-- FOOTER -->
+<footer class="footer">
+  <p>&copy; 2567 โรงเรียนบ้านโคกยางหนองถนน · <a href="index.html">กลับหน้าหลัก</a></p>
+</footer>
 
-        // Fallback: ถ้า SDK โหลดไม่ได้ใน 4 วินาที ให้ใช้ iframe แทน
-        setTimeout(function() {
-            const plugin = document.querySelector('.fb-page iframe');
-            if (!plugin) {
-                document.getElementById('fbPageWrap').style.display = 'none';
-                document.getElementById('fbFallback').style.display = 'block';
-            }
-        }, 4000);
-    </script>
+<!-- Facebook SDK (v20.0) -->
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({ xfbml: true, version: 'v20.0' }); // ✅ อัปเดตจาก v18.0 → v20.0
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/th_TH/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  // Fallback: ถ้า SDK โหลดไม่ได้ใน 4 วินาที ให้ใช้ iframe แทน
+  setTimeout(function() {
+    const plugin = document.querySelector('.fb-page iframe');
+    if (!plugin) {
+      document.getElementById('fbPageWrap').style.display = 'none';
+      document.getElementById('fbFallback').style.display = 'block';
+    }
+  }, 4000);
+</script>
 
 </body>
 </html>
