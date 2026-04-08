@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel — เว็บไซต์โรงเรียน</title>
+    <title>Admin Panel — โรงเรียนบ้านโคกยางหนองถนน</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -206,9 +206,9 @@
 <div class="login-wrap" id="loginWrap">
     <div class="login-box">
         <div class="login-logo">
-            <img src="" id="loginLogoImg" alt="Logo" style="display:none;" onerror="this.style.display='none'">
-            <h1 id="loginSchoolName">ระบบจัดการเว็บไซต์โรงเรียน</h1>
-            <p>Admin Panel</p>
+            <img src="https://lh5.googleusercontent.com/d/16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="Logo" onerror="this.style.display='none'">
+            <h1>โรงเรียนบ้านโคกยางหนองถนน</h1>
+            <p>ระบบจัดการเนื้อหาเว็บไซต์</p>
         </div>
         <div class="login-error" id="loginError"><i class="fas fa-exclamation-circle"></i> <span id="loginErrorMsg"></span></div>
         <div class="form-group">
@@ -229,7 +229,7 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>Admin Panel</h2>
-            <p id="sidebarSchoolName">ระบบจัดการเว็บไซต์โรงเรียน</p>
+            <p>โรงเรียนบ้านโคกยางหนองถนน</p>
         </div>
         <nav class="sidebar-nav">
             <div class="nav-item active" onclick="showPage('dashboard')" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>ภาพรวม</div>
@@ -705,20 +705,8 @@ function storeSet(key, val) {
     try { store.setItem(key, val); } catch(e) {}
 }
 
-// === รองรับ ?api= สำหรับฝังใน Google Sites ===
-const _urlParams = new URLSearchParams(window.location.search);
-const _apiFromUrl = _urlParams.get('api') || '';
-if (_apiFromUrl) { storeSet('rkt_api_url', _apiFromUrl); }
-
-let API_URL = _apiFromUrl || storeGet('rkt_api_url', 'https://script.google.com/macros/s/AKfycbwb-ZEoRTrGu026rl7ewBSsnIHXkRHNp_j7v6tJy-yBTinpN6v4F7r7P1KQYHEy5San/exec');
+let API_URL = storeGet('rkt_api_url', 'https://script.google.com/macros/s/AKfycbwb-ZEoRTrGu026rl7ewBSsnIHXkRHNp_j7v6tJy-yBTinpN6v4F7r7P1KQYHEy5San/exec');
 let API_SECRET = storeGet('rkt_api_secret', 'rkt2567');
-
-// ส่งต่อ ?api= ไปยังลิงก์ "ดูเว็บไซต์"
-if (_apiFromUrl) {
-    document.querySelectorAll('a[href="index.html"]').forEach(a => {
-        a.href = 'index.html?api=' + encodeURIComponent(_apiFromUrl);
-    });
-}
 let currentModal = null;
 let editingRow = null;
 let allData = {};
@@ -760,26 +748,8 @@ async function fetchAuth() {
         if (!text || text.startsWith('<')) return;
         const data = JSON.parse(text);
         if (data && data.admin_user) cachedAuth = { user: data.admin_user, pass: data.admin_pass || DEFAULT_PASS };
-        
-        // อัปเดตข้อมูล UI หน้า Login
-        if (data && data.name_th) {
-            const el1 = document.getElementById('loginSchoolName');
-            const el2 = document.getElementById('sidebarSchoolName');
-            if (el1) el1.textContent = data.name_th;
-            if (el2) el2.textContent = data.name_th;
-        }
-        if (data && data.logo) {
-            const logoEl = document.getElementById('loginLogoImg');
-            if (logoEl) {
-                logoEl.src = fixDriveUrl(data.logo);
-                logoEl.style.display = 'block';
-            }
-        }
     } catch(e) { console.warn('fetchAuth:', e.message); }
 }
-
-// โหลดข้อมูลชื่อและโลโก้โรงเรียนมาแสดงทันทีที่เปิดหน้า Admin (ก่อน Login)
-if (API_URL) fetchAuth();
 
 // ===== LOGIN =====
 async function doLogin() {
@@ -1573,8 +1543,8 @@ function setBtnLoading(loading) {
 function saveApiConfig() {
     API_URL = document.getElementById('apiUrl').value.trim();
     const inputSecret = document.getElementById('apiSecret').value.trim();
-    API_SECRET = inputSecret || 'admin123'; // fallback to default
-    try { storeSet('rkt_api_url', API_URL); storeSet('school_api_url', API_URL); storeSet('rkt_api_secret', API_SECRET); } catch(e) {}
+    API_SECRET = inputSecret || 'rkt2567'; // fallback to default
+    try { storeSet('rkt_api_url', API_URL); storeSet('rkt_api_secret', API_SECRET); } catch(e) {}
     updateApiStatus();    toast('บันทึกการตั้งค่าแล้ว', 'success');
     if (API_URL) loadAllData();
 }
@@ -1611,12 +1581,11 @@ function toast(msg, type = 'success') {
 
 // ===== APPS SCRIPT CODE =====
 function loadScriptCode() {
-    document.getElementById('scriptCode').value = `// Google Apps Script — School Website CMS Template
+    document.getElementById('scriptCode').value = `// Google Apps Script — RKT School CMS v2
 // วาง code นี้ใน Apps Script แล้ว Deploy เป็น Web App
 // Execute as: Me | Who has access: Anyone
 
-// รหัสผ่านถูกเก็บใน Google Sheet โดย Setup Wizard
-const DEFAULT_SECRET = 'admin123';
+const SECRET = 'rkt2567'; // เปลี่ยนได้ตามต้องการ
 
 // ===== CORS Helper =====
 function setCORS(output) {
@@ -1696,14 +1665,13 @@ function jsonOut(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// ===== Seed ข้อมูลตัวอย่าง (รันครั้งเดียวหลัง Deploy ใหม่) =====
+// ===== Seed ข้อมูลเริ่มต้น (รันครั้งเดียว) =====
 function seedInitialData() {
-  // ⚠️ ข้อมูลในนี้เป็นตัวอย่าง แก้ไขใน Admin Panel หรือ Google Sheet โดยตรง
   saveKeyValue('settings', {
-    name_th: 'โรงเรียนตัวอย่าง',
-    name_en: 'Example School',
-    dept: 'สพป.จังหวัด เขต X',
-    phone: '0XX-XXX-XXXX',
+    name_th: 'โรงเรียนบ้านโคกยางหนองถนน',
+    name_en: 'Baan Khok Yang Nong Thanon School',
+    dept: 'สพป.บุรีรัมย์ เขต 3',
+    phone: '089-947-2938',
     email: 'admin1@rkt.ac.th',
     website: 'www.rkt.ac.th',
     address: 'ต.ก้านเหลือง อ.นางรอง จ.บุรีรัมย์ 31110',
