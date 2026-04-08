@@ -1021,7 +1021,8 @@
             if (s.name_en) { document.querySelectorAll('.school-name-en').forEach(el => el.textContent = s.name_en); }
             if (s.phone) document.querySelectorAll('.school-phone').forEach(el => el.textContent = s.phone);
             if (s.email) document.querySelectorAll('.school-email').forEach(el => el.textContent = s.email);
-            if (s.address) document.querySelectorAll('.school-address').forEach(el => el.textContent = s.address);
+            // ไม่ดึงที่อยู่จาก CMS เพื่อใช้ค่า static ที่ถูกต้องใน HTML
+            // if (s.address) document.querySelectorAll('.school-address').forEach(el => el.textContent = s.address);
             if (s.vision) document.querySelectorAll('.school-vision').forEach(el => el.textContent = s.vision);
             if (s.motto) document.querySelectorAll('.school-motto').forEach(el => el.textContent = s.motto);
             if (s.students) document.querySelectorAll('.stat-students').forEach(el => el.textContent = s.students);
