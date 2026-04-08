@@ -1110,6 +1110,18 @@
             if (d.photo) document.querySelectorAll('.director-photo').forEach(el => el.src = fixDriveUrl(d.photo));
         }
 
+        function normalizeFbEmbedUrl(rawValue) {
+            if (!rawValue) return '';
+            const raw = String(rawValue).trim();
+            if (!raw) return '';
+            const iframeSrcMatch = raw.match(/src=["']([^"']+)["']/i);
+            if (iframeSrcMatch) return iframeSrcMatch[1];
+            if (raw.includes('plugins/post.php')) return raw;
+            const postUrl = extractFbPostUrl(raw);
+            if (!postUrl) return '';
+            return `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(postUrl)}&show_text=true&width=500`;
+        }
+
         function renderNews(rows) {
             const el = document.getElementById('newsTbodyFront');
             if (!el || !rows.length) return;
@@ -1117,10 +1129,7 @@
                 // แยก Facebook post URL → embed URL
                 let fbEmbed = '';
                 if (r.fb_post && r.fb_post.trim()) {
-                    // รองรับทั้ง URL โพสต์ปกติ และ URL จาก iframe src
-                    const postUrl = r.fb_post.includes('plugins/post')
-                        ? r.fb_post  // เป็น embed URL อยู่แล้ว
-                        : `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(r.fb_post)}&show_text=true&width=500`;
+                    const postUrl = normalizeFbEmbedUrl(r.fb_post);
                     fbEmbed = `
                         <div style="margin-top:.875rem;border-radius:8px;overflow:hidden;border:1px solid var(--border)">
                             <iframe src="${postUrl}"
