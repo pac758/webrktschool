@@ -1122,6 +1122,18 @@
             return `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(postUrl)}&show_text=true&width=500`;
         }
 
+        function normalizeNewsMedia(rawValue) {
+            if (!rawValue) return { type: '', url: '' };
+            const raw = String(rawValue).trim();
+            if (!raw) return { type: '', url: '' };
+            const fbUrl = normalizeFbEmbedUrl(raw);
+            if (fbUrl) return { type: 'facebook', url: fbUrl };
+            const driveUrl = fixDriveUrl(raw);
+            if (driveUrl && driveUrl !== raw) return { type: 'image', url: driveUrl };
+            if (/^https?:\/\/[^\s]+\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(raw)) return { type: 'image', url: raw };
+            return { type: '', url: '' };
+        }
+
         function renderNews(rows) {
             const el = document.getElementById('newsTbodyFront');
             if (!el || !rows.length) return;
