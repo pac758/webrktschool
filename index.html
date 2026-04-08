@@ -929,17 +929,22 @@
             if (!rawValue) return '';
             const raw = String(rawValue).trim();
             if (!raw) return '';
+            let url = raw;
             // ถ้าเป็น iframe code → ดึง src
             const iframeSrcMatch = raw.match(/src=["']([^"']+)["']/i);
-            let url = iframeSrcMatch ? iframeSrcMatch[1] : raw;
+            if (iframeSrcMatch) url = iframeSrcMatch[1];
             // ถ้าเป็น embed URL (plugins/post.php) → ดึง href param ออกมา
-            const hrefMatch = url.match(/href=([^&"'\s>]+)/i);
-            if (hrefMatch) {
-                try { url = decodeURIComponent(hrefMatch[1]); } catch(e) { url = hrefMatch[1]; }
+            if (url.includes('plugins/post.php')) {
+                const hrefMatch = url.match(/[?&]href=([^&"'\s>]+)/i);
+                if (hrefMatch) {
+                    try { url = decodeURIComponent(hrefMatch[1]); } catch(e) { url = hrefMatch[1]; }
+                } else {
+                    return ''; // ไม่มี href param
+                }
             }
-            // ถ้ายังเป็น embed URL อยู่ → ไม่ใช่ post URL จริง
-            if (url.includes('plugins/post.php')) return '';
-            if (!/^https?:\/\//i.test(url)) return '';
+            // ถ้าเป็น share URL (facebook.com/share/...) หรือ fb.watch → ไม่รองรับ
+            if (url.includes('/share/') || url.includes('fb.watch')) return '';
+            if (!/^https?:\/\/www\.facebook\.com\//i.test(url)) return '';
             return url;
         }
 
