@@ -1126,18 +1126,22 @@
             const el = document.getElementById('newsTbodyFront');
             if (!el || !rows.length) return;
             el.innerHTML = rows.slice(0, 5).map(r => {
-                // แยก Facebook post URL → embed URL
+                const media = normalizeNewsMedia(r.fb_post);
                 let fbEmbed = '';
-                if (r.fb_post && r.fb_post.trim()) {
-                    const postUrl = normalizeFbEmbedUrl(r.fb_post);
+                if (media.type === 'facebook' && media.url) {
                     fbEmbed = `
                         <div style="margin-top:.875rem;border-radius:8px;overflow:hidden;border:1px solid var(--border)">
-                            <iframe src="${postUrl}"
+                            <iframe src="${media.url}"
                                 width="100%" height="500"
                                 style="border:none;overflow:hidden;display:block"
                                 scrolling="no" frameborder="0" allowfullscreen
                                 allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
                             </iframe>
+                        </div>`;
+                } else if (media.type === 'image' && media.url) {
+                    fbEmbed = `
+                        <div style="margin-top:.875rem;border-radius:8px;overflow:hidden;border:1px solid var(--border);background:#fff">
+                            <img src="${media.url}" alt="${r.title||'news image'}" style="width:100%;display:block;object-fit:cover" onerror="this.onerror=null;this.closest('div').style.display='none'">
                         </div>`;
                 }
                 return `
@@ -1147,7 +1151,8 @@
                         <div class="news-info" style="flex:1">
                             <h3><a href="${r.link||'#'}">${r.title||''}</a></h3>
                             <p class="news-excerpt">${r.excerpt||''}</p>
-                            ${r.fb_post ? '<span style="font-size:.75rem;color:#1877F2;font-weight:600"><i class="fab fa-facebook" style="margin-right:.3rem"></i>มีโพสต์ Facebook</span>' : ''}
+                            ${media.type === 'facebook' ? '<span style="font-size:.75rem;color:#1877F2;font-weight:600"><i class="fab fa-facebook" style="margin-right:.3rem"></i>มีโพสต์ Facebook</span>' : ''}
+                            ${media.type === 'image' ? '<span style="font-size:.75rem;color:#2563EB;font-weight:600"><i class="fas fa-image" style="margin-right:.3rem"></i>มีรูปภาพประกอบ</span>' : ''}
                         </div>
                     </div>
                     ${fbEmbed}
