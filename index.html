@@ -173,19 +173,14 @@
     <section id="home" class="hero">
         <div class="container hero-inner">
             <div>
-                <div class="hero-badge"><i class="fas fa-school"></i> <span id="heroBadge">ยินดีต้อนรับสู่รั้วแดง-ทอง</span></div>
-                <h2 id="heroHeading">พัฒนาผู้เรียน<br>สู่<span>ความเป็นเลิศ</span></h2>
-                <p id="heroDesc" style="margin-top:.75rem">มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ผสมผสานเทคโนโลยีสมัยใหม่และคุณธรรม เพื่อสร้างเด็กไทยที่พร้อมก้าวสู่ระดับสากล</p>
-                <div class="hero-btns" id="heroBtns">
-                    <a href="https://script.google.com/macros/s/AKfycbxSarrCofSBsB_arfHLQFDG3pUEAuaqRxMbNAXmfzBYD799Jt7gM08ZKxS8hU_YrDV2/exec" target="_blank" class="btn btn-white"><i class="fas fa-chart-line"></i>ตรวจสอบผลการเรียน</a>
-                    <a href="https://script.google.com/macros/s/AKfycbz9ASNeHRWV7ObF-UE0qWnAiVGjogpn0sMXAb-8L-66u7I9S3fe9VY9q8dbNJXpcTrN/exec" target="_blank" class="btn btn-outline"><i class="fas fa-user-plus"></i>ระบบ ปพ.5</a>
-                    <a href="https://sites.google.com/rkt.ac.th/mix/Home?authuser=0" target="_blank" class="btn btn-outline"><i class="fas fa-laptop"></i>เรียนออนไลน์</a>
-                    <a href="https://script.google.com/macros/s/AKfycbwQgI6RtfxLMWYrA_jP1cunUhCqEu7STF-aDvl6aLL5ognwhEGIqwFdSuc2NJOtwmb3/exec" target="_blank" class="btn btn-outline"><i class="fas fa-briefcase"></i>ศูนย์กลางงาน</a>
-                </div>
+                <div class="hero-badge" id="heroBadgeWrap" style="display:none"><i class="fas fa-school"></i> <span id="heroBadge"></span></div>
+                <h2 id="heroHeading"></h2>
+                <p id="heroDesc" style="margin-top:.75rem"></p>
+                <div class="hero-btns" id="heroBtns"></div>
             </div>
-            <div class="hero-img-wrap">
-                <img id="heroImage" src="https://drive.google.com/thumbnail?id=1va1Au_6cu7Setw8BXXeLAz6met5Td1k8&sz=w800" alt="กิจกรรมโรงเรียน" onerror="this.onerror=null;this.src='https://placehold.co/640x480/9B1C1C/white?text=โรงเรียนบ้านโคกยางหนองถนน'">
-                <div class="hero-img-badge"><i class="fas fa-award"></i> <span id="heroImageBadge">รางวัลโรงเรียนพระราชทาน</span></div>
+            <div class="hero-img-wrap" id="heroImageWrap" style="display:none">
+                <img id="heroImage" src="" alt="กิจกรรมโรงเรียน">
+                <div class="hero-img-badge" id="heroImageBadgeWrap" style="display:none"><i class="fas fa-award"></i> <span id="heroImageBadge"></span></div>
             </div>
         </div>
     </section>
@@ -1041,15 +1036,45 @@
         }
 
         function applyHero(s) {
-            if (s.hero_badge) document.getElementById('heroBadge').textContent = s.hero_badge;
-            if (s.hero_heading1 || s.hero_heading2) {
-                const h1 = s.hero_heading1 || 'พัฒนาผู้เรียน';
-                const h2 = s.hero_heading2 || 'ความเป็นเลิศ';
-                document.getElementById('heroHeading').innerHTML = `${h1}<br>สู่<span>${h2}</span>`;
+            const h1 = s.hero_heading1 || 'พัฒนาผู้เรียน';
+            const h2 = s.hero_heading2 || 'ความเป็นเลิศ';
+            document.getElementById('heroHeading').innerHTML = `${h1}<br>สู่<span>${h2}</span>`;
+            
+            const heroDesc = s.hero_desc || 'มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ผสมผสานเทคโนโลยีสมัยใหม่และคุณธรรม เพื่อสร้างเด็กไทยที่พร้อมก้าวสู่ระดับสากล';
+            document.getElementById('heroDesc').textContent = heroDesc;
+            
+            const badgeEl = document.getElementById('heroBadge');
+            const badgeWrap = document.getElementById('heroBadgeWrap');
+            if (s.hero_badge) {
+                badgeEl.textContent = s.hero_badge;
+                badgeWrap.style.display = '';
+            } else {
+                badgeWrap.style.display = 'none';
             }
-            if (s.hero_desc) document.getElementById('heroDesc').textContent = s.hero_desc;
-            if (s.hero_image) document.getElementById('heroImage').src = fixDriveUrl(s.hero_image);
-            if (s.hero_image_badge) document.getElementById('heroImageBadge').textContent = s.hero_image_badge;
+            
+            const imgWrap = document.getElementById('heroImageWrap');
+            const imgEl = document.getElementById('heroImage');
+            const imgBadgeWrap = document.getElementById('heroImageBadgeWrap');
+            const imgBadgeEl = document.getElementById('heroImageBadge');
+            
+            if (s.hero_image) {
+                imgEl.src = fixDriveUrl(s.hero_image);
+                imgEl.onerror = function() {
+                    this.onerror = null;
+                    this.src = 'https://placehold.co/640x480/9B1C1C/white?text=โรงเรียนบ้านโคกยางหนองถนน';
+                };
+                imgWrap.style.display = '';
+                
+                if (s.hero_image_badge) {
+                    imgBadgeEl.textContent = s.hero_image_badge;
+                    imgBadgeWrap.style.display = '';
+                } else {
+                    imgBadgeWrap.style.display = 'none';
+                }
+            } else {
+                imgWrap.style.display = 'none';
+            }
+            
             const btns = [];
             for (let i = 1; i <= 4; i++) {
                 const text = s['hero_btn'+i+'_text'], url = s['hero_btn'+i+'_url'], icon = s['hero_btn'+i+'_icon'];
@@ -1058,7 +1083,9 @@
                     btns.push(`<a href="${url}" target="_blank" class="${cls}"><i class="${icon||'fas fa-link'}"></i>${text}</a>`);
                 }
             }
-            if (btns.length) document.getElementById('heroBtns').innerHTML = btns.join('');
+            if (btns.length) {
+                document.getElementById('heroBtns').innerHTML = btns.join('');
+            }
         }
 
         function applyAbout(s) {
