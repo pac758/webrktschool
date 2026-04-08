@@ -1115,9 +1115,18 @@
             if (!el || !rows.length) return;
             el.innerHTML = rows.slice(0, 5).map(r => {
                 const postUrl = extractFbPostUrl(r.fb_post);
+                const embedSrc = postUrl
+                    ? `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(postUrl)}&show_text=true&width=500&appId=`
+                    : '';
                 const fbEmbed = postUrl ? `
-                        <div style="margin-top:.875rem;border-radius:8px;overflow:hidden;border:1px solid var(--border);padding:0">
-                            <div class="fb-post" data-href="${postUrl}" data-width="500" data-show-text="true"></div>
+                        <div style="margin-top:.875rem;border-radius:8px;overflow:hidden;border:1px solid var(--border);padding:0;background:#fff">
+                            <iframe src="${embedSrc}"
+                                width="100%" height="600"
+                                style="border:none;overflow:hidden"
+                                scrolling="no" frameborder="0"
+                                allowfullscreen="true"
+                                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+                            </iframe>
                         </div>` : '';
                 return `
                 <div class="news-item" style="flex-direction:column;align-items:flex-start">
@@ -1132,16 +1141,6 @@
                     ${fbEmbed}
                 </div>`;
             }).join('');
-            // ให้ FB SDK render โพสต์ใหม่
-            if (typeof FB !== 'undefined') {
-                FB.XFBML.parse(el);
-            } else {
-                // FB SDK ยังโหลดไม่เสร็จ → รอแล้ว parse ทีหลัง
-                window.fbAsyncInit = function() {
-                    FB.init({ xfbml: true, version: 'v21.0' });
-                    FB.XFBML.parse(el);
-                };
-            }
         }
 
         function renderCalendar(rows) {
