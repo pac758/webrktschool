@@ -38,32 +38,6 @@
         .topbar .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
         .topbar a{color:rgba(255,255,255,.8);transition:var(--trans)}
         .topbar a:hover{color:var(--gold-lt)}
-        /* ===== HEADER ===== */
-        .header{background:var(--surface);box-shadow:0 2px 12px rgba(0,0,0,.08);position:sticky;top:0;z-index:999;transition:var(--trans)}
-        .header.scrolled{background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}
-        .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;max-width:1200px;margin:0 auto}
-        .logo{display:flex;align-items:center;gap:.875rem}
-        .logo img{width:52px;height:52px;object-fit:contain;transition:var(--trans)}
-        .logo:hover img{transform:rotate(-5deg) scale(1.05)}
-        .logo-text h1{font-size:1.15rem;color:var(--red);line-height:1.1}
-        .logo-text span{font-size:.75rem;color:var(--muted);font-weight:400}
-        .nav-desktop{display:none;gap:1.75rem;align-items:center}
-        .nav-desktop a{font-size:.9rem;font-weight:500;color:var(--text);position:relative;padding:.25rem 0}
-        .nav-desktop a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--red);transition:width .3s}
-        .nav-desktop a:hover{color:var(--red)}
-        .nav-desktop a:hover::after{width:100%}
-        .nav-btn{background:var(--red);color:#fff;padding:.5rem 1.25rem;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:0 2px 8px rgba(155,28,28,.3)}
-        .nav-btn:hover{background:var(--red-dark);transform:translateY(-1px)}
-        .hamburger{background:none;border:none;font-size:1.4rem;color:var(--red);cursor:pointer;display:flex;align-items:center}
-        /* ===== MOBILE MENU ===== */
-        .mob-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;opacity:0;transition:opacity .3s}
-        .mob-overlay.open{display:block;opacity:1}
-        .mob-nav{position:fixed;top:0;right:-300px;width:280px;height:100%;background:#fff;z-index:1001;transition:right .3s cubic-bezier(.4,0,.2,1);padding:1.5rem;display:flex;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,.1)}
-        .mob-nav.open{right:0}
-        .mob-close{align-self:flex-end;background:none;border:none;font-size:1.4rem;color:var(--muted);cursor:pointer;margin-bottom:1.5rem}
-        .mob-links li{margin-bottom:1rem}
-        .mob-links a{font-size:1rem;font-weight:500;color:var(--text);display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;border-radius:8px;transition:var(--trans)}
-        .mob-links a:hover,.mob-links a.active{background:#F1F5F9;color:var(--red)}
     </style>
 </head>
 <body>
@@ -82,47 +56,6 @@
                 <a href="admin.html" style="background:rgba(255,255,255,.15);padding:.2rem .75rem;border-radius:50px"><i class="fas fa-lock" style="margin-right:.3rem"></i>Admin</a>
             </div>
         </div>
-    </div>
-
-    <!-- HEADER -->
-    <header class="header" id="header">
-        <div class="header-inner">
-            <a href="#" class="logo">
-                <img class="school-logo" src="https://drive.google.com/thumbnail?id=16ELv7E9YsEHeK8pXkDVlfvLvRo3KxoMm" alt="ตราโรงเรียน" onerror="this.src='https://placehold.co/100x100/9B1C1C/white?text=RKT'">
-                <div class="logo-text">
-                    <h1 class="school-name-th">โรงเรียนบ้านโคกยางหนองถนน</h1>
-                    <span>สพป.บุรีรัมย์ เขต 3</span>
-                </div>
-            </a>
-            <nav class="nav-desktop" id="navDesktop">
-                <a href="#home">หน้าแรก</a>
-                <a href="#about">เกี่ยวกับเรา</a>
-                <a href="#director">ผู้บริหาร</a>
-                <a href="#features">จุดเด่น</a>
-                <a href="#team">บุคลากร</a>
-                <a href="#gallery">กิจกรรม</a>
-                <a href="#news">ข่าวสาร</a>
-                <a href="#contact">ติดต่อ</a>
-                <a href="https://www.rkt.ac.th/%E0%B8%9E%E0%B8%A3%E0%B8%AD%E0%B8%A1-ai" target="_blank" class="nav-btn"><i class="fas fa-robot" style="margin-right:.4rem"></i>พรอม AI</a>
-            </nav>
-            <button class="hamburger" id="hamburger" aria-label="เปิดเมนู"><i class="fas fa-bars"></i></button>
-        </div>
-    </header>
-
-    <!-- MOBILE MENU -->
-    <div class="mob-overlay" id="mobOverlay"></div>
-    <div class="mob-nav" id="mobNav">
-        <button class="mob-close" id="mobClose"><i class="fas fa-times"></i></button>
-        <ul class="mob-links">
-            <li><a href="#home" class="active"><i class="fas fa-home"></i>หน้าแรก</a></li>
-            <li><a href="#about"><i class="fas fa-info-circle"></i>เกี่ยวกับเรา</a></li>
-            <li><a href="#director"><i class="fas fa-user-tie"></i>ผู้บริหาร</a></li>
-            <li><a href="#features"><i class="fas fa-star"></i>จุดเด่น</a></li>
-            <li><a href="#team"><i class="fas fa-users"></i>บุคลากร</a></li>
-            <li><a href="#gallery"><i class="fas fa-images"></i>กิจกรรม</a></li>
-            <li><a href="#news"><i class="fas fa-newspaper"></i>ข่าวสาร</a></li>
-            <li><a href="#contact"><i class="fas fa-phone"></i>ติดต่อ</a></li>
-        </ul>
     </div>
 
     <style>
@@ -795,8 +728,6 @@
             .attr-grid{grid-template-columns:repeat(4,1fr)}
         }
         @media(min-width:768px){
-            .nav-desktop{display:flex}
-            .hamburger{display:none}
             .hero-inner{flex-direction:row;text-align:left;justify-content:space-between}
             .hero h2{font-size:clamp(2rem,4vw,3.2rem)}
             .hero p{margin:0}
@@ -903,27 +834,7 @@
     </footer>
 
     <script>
-        // Sticky header
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            header.classList.toggle('scrolled', window.scrollY > 50);
-        });
-
-        // Mobile menu
-        const hamburger = document.getElementById('hamburger');
-        const mobNav = document.getElementById('mobNav');
-        const mobOverlay = document.getElementById('mobOverlay');
-        const mobClose = document.getElementById('mobClose');
-
-        function openMenu() { mobNav.classList.add('open'); mobOverlay.classList.add('open'); }
-        function closeMenu() { mobNav.classList.remove('open'); mobOverlay.classList.remove('open'); }
-
-        hamburger.addEventListener('click', openMenu);
-        mobClose.addEventListener('click', closeMenu);
-        mobOverlay.addEventListener('click', closeMenu);
-        document.querySelectorAll('.mob-links a').forEach(a => a.addEventListener('click', closeMenu));
-
-        // Smooth scroll with header offset
+        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
                 const id = a.getAttribute('href');
@@ -931,7 +842,7 @@
                 const el = document.querySelector(id);
                 if (el) {
                     e.preventDefault();
-                    window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+                    window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 16, behavior: 'smooth' });
                 }
             });
         });
